@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
-import PageOne from './components/DeckBuilder';
-import PageTwo from './components/SoloPlay';
-import PageThree from './components/Multiplayer';
+import DeckBuilder from './components/DeckBuilder';
+import SoloPlay from './components/SoloPlay';
+import Multiplayer from './components/Multiplayer';
 function App(): JSX.Element {
 
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/page-one" element={<PageOne />} />
-        <Route path="/page-two" element={<PageTwo />} />
-        <Route path="/page-three" element={<PageThree />} />
+        <Route path="/decks" element={<DeckBuilder />} />
+        <Route path="/solo" element={<SoloPlay />} />
+        <Route path="/multiplayer" element={<Multiplayer />} />
       </Routes>
     </Router>
   )
