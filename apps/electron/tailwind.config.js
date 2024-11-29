@@ -16,5 +16,14 @@ module.exports = {
     },
   },
   plugins: [],
+  variants: {
+    extend: {
+      scrollbar: ['rounded']
+    }
+  },
+  safelist: [
+      // Add class for overflow hidden
+    'overflow-hidden',
+  ],
 }
 

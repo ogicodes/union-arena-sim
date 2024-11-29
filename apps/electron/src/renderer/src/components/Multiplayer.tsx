@@ -22,7 +22,7 @@ const Multiplayer = () => {
           <img src={circleLogo} alt="Union Arena Simulation" className="h-40 w-40" />
           <h1 className="text-4xl font-semibold text-white my-10">
             Union{' '}
-            <span className="text-[#3a3939] hover:text-gray-300 transition duration-300">
+            <span className="text-[#7e7c7c] hover:text-gray-300 transition duration-300">
               Arena
             </span>{' '}
             Simulation
@@ -54,11 +54,11 @@ const Multiplayer = () => {
             <p className=" text-gray-400">Selected Deck: {selectedDeck}</p>
           </div>
           <div className="flex gap-4 mb-12">
-            <NavButton text="Back" onClick={() => navigate(-1)} variant="primary" size="full" />
+            <NavButton text="Back" onClick={() => navigate(-1)} variant="tertiary" size="full" />
             <NavButton
               text="Join Lobby"
               onClick={() => navigate(-1)}
-              variant="tertiary"
+              variant="primary"
               size="full"
             />
           </div>

@@ -22,7 +22,7 @@ const SoloPlay = () => {
           <img src={circleLogo} alt="Union Arena Simulation" className="h-40 w-40" />
           <h1 className="text-4xl font-semibold text-white my-10">
             Union{' '}
-            <span className="text-[#3a3939] hover:text-gray-300 transition duration-300">
+            <span className="text-[#7e7c7c] hover:text-gray-300 transition duration-300">
               Arena
             </span>{' '}
             Simulation
@@ -67,13 +67,13 @@ const SoloPlay = () => {
             <NavButton
               text="Back"
               onClick={() => navigate(-1)}
-              variant="primary"
+              variant="tertiary"
               size="full"
             />
             <NavButton
-              text="Join Lobby"
+              text="Start Game"
               onClick={() => navigate(-1)}
-              variant="tertiary"
+              variant="primary"
               size="full"
             />
           </div>
