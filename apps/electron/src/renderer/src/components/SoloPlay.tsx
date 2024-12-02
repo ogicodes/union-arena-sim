@@ -64,15 +64,10 @@ const SoloPlay = () => {
             <p className=" text-gray-400">Selected Deck: {selectedDeck}</p>
           </div>
           <div className="flex gap-4 mb-4">
-            <NavButton
-              text="Back"
-              onClick={() => navigate(-1)}
-              variant="tertiary"
-              size="full"
-            />
+            <NavButton text="Back" onClick={() => navigate(-1)} variant="tertiary" size="full" />
             <NavButton
               text="Start Game"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/gameLobby')}
               variant="primary"
               size="full"
             />

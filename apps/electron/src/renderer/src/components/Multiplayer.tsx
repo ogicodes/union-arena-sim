@@ -57,7 +57,7 @@ const Multiplayer = () => {
             <NavButton text="Back" onClick={() => navigate(-1)} variant="tertiary" size="full" />
             <NavButton
               text="Join Lobby"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/gameLobby')}
               variant="primary"
               size="full"
             />
