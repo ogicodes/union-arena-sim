@@ -9,3 +9,6 @@ export type Player = InstanceType<typeof PlayerClass>;
 export type GameState = InstanceType<typeof GameStateClass>;
 export type TurnManager = InstanceType<typeof TurnManagerClass>;
 export type GameEngine = InstanceType<typeof GameEngineClass>;
+
+export type Phases = "Draw" | "Main";
+export type CardType = "Spell" | "Trap";

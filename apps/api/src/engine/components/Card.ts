@@ -1,12 +1,14 @@
-export class Card {
-  name: string;
-  description: string;
-  cardType: string;
-  uniqueId: string;
-  owner: string | null;
-  isFaceUp: boolean;
+import type { CardType } from "../../types";
 
-  constructor(name: string, description: string, cardType: string) {
+export class Card {
+  public name: string;
+  public description: string;
+  public cardType: CardType;
+  public uniqueId: string;
+  public owner: string | null;
+  public isFaceUp: boolean;
+
+  constructor(name: string, description: string, cardType: CardType) {
     this.name = name;
     this.description = description;
     this.cardType = cardType;

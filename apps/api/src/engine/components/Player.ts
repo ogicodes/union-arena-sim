@@ -1,13 +1,13 @@
 import type { Card } from "../../types/index";
 
 export class Player {
-  id: string;
-  name: string;
-  lifePoints: number;
-  deck: Card[];
-  hand: Card[];
-  removalArea: Card[];
-  sideline: Card[];
+  public id: string;
+  public name: string;
+  public lifePoints: number;
+  public deck: Card[];
+  public hand: Card[];
+  public removalArea: Card[];
+  public sideline: Card[];
 
   constructor(name: string, deck: Card[]) {
     this.id = "hello"; // generate this later

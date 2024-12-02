@@ -1,11 +1,10 @@
-import type { Player } from "../../types";
-import type { Card } from "../../types";
+import type { Player, Card, Phases } from "../../types";
 
 export class GameState {
   players: Player[];
   activePlayerIndex: number;
   turnCount: number;
-  phase: "Draw" | "Main";
+  phase: Phases;
   board: Map<string, { frontLine: Card[]; energyLine: Card[] }>;
   deck: Map<string, Card[]>;
   sideline: Map<string, Card[]>;
@@ -47,7 +46,7 @@ export class GameState {
   }
 
   nextPhase(): void {
-    const phases: ("Draw" | "Main")[] = ["Draw", "Main"];
+    const phases: Phases[] = ["Draw", "Main"];
     const currentIndex = phases.indexOf(this.phase);
     this.phase = phases[(currentIndex + 1) % phases.length];
 
