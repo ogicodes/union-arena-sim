@@ -1,34 +1,20 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import LandingPage from './components/LandingPage'
+import DeckBuilder from './components/DeckBuilder'
+import SoloPlay from './components/SoloPlay'
+import Multiplayer from './components/Multiplayer'
+import GameLobby from './components/GameLobby'
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/decks" element={<DeckBuilder />} />
+        <Route path="/solo" element={<SoloPlay />} />
+        <Route path="/multiplayer" element={<Multiplayer />} />
+        <Route path="/gameLobby" element={<GameLobby />} />
+      </Routes>
+    </Router>
   )
 }
 
