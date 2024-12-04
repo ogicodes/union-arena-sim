@@ -3,7 +3,7 @@ import { exit } from "process";
 import type { FormattedCard, Card } from "./types";
 import { join } from "path";
 import { createDir, writeFile, writeImage } from "./utils/fs";
-import { dashProp, domParser } from "./utils/parsers";
+import { buildParsedOrder, dashProp, domParser } from "./utils/parsers";
 
 const main = async () => {
   try {
@@ -85,6 +85,11 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
     await writeImage(card.image, imagePath);
 
     const parsedEffectData = domParser(card.effectData);
+    const builtEffectDataText = buildParsedOrder(
+      parsedEffectData.parserResultOrder,
+      parsedEffectData.images,
+      parsedEffectData.text,
+    );
     if (card.effectData) {
       for (let i = 0; i < parsedEffectData.images.length; i++) {
         const effectDataImage = parsedEffectData.images[i].src;
@@ -95,6 +100,11 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
     }
 
     const parsedTriggerData = domParser(card.triggerData);
+    const builtTriggerDataText = buildParsedOrder(
+      parsedTriggerData.parserResultOrder,
+      parsedTriggerData.images,
+      parsedTriggerData.text,
+    );
     if (card.triggerData) {
       for (let i = 0; i < parsedTriggerData.images.length; i++) {
         const triggerDataImage = parsedTriggerData.images[i].src;
@@ -123,8 +133,9 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
       generatedEnergyData: card.generatedEnergyData
         ? Number(card.generatedEnergyData)
         : null,
-      effectData: card.effectData ? dashProp(parsedEffectData.text) : null,
-      triggerData: card.triggerData ? dashProp(parsedTriggerData.text) : null,
+      effectData: card.effectData !== "" ? dashProp(builtEffectDataText) : null,
+      triggerData:
+        card.triggerData !== "" ? dashProp(builtTriggerDataText) : null,
       getInfoData: card.getInfoData ? card.getInfoData : null,
     };
 

@@ -43,8 +43,10 @@ export interface ParsedImage {
   alt: string;
 }
 
+export type ParserResultOrder = "img" | "text_node";
+
 export interface ParserResult {
   images: ParsedImage[];
   text: string[];
-  parserResultOrder: ("img" | "text_node")[];
+  parserResultOrder: ParserResultOrder[];
 }

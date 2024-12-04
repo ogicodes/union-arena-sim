@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { ParserResult } from "../types";
+import { ParserResultOrder, ParserResult, ParsedImage } from "../types";
 
 /**
  * Takes data in the shape of a dom representation
@@ -16,7 +16,7 @@ export const domParser = (data: string): ParserResult => {
   let currentNode: ChildNode | null = document.body.firstChild;
 
   while (currentNode) {
-    if (currentNode.nodeType === dom.window.Node.TEXT_NODE) {
+    if (currentNode.nodeType !== dom.window.Node.ELEMENT_NODE) {
       const textContent = currentNode.textContent?.trim();
       if (textContent) {
         result.text.push(textContent);
@@ -50,5 +50,21 @@ export const domParser = (data: string): ParserResult => {
  * into a friendly standard format.
  * */
 export const dashProp = (data: string[]): string => {
-  return data.map((word) => word.toLowerCase().replace(/\s+/g, "-")).join("%");
+  return data.map((word) => word?.toLowerCase().replace(/\s+/g, "-")).join("%");
 };
+
+/**
+ * Takes the parserResultOrder, image object and text object
+ * and reconstructs an array of strings with the parserResultOrder
+ * of 'img' alt tags and text strings accordingly.
+ * */
+export function buildParsedOrder(
+  parserResultOrder: ParserResultOrder[],
+  _images: ParsedImage[],
+  _text: string[],
+): string[] {
+  const args = arguments;
+  return parserResultOrder.map((i) =>
+    i === "img" ? args[1].shift().alt : args[2].shift(),
+  );
+}
