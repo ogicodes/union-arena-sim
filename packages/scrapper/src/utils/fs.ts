@@ -35,7 +35,10 @@ export const writeImage = async (
   dirPath: string,
 ): Promise<void> => {
   try {
-    const response = await fetch(url, { method: "GET" });
+    // targets the hd endpoint for images
+    const updatedUrl = url.replace("/sd/", "/hd/");
+
+    const response = await fetch(updatedUrl, { method: "GET" });
 
     if (response.status === 404) {
       console.warn(`Skipping: ${url} (404)`);
