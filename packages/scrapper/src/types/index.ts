@@ -1,20 +1,19 @@
 export interface FormattedCard {
   cardNo: string;
-  rarity: string;
+  rarity: string | null;
   name: string;
   seriesName: string;
   series: string;
-  needEnergyData: string;
-  color: string;
-  apData: string;
+  needEnergyData: number | null;
+  color: string | null;
+  apData: number;
   categoryData: string;
-  bpData: string;
-  attributeData: string;
-  generatedEnergyData: string;
-  effectData: string;
-  triggerData: string;
-  getInfoData: string;
-  format: string;
+  bpData: number | null;
+  attributeData: string | null;
+  generatedEnergyData: number | null;
+  effectData: string | null;
+  triggerData: string | null;
+  getInfoData: string | null;
 }
 
 export interface Card {

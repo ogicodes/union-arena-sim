@@ -18,7 +18,16 @@ const main = async () => {
         name: "url",
         message: "Enter URL: ",
       },
+      {
+        type: "input",
+        name: "resumeIndex",
+        message: "Resume from idx? (enter to restart): ",
+        default: "",
+      },
     ]);
+
+    // Useful if script starts hanging
+    const resumeIndex = answers.resumeIndex ? Number(answers.resumeIndex) : 0;
 
     /**
      * Set the directory to save the data to
@@ -30,11 +39,17 @@ const main = async () => {
     /**
      * Perform a loop to save each card into a dir
      * */
-    for (let i = 0; i < data.length; i++) {
+    let saved = 0;
+    for (let i = resumeIndex; i < data.length; i++) {
       const card = data[i];
       const savedCard = await saveCard(card, answers.path);
-      console.log(`saved: ${savedCard}`);
+      saved++;
+      console.info(`${i} - saved: ${savedCard}`);
     }
+
+    console.info(
+      `${saved}/${data.length} @ ${((saved / data.length) * 100).toFixed(2)}%`,
+    );
   } catch (e) {
     console.error("An error occurred:", e);
     exit(1);
@@ -93,29 +108,31 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
      * Saves the card data to the directory:
      * /foo/bar/card.json
      * */
+
     const formattedCardData: FormattedCard = {
       cardNo: card.cardNo,
-      rarity: card.rarity.toLowerCase(),
+      rarity: card.rarity ? card.rarity.toLowerCase() : null,
       name: card.name.toLowerCase(),
       seriesName: card.seriesName.toLowerCase(),
       series: card.series.toLowerCase(),
-      needEnergyData: card.needEnergyData,
-      color: card.color.toLowerCase(),
-      apData: card.apData,
+      needEnergyData: card.needEnergyData ? Number(card.needEnergyData) : null,
+      color: card.color ? card.color.toLowerCase() : null,
+      apData: Number(card.apData),
       categoryData: card.categoryData.toLowerCase(),
-      bpData: card.bpData,
-      attributeData: card.attributeData,
-      generatedEnergyData: card.generatedEnergyData,
-      effectData: dashProp(parsedEffectData.text),
-      triggerData: dashProp(parsedTriggerData.text),
-      getInfoData: card.getInfoData,
-      format: card.format.toLowerCase(),
+      bpData: card.bpData ? Number(card.bpData) : null,
+      attributeData: card.attributeData ? card.attributeData : null,
+      generatedEnergyData: card.generatedEnergyData
+        ? Number(card.generatedEnergyData)
+        : null,
+      effectData: card.effectData ? dashProp(parsedEffectData.text) : null,
+      triggerData: card.triggerData ? dashProp(parsedTriggerData.text) : null,
+      getInfoData: card.getInfoData ? card.getInfoData : null,
     };
 
     const filePath = join(constructedDir, CARD_FILE_NAME);
     await writeFile(formattedCardData, filePath);
 
-    return cardDir;
+    return formattedCardData.name;
   } catch (e) {
     throw new Error(`Unable to save card ${card.name}: ${e}`);
   }

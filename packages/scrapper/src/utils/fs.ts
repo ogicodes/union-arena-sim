@@ -2,11 +2,6 @@ import { writeFile as fsWriteFile } from "fs/promises";
 import fs from "fs/promises";
 
 /**
- * Utility function to generate a file name
- * */
-export const getFileNames = async () => {};
-
-/**
  * Handles directory creation
  * */
 export const createDir = async (dirPath: string): Promise<void> => {
@@ -41,6 +36,11 @@ export const writeImage = async (
 ): Promise<void> => {
   try {
     const response = await fetch(url, { method: "GET" });
+
+    if (response.status === 404) {
+      console.warn(`Skipping: ${url} (404)`);
+      return;
+    }
 
     if (!response.ok) {
       throw new Error(`Failed to fetch image. Status: ${response.status}`);
