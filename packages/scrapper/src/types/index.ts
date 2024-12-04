@@ -46,4 +46,5 @@ export interface ParsedImage {
 export interface ParserResult {
   images: ParsedImage[];
   text: string[];
+  parserResultOrder: ("img" | "text_node")[];
 }

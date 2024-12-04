@@ -8,16 +8,10 @@ import { ParserResult } from "../types";
  * returns an object
  * */
 export const domParser = (data: string): ParserResult => {
-  const result: ParserResult = { images: [], text: [] };
+  const result: ParserResult = { images: [], text: [], parserResultOrder: [] };
 
   const dom = new JSDOM(data);
   const document = dom.window.document;
-
-  const images = Array.from(document.querySelectorAll("img"));
-  result.images = images.map((img) => ({
-    src: img.getAttribute("src") || "",
-    alt: img.getAttribute("alt") || "",
-  }));
 
   let currentNode: ChildNode | null = document.body.firstChild;
 
@@ -26,10 +20,21 @@ export const domParser = (data: string): ParserResult => {
       const textContent = currentNode.textContent?.trim();
       if (textContent) {
         result.text.push(textContent);
+        result.parserResultOrder.push("text_node");
+      }
+    } else if (currentNode.nodeType === dom.window.Node.ELEMENT_NODE) {
+      const element = currentNode as Element;
+      if (element.tagName === "IMG") {
+        result.images.push({
+          src: element.getAttribute("src") || "",
+          alt: element.getAttribute("alt") || "",
+        });
+        result.parserResultOrder.push("img");
       }
     }
     currentNode = currentNode.nextSibling;
   }
+
   return result;
 };
 
