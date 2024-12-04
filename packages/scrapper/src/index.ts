@@ -57,7 +57,7 @@ const main = async () => {
 };
 
 /**
- * Handles the saving of a card, returns the cardDir
+ * Handles the saving of a card, returns the card name
  * when completed successfully
  * */
 const saveCard = async (card: Card, dir: string): Promise<string> => {
@@ -108,7 +108,6 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
      * Saves the card data to the directory:
      * /foo/bar/card.json
      * */
-
     const formattedCardData: FormattedCard = {
       cardNo: card.cardNo,
       rarity: card.rarity ? card.rarity.toLowerCase() : null,

@@ -5,7 +5,7 @@ import { ParserResult } from "../types";
  * Takes data in the shape of a dom representation
  * (useful for the effectData, triggerData, etc) and
  * parses out the image src url, alt text and text nodes from it,
- * return this is an object
+ * returns an object
  * */
 export const domParser = (data: string): ParserResult => {
   const result: ParserResult = { images: [], text: [] };
