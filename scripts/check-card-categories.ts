@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import { join } from "path";
-import type { Card } from "../packages/scrapper/src/types/";
+import type { FormattedCard } from "../packages/scrapper/src/types/";
 
 /**
  * This CLI tools checks a directory of cards,
@@ -43,9 +43,9 @@ const findFile = async (
   return null;
 };
 
-const parseFile = async (path: string): Promise<Card> => {
+const parseFile = async (path: string): Promise<FormattedCard> => {
   const content = await fs.readFile(path, "utf8");
-  return JSON.parse(content) as Card;
+  return JSON.parse(content) as FormattedCard;
 };
 
 const dir = findArg("--dir");
