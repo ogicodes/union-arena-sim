@@ -3,20 +3,24 @@ import type { Card } from "../../types/index";
 export class Player {
   public id: string;
   public name: string;
-  public lifePoints: number;
+  public lifePoints: Card[];
   public deck: Card[];
   public hand: Card[];
   public removalArea: Card[];
   public sideline: Card[];
+  public mulligan: boolean;
+  public turnCount: number;
 
   constructor(name: string, deck: Card[]) {
     this.id = "hello"; // generate this later
     this.name = name;
-    this.lifePoints = 8000;
+    this.lifePoints = [];
     this.deck = this.shuffleDeck(deck);
     this.hand = [];
     this.removalArea = [];
     this.sideline = [];
+    this.mulligan = false;
+    this.turnCount = 1;
   }
 
   private shuffleDeck(deck: Card[]): Card[] {
@@ -33,10 +37,11 @@ export class Player {
       return null;
     }
     const card = this.deck.shift();
-    if (card) {
-      this.hand.push(card);
-    }
     return card || null;
+  }
+
+  addToHand(card: Card): void {
+    this.hand.push(card);
   }
 
   playCard(cardIndex: number): Card | null {
@@ -57,13 +62,19 @@ export class Player {
     this.removalArea.push(card);
   }
 
-  takeDamage(damage: number): void {
-    this.lifePoints -= damage;
+  setLifePoints(card: Card): void {
+    this.lifePoints.push(card);
+  }
+
+  takeDamage(cardIdx: number): void {
+    this.lifePoints[cardIdx].flip();
+
     console.log(`player took damage`);
   }
 
-  hasLast(): boolean {
-    return this.lifePoints <= 0;
+  hasLost(): boolean {
+    console.log(`You have lost. Goodbye.`);
+    return true;
   }
 
   getHand(): Card[] {
