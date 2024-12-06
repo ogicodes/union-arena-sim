@@ -26,18 +26,18 @@ const main = async () => {
       },
     ]);
 
-    // Useful if script starts hanging
+    // Useful if script starts hanging.
     const resumeIndex = answers.resumeIndex ? Number(answers.resumeIndex) : 0;
 
     /**
-     * Set the directory to save the data to
+     * Set the directory to save the data to.
      * */
     await createDir(answers.path);
 
     const data = await scrape(answers.url);
 
     /**
-     * Perform a loop to save each card into a dir
+     * Perform a loop to save each card into a dir.
      * */
     let saved = 0;
     for (let i = resumeIndex; i < data.length; i++) {
@@ -58,65 +58,67 @@ const main = async () => {
 
 /**
  * Handles the saving of a card, returns the card name
- * when completed successfully
+ * when completed successfully.
  * */
 const saveCard = async (card: Card, dir: string): Promise<string> => {
   try {
     /**
      * Creates a directory: /foo/bar/
      * Where foo is the inquierer dir,
-     * bar is the name of the card
+     * bar is the name of the card.
      * */
     const CARD_FILE_NAME: string = "card.json";
     const cardDir = card.name.split(" ").join("-").toLowerCase();
 
-    // Create the dir for the card
+    // Create the dir for the card.
     const constructedDir = join(dir, cardDir);
     await createDir(constructedDir);
 
-    // Create the dir for the card assets
+    // Create the dir for the card assets.
     const assetsDir = join(constructedDir, "assets");
     await createDir(assetsDir);
 
     /**
-     * Handle the images
+     * Save the main card image.
      * */
     const imagePath = join(constructedDir, `card-image.webp`);
     await writeImage(card.image, imagePath);
 
+    /**
+     * Save the effectData images.
+     * */
     const parsedEffectData = domParser(card.effectData);
+    for (let i = 0; i < parsedEffectData.images.length; i++) {
+      const effectDataImage = parsedEffectData.images[i].src;
+      const constructedImageName = `effect-${i}.webp`;
+      const constructedImagePath = `${assetsDir}/${constructedImageName}`;
+      await writeImage(effectDataImage, constructedImagePath);
+    }
     const builtEffectDataText = buildParsedOrder(
       parsedEffectData.parserResultOrder,
       parsedEffectData.images,
       parsedEffectData.text,
     );
-    if (card.effectData) {
-      for (let i = 0; i < parsedEffectData.images.length; i++) {
-        const effectDataImage = parsedEffectData.images[i].src;
-        const constructedImageName = `effect-${i}.webp`;
-        const constructedImagePath = `${assetsDir}/${constructedImageName}`;
-        await writeImage(effectDataImage, constructedImagePath);
-      }
-    }
 
+    /**
+     * Save the triggerData images.
+     * */
     const parsedTriggerData = domParser(card.triggerData);
+    for (let i = 0; i < parsedTriggerData.images.length; i++) {
+      const triggerDataImage = parsedTriggerData.images[i].src;
+      const constructedImageName = `trigger-${i}.webp`;
+      const constructedImagePath = `${assetsDir}/${constructedImageName}`;
+      await writeImage(triggerDataImage, constructedImagePath);
+    }
     const builtTriggerDataText = buildParsedOrder(
       parsedTriggerData.parserResultOrder,
       parsedTriggerData.images,
       parsedTriggerData.text,
     );
-    if (card.triggerData) {
-      for (let i = 0; i < parsedTriggerData.images.length; i++) {
-        const triggerDataImage = parsedTriggerData.images[i].src;
-        const constructedImageName = `trigger-${i}.webp`;
-        const constructedImagePath = `${assetsDir}/${constructedImageName}`;
-        await writeImage(triggerDataImage, constructedImagePath);
-      }
-    }
 
     /**
      * Saves the card data to the directory:
-     * /foo/bar/card.json
+     * /foo/bar/card.json.
      * */
     const formattedCardData: FormattedCard = {
       cardNo: card.cardNo,
@@ -133,9 +135,18 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
       generatedEnergyData: card.generatedEnergyData
         ? Number(card.generatedEnergyData)
         : null,
-      effectData: card.effectData !== "" ? dashProp(builtEffectDataText) : null,
+      effectData:
+        card.effectData !== ""
+          ? dashProp(builtEffectDataText)
+            ? dashProp(builtEffectDataText)
+            : null
+          : null,
       triggerData:
-        card.triggerData !== "" ? dashProp(builtTriggerDataText) : null,
+        card.triggerData !== ""
+          ? dashProp(builtTriggerDataText)
+            ? dashProp(builtTriggerDataText)
+            : null
+          : null,
       getInfoData: card.getInfoData ? card.getInfoData : null,
     };
 

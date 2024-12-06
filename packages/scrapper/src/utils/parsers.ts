@@ -16,7 +16,7 @@ export const domParser = (data: string): ParserResult => {
   let currentNode: ChildNode | null = document.body.firstChild;
 
   while (currentNode) {
-    if (currentNode.nodeType !== dom.window.Node.ELEMENT_NODE) {
+    if (currentNode.nodeType === dom.window.Node.TEXT_NODE) {
       const textContent = currentNode.textContent?.trim();
       if (textContent) {
         result.text.push(textContent);
@@ -26,8 +26,8 @@ export const domParser = (data: string): ParserResult => {
       const element = currentNode as Element;
       if (element.tagName === "IMG") {
         result.images.push({
-          src: element.getAttribute("src") || "",
-          alt: element.getAttribute("alt") || "",
+          src: element.getAttribute("src") as string,
+          alt: element.getAttribute("alt") as string,
         });
         result.parserResultOrder.push("img");
       }
@@ -50,7 +50,10 @@ export const domParser = (data: string): ParserResult => {
  * into a friendly standard format.
  * */
 export const dashProp = (data: string[]): string => {
-  return data.map((word) => word?.toLowerCase().replace(/\s+/g, "-")).join("%");
+  const str = data
+    .map((word) => word?.toLowerCase().replace(/\s+/g, "-"))
+    .join("%");
+  return str === "null" ? "" : str;
 };
 
 /**
