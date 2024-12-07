@@ -1,4 +1,4 @@
-import type { Card } from "../../types/index";
+import type { Card, ActionPointCard } from "../../types/index";
 
 export class Player {
   public id: string;
@@ -6,12 +6,14 @@ export class Player {
   public lifePoints: Card[];
   public deck: Card[];
   public hand: Card[];
+  public actionPoints: ActionPointCard[];
   public removalArea: Card[];
   public sideline: Card[];
   public mulligan: boolean;
   public turnCount: number;
+  public payApToDraw: boolean;
 
-  constructor(name: string, deck: Card[]) {
+  constructor(name: string, deck: Card[], actionPoints: ActionPointCard[]) {
     this.id = "hello"; // generate this later
     this.name = name;
     this.lifePoints = [];
@@ -21,6 +23,8 @@ export class Player {
     this.sideline = [];
     this.mulligan = false;
     this.turnCount = 1;
+    this.payApToDraw = false;
+    this.actionPoints = actionPoints;
   }
 
   private shuffleDeck(deck: Card[]): Card[] {

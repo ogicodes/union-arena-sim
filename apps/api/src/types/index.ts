@@ -3,12 +3,14 @@ import { Player as PlayerClass } from "../engine/components/Player";
 import { GameState as GameStateClass } from "../engine/core/GameState";
 import { TurnManager as TurnManagerClass } from "../engine/core/TurnManager";
 import { GameEngine as GameEngineClass } from "../engine/core/GameEngine";
+import { ActionPointCard as ActionPointCardClass } from "../engine/components/ActionPointCard";
 
 export type Card = InstanceType<typeof CardClass>;
 export type Player = InstanceType<typeof PlayerClass>;
 export type GameState = InstanceType<typeof GameStateClass>;
 export type TurnManager = InstanceType<typeof TurnManagerClass>;
 export type GameEngine = InstanceType<typeof GameEngineClass>;
+export type ActionPointCard = InstanceType<typeof ActionPointCardClass>;
 
 export type Phases =
   | "Start Phase"
@@ -71,6 +73,7 @@ export type ActivationTimingAbility =
   | "During Your Turn"
   | "During Opponents Turn"
   | "Activate: Main"
+  | "Raid"
   | "None";
 
 export type ActivationCondition =
@@ -82,3 +85,31 @@ export type ActivationCondition =
   | "SideLine This Card"
   | "Once Per Turn"
   | "None";
+
+export interface FormattedCard {
+  cardNo: string;
+  rarity: string | null;
+  name: string;
+  seriesName: string;
+  series: string;
+  needEnergyData: number | null;
+  color: string | null;
+  apData: number;
+  categoryData: string;
+  bpData: number | null;
+  attributeData: string | null;
+  generatedEnergyData: number | null;
+  effectData: string | null;
+  triggerData: string | null;
+  getInfoData: string | null;
+}
+
+export interface GameBoard {
+  frontLine: (Card | null)[];
+  energyLine: (Card | null)[];
+  actionPointsLine: ActionPointCard[];
+}
+
+export interface PlayerState {
+  player: Player;
+}

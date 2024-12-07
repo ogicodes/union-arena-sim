@@ -1,14 +1,29 @@
-import { GameState, Phases } from "../../types";
-
+import { GameBoard, GameState, Phases, Player } from "../../types";
+import { Card } from "../components/Card";
+import {
+  getRaidTarget,
+  parseEffects,
+  containsRaid,
+} from "../../utils/parse-effects";
 export class TurnManager {
   public phase: Phases;
   private gameState: GameState;
-  public payApToDraw: boolean;
+  private currentPlayer: Player;
+  private currentPlayerBoard: GameBoard;
 
   constructor(gamestate: GameState) {
     this.phase = "Start Phase";
     this.gameState = gamestate;
-    payApToDraw = false;
+    this.currentPlayer = gamestate.getActivePlayer();
+
+    // Add null check and throw meaningful error if board is not initialized
+    const board = gamestate.getBoard(this.currentPlayer.id);
+    if (!board) {
+      throw new Error(
+        `Board not initialized for player ${this.currentPlayer.id}`
+      );
+    }
+    this.currentPlayerBoard = board;
   }
 
   public nextPhase(): void {
@@ -34,60 +49,317 @@ export class TurnManager {
         this.phase = "Attack Phase";
         break;
       case "End Phase":
-        this.handleEndPhase();
+        this.handleEndPhase([0]);
         console.log("End phase actions");
         this.phase = "End Phase";
         break;
     }
   }
 
+  /** Start Phase
+   * handles events that happen in start phase
+   */
   private handleStartPhase(): void {
-    // abilities that state they are active until the start of your next turn, and other similarly phrased abilities, become inactive.
-
-    // Switch all resting cards to active
-    this.gameState.getActivePlayer().frontLine.card.activateCard()
-    this.gameState.getActivePlayer().energyLine.card.activateCard()
-
-    //Make sure you have the appropriate number of AP cards in your AP area for the current turn
-    if (this.gameState.turnCount === 1) {
-      this.gameState.getActivePlayer().actionPointsLine = 1 
-      this.gameState.getActivePlayer().actionPointsLine.card.activateCard
-      console.log(`AP count is 1`)
-    } if (this.gameState.turnCount === 2 || 3 || 4) {
-      this.gameState.getActivePlayer().actionPointsLine = 2 
-      this.gameState.getActivePlayer().actionPointsLine.card.activateCard
-      console.log(`AP count is 3`)
-    } else {
-      this.gameState.getActivePlayer().actionPointsLine = 3 
-      this.gameState.getActivePlayer().actionPointsLine.card.activateCard
-      console.log(`AP count is 3`)
+    /**
+     * abilities that state they are active until the start of your next turn, and other similarly phrased abilities, become inactive.
+     */
+    if (
+      this.currentPlayerBoard.frontLine &&
+      this.currentPlayerBoard.energyLine
+    ) {
+      for (let i = 0; i < this.currentPlayerBoard.frontLine.length; i++) {
+        const card = this.currentPlayerBoard.frontLine[i];
+        if (card) {
+          card.deactivateCardEffect();
+        }
+      }
+      for (let i = 0; i < this.currentPlayerBoard.energyLine.length; i++) {
+        const card = this.currentPlayerBoard.energyLine[i];
+        if (card) {
+          card.deactivateCardEffect();
+        }
+      }
+    }
+    /**
+     * Switch all resting cards to active
+     */
+    if (
+      this.currentPlayerBoard.frontLine &&
+      this.currentPlayerBoard.energyLine &&
+      this.currentPlayerBoard.actionPointsLine
+    ) {
+      this.currentPlayerBoard.frontLine.map((card) => {
+        if (card) {
+          card.activateCard();
+        }
+      });
+      this.currentPlayerBoard.energyLine.map((card) => {
+        if (card) {
+          card.activateCard();
+        }
+      });
+      this.currentPlayerBoard.actionPointsLine.map((card) => {
+        if (card) {
+          card.activateCard();
+        }
+      });
     }
 
-    // Draw a card (player 1 does not draw in their first turn)
+    /**
+     * Make sure you have the appropriate number of AP cards in your AP area for the current turn
+     */
+    switch (this.gameState.turnCount) {
+      case 1:
+        this.currentPlayerBoard.actionPointsLine[0].flip();
+        console.log(`AP count is 1`);
+        break;
+      case 2:
+      case 3:
+      case 4:
+        this.currentPlayerBoard.actionPointsLine[1].flip();
+        console.log(`AP count is 2`);
+        break;
+      default:
+        this.currentPlayerBoard.actionPointsLine[0].flip();
+        this.currentPlayerBoard.actionPointsLine[1].flip();
+        this.currentPlayerBoard.actionPointsLine[2].flip();
+        console.log(`AP count is 3`);
+        break;
+    }
+
+    /**
+     * Draw a card (player 1 does not draw in their first turn)
+     */
     if (this.gameState.turnCount > 1) {
       this.gameState.getActivePlayer().drawCard();
     }
     // Once per turn you may pay 1 AP (by switching an AP card to resting) to draw a card
-    if (payApToDraw === true) {
-      this.gameState.getActivePlayer().actionPointsLine[0].card.restCard()
-      this.gamestate.getActivePlayer().drawCard()
+    if (this.currentPlayer.payApToDraw) {
+      this.currentPlayerBoard.actionPointsLine[0].restCard();
+      this.currentPlayer.drawCard();
     }
   }
 
-  private handleMovementPhase(): void {
-    // You may move any number of characters from your Energy line to your Front line. if you do not have enough space on your Front line for all characters, you must move characters from your Front line to your removal area first
+  /** Movement Phase
+   * handles events that happen in movement phase
+   */
+  private handleMovementPhase(cardIdx?: number): void {
+    /**
+     * You may move any number of characters from your Energy line to your Front line.
+     * if you do not have enough space on your Front line for all characters,
+     * you must move characters from your Front line to your removal area first
+     */
+    // Count available space in front line
+    let frontLineSpace = 0;
+    for (let i = 0; i < this.currentPlayerBoard.frontLine.length; i++) {
+      if (!this.currentPlayerBoard.frontLine[i]) {
+        frontLineSpace++;
+      }
+    }
+
+    // If user selected a card to remove and front line is full
+    if (cardIdx !== undefined && frontLineSpace === 0) {
+      const selectedCard = this.currentPlayerBoard.frontLine[cardIdx];
+      if (selectedCard) {
+        this.currentPlayer.sendToRemovalArea(selectedCard);
+        this.currentPlayerBoard.frontLine[cardIdx] = null;
+      }
+    }
+
+    // Now handle moving cards from energy line to front line
+    // Move selected cards from energy line to front line if space available
+    // This would likely be handled by a separate method call from the frontend
+    // when the user selects which energy cards to move
+    // Move selected cards from energy line to front line if space available
+    if (cardIdx !== undefined) {
+      const selectedCard = this.currentPlayerBoard.energyLine[cardIdx];
+      if (selectedCard) {
+        // Find first empty slot in front line
+        const emptySlotIdx = this.currentPlayerBoard.frontLine.findIndex(
+          (slot) => slot === null
+        );
+
+        if (emptySlotIdx !== -1) {
+          // Move card from energy to front line
+          this.currentPlayerBoard.frontLine[emptySlotIdx] = selectedCard;
+          this.currentPlayerBoard.energyLine[cardIdx] = null;
+        }
+      }
+    }
   }
 
-  private handleMainPhase(): void {
-    // any of these can happen in any order
-    // play a card from your hand to your Energy line
-    // play a card from your hand to your Front line
+  /** Main Phase
+   * handles events that happen in main phase
+   */
+  public handleMainPhase(cardIdx?: number): void {
+    // Play a card from hand to energy line
+    if (cardIdx !== undefined) {
+      const selectedCard = this.currentPlayer.hand[cardIdx];
+      if (selectedCard) {
+        // Check if we have enough energy for the card
+        const requiredEnergy = selectedCard.needEnergyData || 0;
+        const availableEnergy = this.currentPlayerBoard.energyLine.reduce(
+          (total, card) => {
+            return total + (card?.generatedEnergyData || 0);
+          },
+          0
+        );
+
+        // Check if we have enough action points
+        const requiredAP = selectedCard.apCost || 0;
+        const availableAP = this.currentPlayerBoard.actionPointsLine.reduce(
+          (total, ap) => {
+            return total + (!ap.isRested ? 1 : 0);
+          },
+          0
+        );
+
+        if (availableEnergy >= requiredEnergy && availableAP >= requiredAP) {
+          // Find first empty slot in energy line
+          const emptyEnergySlot = this.currentPlayerBoard.energyLine.findIndex(
+            (slot) => slot === null
+          );
+
+          if (emptyEnergySlot !== -1) {
+            // Move card from hand to energy line
+            this.currentPlayerBoard.energyLine[emptyEnergySlot] = selectedCard;
+            this.currentPlayer.hand.splice(cardIdx, 1);
+
+            // Use up required action points
+            let apUsed = 0;
+            this.currentPlayerBoard.actionPointsLine.forEach((ap) => {
+              if (apUsed < requiredAP && !ap.isRested) {
+                ap.isRested = true;
+                apUsed++;
+              }
+            });
+          }
+        }
+      }
+    }
+
+    // Play a card from hand to front line
+    if (cardIdx !== undefined) {
+      const selectedCard = this.currentPlayer.hand[cardIdx];
+      if (selectedCard) {
+        // Check if we have enough energy for the card
+        const requiredEnergy = selectedCard.needEnergyData || 0;
+        const availableEnergy = this.currentPlayerBoard.energyLine.reduce(
+          (total, card) => {
+            return total + (card?.generatedEnergyData || 0);
+          },
+          0
+        );
+
+        if (availableEnergy >= requiredEnergy) {
+          // Find first empty slot in front line
+          const emptyFrontSlot = this.currentPlayerBoard.frontLine.findIndex(
+            (slot) => slot === null
+          );
+
+          if (emptyFrontSlot !== -1) {
+            // Move card from hand to front line
+            this.currentPlayerBoard.frontLine[emptyFrontSlot] = selectedCard;
+            this.currentPlayer.hand.splice(cardIdx, 1);
+          }
+        }
+      }
+    }
+
+    // Check for "When Played" activation timing ability on the newly played card
+    const checkForWhenPlayedAbility = (card: Card) => {
+      if (card.activationTimingAbility === "When Played") {
+        card.activateCardEffect();
+      }
+    };
+
+    // Check both front line and energy line for newly played cards
+    const lastPlayedFrontCard = this.currentPlayerBoard.frontLine.find(
+      (card) => card !== null
+    );
+    const lastPlayedEnergyCard = this.currentPlayerBoard.energyLine.find(
+      (card) => card !== null
+    );
+
+    if (lastPlayedFrontCard) {
+      checkForWhenPlayedAbility(lastPlayedFrontCard);
+    }
+
+    if (lastPlayedEnergyCard) {
+      checkForWhenPlayedAbility(lastPlayedEnergyCard);
+    }
+
     // perform Raid on a card
-    // Play a site card
-    // play an event card
+    if (cardIdx !== undefined) {
+      const selectedCard = this.currentPlayer.hand[cardIdx];
+      if (selectedCard) {
+        if (selectedCard.activationTimingAbility === "Raid") {
+          // Check front line and energy line for matching raid target
+          const parsedEffect = parseEffects(selectedCard.effectData);
+          const raidTarget = getRaidTarget(parsedEffect);
+          const frontLineMatch = this.currentPlayerBoard.frontLine.some(
+            (card) => card?.name === raidTarget
+          );
+          const energyLineMatch = this.currentPlayerBoard.energyLine.some(
+            (card) => card?.name === raidTarget
+          );
+
+          if (frontLineMatch && energyLineMatch) {
+            // Find the raid target card position
+            const frontLineTargetIdx =
+              this.currentPlayerBoard.frontLine.findIndex(
+                (card) => card?.name === raidTarget
+              );
+            const energyLineTargetIdx =
+              this.currentPlayerBoard.energyLine.findIndex(
+                (card) => card?.name === raidTarget
+              );
+
+            // If target is in energy line, move both cards to front line
+            if (energyLineTargetIdx !== -1) {
+              const emptyFrontSlot =
+                this.currentPlayerBoard.frontLine.findIndex(
+                  (card) => card === null
+                );
+
+              if (emptyFrontSlot !== -1) {
+                // Move raid target from energy to front
+                const targetCard =
+                  this.currentPlayerBoard.energyLine[energyLineTargetIdx];
+                this.currentPlayerBoard.frontLine[emptyFrontSlot] = targetCard;
+                this.currentPlayerBoard.energyLine[energyLineTargetIdx] = null;
+
+                // Play raiding card on top of target
+                if (targetCard) {
+                  targetCard.raidCard();
+                  this.currentPlayerBoard.frontLine[emptyFrontSlot] =
+                    selectedCard;
+                  this.currentPlayer.hand.splice(cardIdx, 1);
+                }
+              }
+            }
+            // If target is in front line, play raiding card on top of it
+            else if (frontLineTargetIdx !== -1) {
+              const targetCard =
+                this.currentPlayerBoard.frontLine[frontLineTargetIdx];
+              if (targetCard) {
+                targetCard.raidCard();
+                this.currentPlayerBoard.frontLine[frontLineTargetIdx] =
+                  selectedCard;
+                this.currentPlayer.hand.splice(cardIdx, 1);
+              }
+            }
+          }
+        }
+      }
+    }
+
     // use the Activate: Main ability of a card
   }
 
+  /** Attack Phase
+   * handles events that happen in attack phase
+   */
   private handleAttackPhase(): void {
     // You can attack with one active character on your front line at a time, and you must switch it to resting when it attacks. If you still have active characters after you complete an attack you can attack with them in the same manner
     // you can only target your opponents life points with your attacks
@@ -95,19 +367,51 @@ export class TurnManager {
     // you do not pay AP when attacking
   }
 
-  private handleEndPhase(): void {
+  /** End Phase
+   * handles events that happen in end phase
+   */
+  private handleEndPhase(cardIdxs: number[]): void {
     // if there are any abilities that activate at the start of the end phase, activate and resolve them now.
 
-    // switch all resting cards to active.
-    this.gameState.getActivePlayer().frontLine.card.activateCard()
-    this.gameState.getActivePlayer().energyLine.card.activateCard()
-    this.gameState.getActivePlayer().actionPointsLine.card.activateCard()
-
-    // if you have more than 8 cards in your hand, chose cards to discard until you have 8 cards in your hand
-    if (this.gameState.getActivePlayer().hand > 8 ) {
-      this.gamestate.getActivePlayer().hand.card.sendToRemovalArea()
+    /**
+     * Switch all resting cards to active
+     */
+    if (
+      this.currentPlayerBoard.frontLine &&
+      this.currentPlayerBoard.energyLine &&
+      this.currentPlayerBoard.actionPointsLine
+    ) {
+      this.currentPlayerBoard.frontLine.map((card) => card?.activateCard());
+      this.currentPlayerBoard.energyLine.map((card) => card?.activateCard());
+      this.currentPlayerBoard.actionPointsLine.map((card) =>
+        card?.activateCard()
+      );
     }
 
-    // any abilities that state that they are active until the end of the turn now become inactive
+    /**
+     * if you have more than 8 cards in your hand, chose cards to discard until you have 8 cards in your hand
+     */
+    if (this.currentPlayer.hand.length > 8) {
+      // discard cards
+      for (let i = 0; i < this.currentPlayer.hand.length - 8; i++) {
+        const [card] = this.currentPlayer.hand.splice(cardIdxs[i], 1);
+        this.currentPlayer.sendToRemovalArea(card);
+      }
+    }
+
+    /**
+     * any abilities that state that they are active until the end of the turn now become inactive
+     */
+    if (
+      this.currentPlayerBoard.frontLine &&
+      this.currentPlayerBoard.energyLine
+    ) {
+      this.currentPlayerBoard.frontLine.map((card) =>
+        card?.deactivateCardEffect()
+      );
+      this.currentPlayerBoard.energyLine.map((card) =>
+        card?.deactivateCardEffect()
+      );
+    }
   }
 }

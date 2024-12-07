@@ -1,4 +1,10 @@
-import type { Player, Card, Phases } from "../../types";
+import type {
+  Player,
+  Card,
+  Phases,
+  GameBoard,
+  ActionPointCard,
+} from "../../types";
 
 export class GameState {
   players: Player[];
@@ -7,7 +13,11 @@ export class GameState {
   phase: Phases;
   board: Map<
     string,
-    { frontLine: Card[]; energyLine: Card[]; actionPointsLine: Card[] }
+    {
+      frontLine: Card[];
+      energyLine: Card[];
+      actionPointsLine: ActionPointCard[];
+    }
   >;
   deck: Map<string, Card[]>;
   sideline: Map<string, Card[]>;
@@ -37,7 +47,7 @@ export class GameState {
       this.board.set(player.id, {
         frontLine: new Array(4).fill(null),
         energyLine: new Array(4).fill(null),
-        actionPointsLine: new Array(3).fill(null),
+        actionPointsLine: player.actionPoints,
       });
 
       // empty sidelines
@@ -94,5 +104,14 @@ export class GameState {
   endGame(): void {
     this.gameOver = true;
     console.log(`game over`);
+  }
+
+  /**
+   * this method will return the board of the player with the given id
+   * @param playerId
+   * @returns {GameBoard}
+   */
+  getBoard(playerId: string): GameBoard {
+    return this.board.get(playerId)!;
   }
 }

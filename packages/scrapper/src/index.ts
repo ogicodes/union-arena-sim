@@ -48,7 +48,7 @@ const main = async () => {
     }
 
     console.info(
-      `${saved}/${data.length} @ ${((saved / data.length) * 100).toFixed(2)}%`,
+      `${saved}/${data.length} @ ${((saved / data.length) * 100).toFixed(2)}%`
     );
   } catch (e) {
     console.error("An error occurred:", e);
@@ -62,64 +62,55 @@ const main = async () => {
  * */
 const saveCard = async (card: Card, dir: string): Promise<string> => {
   try {
-    /**
-     * Creates a directory: /foo/bar/
-     * Where foo is the inquierer dir,
-     * bar is the name of the card.
-     * */
     const CARD_FILE_NAME: string = "card.json";
-    const cardDir = card.name.split(" ").join("-").toLowerCase();
+    const cardDir = card.cardNo
+      .split(" ")
+      .join("-")
+      .toLowerCase()
+      .replace(/[<>:"\/\\|?*]/g, "");
 
-    // Create the dir for the card.
+    // Create directories
     const constructedDir = join(dir, cardDir);
-    await createDir(constructedDir);
-
-    // Create the dir for the card assets.
     const assetsDir = join(constructedDir, "assets");
-    await createDir(assetsDir);
+    await Promise.all([createDir(constructedDir), createDir(assetsDir)]);
 
-    /**
-     * Save the main card image.
-     * */
-    const imagePath = join(constructedDir, `card-image.webp`);
-    await writeImage(card.image, imagePath);
+    // Parse effect and trigger data first
+    const [parsedEffectData, parsedTriggerData] = await Promise.all([
+      domParser(card.effectData),
+      domParser(card.triggerData),
+    ]);
 
-    /**
-     * Save the effectData images.
-     * */
-    const parsedEffectData = domParser(card.effectData);
-    for (let i = 0; i < parsedEffectData.images.length; i++) {
-      const effectDataImage = parsedEffectData.images[i].src;
-      const constructedImageName = `effect-${i}.webp`;
-      const constructedImagePath = `${assetsDir}/${constructedImageName}`;
-      await writeImage(effectDataImage, constructedImagePath);
-    }
+    // Prepare all image saving promises
+    const imagePromises = [
+      // Main card image
+      writeImage(card.image, join(constructedDir, `card-image.webp`)),
+
+      // Effect images
+      ...parsedEffectData.images.map((img, i) =>
+        writeImage(img.src, join(assetsDir, `effect-${i}.webp`))
+      ),
+
+      // Trigger images
+      ...parsedTriggerData.images.map((img, i) =>
+        writeImage(img.src, join(assetsDir, `trigger-${i}.webp`))
+      ),
+    ];
+
+    // Wait for all images to be saved
+    await Promise.all(imagePromises);
+
     const builtEffectDataText = buildParsedOrder(
       parsedEffectData.parserResultOrder,
       parsedEffectData.images,
-      parsedEffectData.text,
+      parsedEffectData.text
     );
 
-    /**
-     * Save the triggerData images.
-     * */
-    const parsedTriggerData = domParser(card.triggerData);
-    for (let i = 0; i < parsedTriggerData.images.length; i++) {
-      const triggerDataImage = parsedTriggerData.images[i].src;
-      const constructedImageName = `trigger-${i}.webp`;
-      const constructedImagePath = `${assetsDir}/${constructedImageName}`;
-      await writeImage(triggerDataImage, constructedImagePath);
-    }
     const builtTriggerDataText = buildParsedOrder(
       parsedTriggerData.parserResultOrder,
       parsedTriggerData.images,
-      parsedTriggerData.text,
+      parsedTriggerData.text
     );
 
-    /**
-     * Saves the card data to the directory:
-     * /foo/bar/card.json.
-     * */
     const formattedCardData: FormattedCard = {
       cardNo: card.cardNo,
       rarity: card.rarity ? card.rarity.toLowerCase() : null,
@@ -150,9 +141,7 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
       getInfoData: card.getInfoData ? card.getInfoData : null,
     };
 
-    const filePath = join(constructedDir, CARD_FILE_NAME);
-    await writeFile(formattedCardData, filePath);
-
+    await writeFile(formattedCardData, join(constructedDir, CARD_FILE_NAME));
     return formattedCardData.name;
   } catch (e) {
     throw new Error(`Unable to save card ${card.name}: ${e}`);
