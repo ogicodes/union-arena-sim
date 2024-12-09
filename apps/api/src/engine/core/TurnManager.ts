@@ -354,17 +354,66 @@ export class TurnManager {
       }
     }
 
-    // use the Activate: Main ability of a card
+    // use the Activate: Main ability of a card on the front line or energy line
+    // check the frontline and energyline for cards with the Activate: Main ability
+    const frontLineCard = this.currentPlayerBoard.frontLine.find(
+      (card) => card?.activationTimingAbility === "Activate: Main"
+    );
+    const energyLineCard = this.currentPlayerBoard.energyLine.find(
+      (card) => card?.activationTimingAbility === "Activate: Main"
+    );
+
+    if (frontLineCard) {
+      frontLineCard.activateCardEffect();
+    }
+    if (energyLineCard) {
+      energyLineCard.activateCardEffect();
+    }
   }
 
   /** Attack Phase
    * handles events that happen in attack phase
    */
-  private handleAttackPhase(): void {
-    // You can attack with one active character on your front line at a time, and you must switch it to resting when it attacks. If you still have active characters after you complete an attack you can attack with them in the same manner
-    // you can only target your opponents life points with your attacks
-    // cards can not be used during your attack phase
-    // you do not pay AP when attacking
+  private handleAttackPhase(attackingCardIdx?: number): void {
+    if (attackingCardIdx === undefined) return;
+
+    const attackingCard = this.currentPlayerBoard.frontLine[attackingCardIdx];
+    if (!attackingCard || attackingCard.isRested) return;
+
+    const opponent = this.gameState.getInactivePlayer();
+    const effects = parseEffects(attackingCard.effectData);
+    const hasSnipe = effects.some((effect) => effect.includes("Snipe"));
+    const hasDamage2 = effects.some((effect) => effect.includes("Damage 2"));
+    const damage = hasDamage2 ? 2 : 1;
+
+    if (!hasSnipe) {
+      // Handle life point damage
+      for (let i = 0; i < damage; i++) {
+        const lifeCard = opponent.lifePoints.pop();
+        if (!lifeCard) {
+          this.gameState.endGame();
+          return;
+        }
+
+        // Check for trigger effects
+        const cardEffects = parseEffects(lifeCard.effectData);
+        if (cardEffects.some((effect) => effect.includes("Trigger"))) {
+          console.log(`${lifeCard.name} trigger effect activated!`);
+          // TODO: Handle trigger resolution
+        }
+
+        // Move to removal area
+        const removalArea = this.gameState.RemovalArea.get(opponent.id);
+        if (removalArea) {
+          removalArea.push(lifeCard);
+        }
+      }
+      console.log(
+        `${attackingCard.name} attacked life points. Opponent has ${opponent.lifePoints.length} life points remaining`
+      );
+    }
+
+    attackingCard.restCard();
   }
 
   /** End Phase

@@ -114,4 +114,12 @@ export class GameState {
   getBoard(playerId: string): GameBoard {
     return this.board.get(playerId)!;
   }
+
+  public getInactivePlayer(): Player {
+    return (
+      this.players.find(
+        (p) => p.id !== this.players[this.activePlayerIndex].id
+      ) || this.players[0]
+    );
+  }
 }
