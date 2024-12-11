@@ -2,12 +2,12 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon",
+    "dev": "tsc-watch -p tsconfig.json --onSuccess \"npm run start\"",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js"
+    "start": "node ./build/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,14 +17,13 @@
     "@types/express": "^5.0.0",
     "@types/node": "^20.17.6",
     "@types/ws": "^8.5.13",
-    "nodemon": "^3.1.7",
     "rimraf": "^6.0.1",
-    "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.1",
+    "tsc-watch": "^6.2.1",
     "ws": "^8.18.0"
   }
 }
