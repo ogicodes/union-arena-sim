@@ -2,13 +2,12 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "./build/index.js",
   "scripts": {
     "test": "jest",
-    "dev": "npx nodemon",
+    "dev": "tsc-watch -p tsconfig.json --onSuccess \"npm run start\"",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js"
+    "start": "node ./build/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,21 +16,19 @@
     "@jest/globals": "^29.7.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^20.14.8",
-    "jest": "^29.7.0",
-    "nodemon": "^3.1.7",
-    "prisma": "^5.22.0",
+    "@types/node": "^20.17.6",
+    "@types/ws": "^8.5.13",
     "rimraf": "^6.0.1",
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@prisma/client": "^5.22.0",
-    "@types/express-ws": "^3.0.5",
     "cors": "^2.8.5",
     "express": "^4.21.1",
-    "express-ws": "^5.0.2"
+    "tsc-watch": "^6.2.1",
+    "ws": "^8.18.0"
   }
 }
