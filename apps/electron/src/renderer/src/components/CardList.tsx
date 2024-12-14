@@ -1,136 +1,32 @@
-import cardOne from '../assets/cards/UE03ST_JJK-1-036.png'
-import cardTwo from '../assets/cards/UE03ST_JJK-1-037.png'
-import cardThree from '../assets/cards/UE03ST_JJK-1-044.png'
-import cardFour from '../assets/cards/UE03ST_JJK-1-045.png'
-import cardFive from '../assets/cards/UE03ST_JJK-1-056.png'
-import cardSix from '../assets/cards/UE03ST_JJK-1-058.png'
-import cardSeven from '../assets/cards/UE03ST_JJK-1-062.png'
-import cardEight from '../assets/cards/UE03ST_JJK-1-063.png'
-import cardNine from '../assets/cards/UE03ST_JJK-1-067.png'
-import cardTen from '../assets/cards/UE03ST_JJK-1-101.png'
-import cardEleven from '../assets/cards/UE03ST_JJK-1-102.png'
-import cardTwelve from '../assets/cards/UE03ST_JJK-1-103.png'
-import cardThirteen from '../assets/cards/UE03ST_JJK-1-104.png'
-import cardFourteen from '../assets/cards/UE03ST_JJK-1-105.png'
-import cardFifteen from '../assets/cards/UE03ST_JJK-1-106.png'
-import cardSixteen from '../assets/cards/UE03ST_JJK-1-107.png'
-import cardSeventeen from '../assets/cards/UE03ST_JJK-1-108.png'
-import cardEighteen from '../assets/cards/UE03ST_JJK-1-109.png'
+import type { CardData } from '../types'
 
 interface CardListProps {
   onImageClick: (image: string) => void
   onImageDoubleClick: (image: string) => void
+  cards: CardData[]
 }
 
-const CardList: React.FC<CardListProps> = ({ onImageClick, onImageDoubleClick }) => {
-  const images: string[] = [
-    cardOne,
-    cardTwo,
-    cardThree,
-    cardFour,
-    cardFive,
-    cardSix,
-    cardSeven,
-    cardEight,
-    cardNine,
-    cardTen,
-    cardEleven,
-    cardTwelve,
-    cardThirteen,
-    cardFourteen,
-    cardFifteen,
-    cardSixteen,
-    cardSeventeen,
-    cardEighteen,
-    cardOne,
-    cardTwo,
-    cardThree,
-    cardFour,
-    cardFive,
-    cardSix,
-    cardSeven,
-    cardEight,
-    cardNine,
-    cardTen,
-    cardEleven,
-    cardTwelve,
-    cardThirteen,
-    cardFourteen,
-    cardFifteen,
-    cardSixteen,
-    cardSeventeen,
-    cardEighteen,
-    cardOne,
-    cardTwo,
-    cardThree,
-    cardFour,
-    cardFive,
-    cardSix,
-    cardSeven,
-    cardEight,
-    cardNine,
-    cardTen,
-    cardEleven,
-    cardTwelve,
-    cardThirteen,
-    cardFourteen,
-    cardFifteen,
-    cardSixteen,
-    cardSeventeen,
-    cardEighteen,
-    cardOne,
-    cardTwo,
-    cardThree,
-    cardFour,
-    cardFive,
-    cardSix,
-    cardSeven,
-    cardEight,
-    cardNine,
-    cardTen,
-    cardEleven,
-    cardTwelve,
-    cardThirteen,
-    cardFourteen,
-    cardFifteen,
-    cardSixteen,
-    cardSeventeen,
-    cardEighteen,
-    cardOne,
-    cardTwo,
-    cardThree,
-    cardFour,
-    cardFive,
-    cardSix,
-    cardSeven,
-    cardEight,
-    cardNine,
-    cardTen,
-    cardEleven,
-    cardTwelve,
-    cardThirteen,
-    cardFourteen,
-    cardFifteen,
-    cardSixteen,
-    cardSeventeen,
-    cardEighteen
-  ]
+const CardList: React.FC<CardListProps> = ({ onImageClick, onImageDoubleClick, cards }) => {
+  // Function to convert asset path to proper URL
+  const getImageUrl = (imagePath: string) => {
+    return `/src/${imagePath}` // Adjust the prefix based on your setup
+  }
 
   return (
     <div
       className="h-full w-full overflow-y-scroll p-4 rounded-3xl flex flex-wrap gap-4"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
-      {images.map((image, index) => (
+      {cards.map((card, index) => (
         <img
           key={index}
-          src={image}
+          src={getImageUrl(card.imagePath)}
           alt={`Image ${index + 1}`}
           className="rounded-md h-36 cursor-pointer"
-          onClick={() => onImageClick(image)}
-          onDoubleClick={() => onImageDoubleClick(image)}
-          draggable="true" 
-          onDragStart={(e) => e.dataTransfer.setData('text/plain', image)} 
+          onClick={() => onImageClick(card.imagePath)}
+          onDoubleClick={() => onImageDoubleClick(card.imagePath)}
+          draggable="true"
+          onDragStart={(e) => e.dataTransfer.setData('text/plain', card.imagePath)}
         />
       ))}
     </div>

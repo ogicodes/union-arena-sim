@@ -10,8 +10,7 @@ import {
   Preview,
   Rules
 } from './PlayArea'
-import cardBack from '../assets/cards/card_back.png'
-import cardFront from '../assets/cards/UE03ST_JJK-1-036.png'
+import cardBack from '../assets/card_back.png'
 import rules from '../assets/abilities.png'
 import { useState } from 'react'
 
@@ -30,7 +29,7 @@ const GameLobby = () => {
 
         <Hand
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={410}
           groupOffsetX={100}
           cards={playAreaCards}
@@ -38,7 +37,7 @@ const GameLobby = () => {
         />
         <Life
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={515}
           groupOffsetX={140}
           cards={playAreaCards}
@@ -46,7 +45,7 @@ const GameLobby = () => {
         />
         <ActionPoints
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={430}
           groupOffsetX={518}
           cards={playAreaCards}
@@ -54,7 +53,7 @@ const GameLobby = () => {
         />
         <EnergyArea
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={275}
           groupOffsetX={440}
           cards={playAreaCards}
@@ -62,7 +61,7 @@ const GameLobby = () => {
         />
         <FrontLine
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={120}
           groupOffsetX={440}
           cards={playAreaCards}
@@ -70,7 +69,7 @@ const GameLobby = () => {
         />
         <Deck
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={125}
           groupOffsetX={1100}
           cards={playAreaCards}
@@ -78,7 +77,7 @@ const GameLobby = () => {
         />
         <DiscardPile
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={280}
           groupOffsetX={1100}
           cards={playAreaCards}
@@ -86,7 +85,7 @@ const GameLobby = () => {
         />
         <Graveyard
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={450}
           groupOffsetX={1100}
           cards={playAreaCards}
@@ -97,7 +96,7 @@ const GameLobby = () => {
 
         <Hand
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-400}
           groupOffsetX={1300}
           cards={playAreaCards}
@@ -105,7 +104,7 @@ const GameLobby = () => {
         />
         <Life
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={200}
           groupOffsetX={1340}
           cards={playAreaCards}
@@ -113,7 +112,7 @@ const GameLobby = () => {
         />
         <ActionPoints
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-400}
           groupOffsetX={518}
           cards={playAreaCards}
@@ -121,7 +120,7 @@ const GameLobby = () => {
         />
         <EnergyArea
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-240}
           groupOffsetX={440}
           cards={playAreaCards}
@@ -129,7 +128,7 @@ const GameLobby = () => {
         />
         <FrontLine
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-90}
           groupOffsetX={440}
           cards={playAreaCards}
@@ -137,7 +136,7 @@ const GameLobby = () => {
         />
         <Deck
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-90}
           groupOffsetX={1100}
           cards={playAreaCards}
@@ -145,7 +144,7 @@ const GameLobby = () => {
         />
         <DiscardPile
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-240}
           groupOffsetX={1100}
           cards={playAreaCards}
@@ -153,7 +152,7 @@ const GameLobby = () => {
         />
         <Graveyard
           cardBack={cardBack}
-          cardFront={cardFront}
+          cardFront={cardBack}
           groupOffsetY={-410}
           groupOffsetX={1100}
           cards={playAreaCards}

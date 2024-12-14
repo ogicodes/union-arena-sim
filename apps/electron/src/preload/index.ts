@@ -1,22 +1,29 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge, ipcRenderer } from 'electron'
+import type { CardData } from '../renderer/src/types'
 
-// Custom APIs for renderer
-const api = {}
+console.log('Preload script starting...')
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
-if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-    console.error(error)
+const electronHandler = {
+  loadCards: () => ipcRenderer.invoke('load-cards'),
+  saveDeck: (deckData: { deckName: string; deckImages: string[]; apDeckImages: string[] }) =>
+    ipcRenderer.invoke('save-deck', deckData),
+  loadDecks: () => ipcRenderer.invoke('load-decks'),
+  deleteDeck: (deckName: string) => ipcRenderer.invoke('delete-deck', deckName)
+}
+
+contextBridge.exposeInMainWorld('electron', electronHandler)
+
+declare global {
+  interface Window {
+    electron: {
+      loadCards: () => Promise<CardData[]>
+      saveDeck: (deckData: {
+        deckName: string
+        deckImages: string[]
+        apDeckImages: string[]
+      }) => Promise<{ success: boolean }>
+      loadDecks: () => Promise<Array<{ name: string; mainDeck: string[]; apDeck: string[] }>>
+      deleteDeck: (deckName: string) => Promise<{ success: boolean }>
+    }
   }
-} else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI
-  // @ts-ignore (define in dts)
-  window.api = api
 }
