@@ -32,7 +32,7 @@ const getDirectories = async (path: string): Promise<string[]> => {
 
 const findFile = async (
   dir: string,
-  target: string,
+  target: string
 ): Promise<string | null> => {
   const files = await fs.readdir(dir);
   for (const file of files) {
@@ -60,7 +60,7 @@ const main = async () => {
     const file = await findFile(dirs[i], CARD_FILE_NAME);
     if (!file)
       throw new Error(
-        `file with name: ${CARD_FILE_NAME} not located in: ${dirs[i]}`,
+        `file with name: ${CARD_FILE_NAME} not located in: ${dirs[i]}`
       );
     const { categoryData } = await parseFile(file);
     categories.push(categoryData);

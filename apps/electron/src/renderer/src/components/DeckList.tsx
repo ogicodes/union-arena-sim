@@ -1,33 +1,46 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface DeckListProps {
-  images: string[];
-  onImageRightClick: (index: number) => void;
-  onDrop: (image: string) => void;
-  isFull: boolean;
+  images: string[]
+  apImages: string[]
+  onImageRightClick: (index: number) => void
+  onDrop: (image: string) => void
+  isFull: boolean
 }
 
-const DeckList: React.FC<DeckListProps> = ({ images, onImageRightClick, onDrop, isFull }) => {
-  // Group cards by their image
-  const groupedCards = images.reduce<{ [key: string]: string[] }>((acc, image) => {
-    acc[image] = acc[image] ? [...acc[image], image] : [image];
-    return acc;
-  }, {});
+const DeckList: React.FC<DeckListProps> = ({
+  images,
+  apImages,
+  onImageRightClick,
+  onDrop,
+  isFull
+}) => {
+  // Function to convert asset path to proper URL
+  const getImageUrl = (imagePath: string) => {
+    return `/src/${imagePath}`
+  }
+
+  // Group all cards (both regular and AP)
+  const allImages = [...apImages, ...images]
+  const groupedCards = allImages.reduce<{ [key: string]: string[] }>((acc, image) => {
+    acc[image] = acc[image] ? [...acc[image], image] : [image]
+    return acc
+  }, {})
 
   return (
     <div
       className="h-full w-full overflow-y-scroll p-4 rounded-3xl flex flex-wrap gap-4"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       onDragOver={(e) => {
-        if (!isFull) e.preventDefault();
+        if (!isFull) e.preventDefault()
       }}
       onDrop={(e) => {
         if (!isFull) {
-          e.preventDefault();
-          const image = e.dataTransfer.getData('text/plain');
-          onDrop(image);
+          e.preventDefault()
+          const image = e.dataTransfer.getData('text/plain')
+          onDrop(image)
         } else {
-          alert('Deck is full! Remove a card to add more.');
+          alert('Deck is full! Remove a card to add more.')
         }
       }}
     >
@@ -50,23 +63,27 @@ const DeckList: React.FC<DeckListProps> = ({ images, onImageRightClick, onDrop, 
                   position: 'absolute',
                   top: `${cardIndex * 12}px`, // Offset down by 4px per card
                   left: `${cardIndex * 12}px`, // Offset right by 4px per card
-                  zIndex: cardIndex, // Ensure proper stacking
+                  zIndex: cardIndex // Ensure proper stacking
                 }}
                 className="w-full h-full cursor-pointer"
                 onContextMenu={(e) => {
-                  e.preventDefault();
-                  const removeIndex = images.findIndex((img, i) => img === image && i >= groupIndex);
-                  onImageRightClick(removeIndex); // Remove the card
+                  e.preventDefault()
+                  const removeIndex = images.findIndex((img, i) => img === image && i >= groupIndex)
+                  onImageRightClick(removeIndex) // Remove the card
                 }}
               >
-                <img src={image} alt={`Deck Card ${groupIndex}`} className="w-full h-full object-contain rounded-md" />
+                <img
+                  src={getImageUrl(image)}
+                  alt={`Deck Card ${groupIndex}`}
+                  className="w-full h-full object-contain rounded-md"
+                />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default DeckList;
+export default DeckList
