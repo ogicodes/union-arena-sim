@@ -3,10 +3,10 @@
  * @param data - the effect data
  * @returns string - the effects
  */
-export const parseEffects = (data: string): string => {
-  const words = data.split("%").map((sentence) => sentence.replace("-", " "));
-  return words.join(" ");
-};
+export function parseEffects(effectData: string | null): string[] {
+  if (!effectData) return [];
+  return effectData.split("%").map((effect) => effect.trim());
+}
 
 /**
  * this function checks if the effect data contains "raid"
@@ -22,7 +22,7 @@ export const containsRaid = (data: string): boolean => {
  * @param data - the effect data
  * @returns string - the raid target
  */
-export const getRaidTarget = (data: string): string => {
-  const target = data.match(/<([^>]+)>/)?.[1] || "";
-  return target.replace("-", " ");
-};
+export function getRaidTarget(effects: string[]): string {
+  const raidEffect = effects.find((effect) => effect.includes("raid"));
+  return raidEffect?.split("<")[1]?.split(">")[0] || "";
+}

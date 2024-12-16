@@ -1,78 +1,41 @@
+import { getDirectories, getFile, readCardFile } from "../utils/file-helpers";
+import { createCard } from "../utils/card-factory";
+import { Card } from "../engine/components/Card";
+import { ActionPointCard } from "../engine/components/ActionPointCard";
+import { GameEngine } from "../engine/core/GameEngine";
+import { Player } from "../engine/components/Player";
 import type {
   FormattedCard,
-  Card as Cards,
-  CardType,
   ActionPointCard as ActionPointCardType,
 } from "../types";
-import { Card } from "./components/Card";
-import { ActionPointCard } from "./components/ActionPointCard";
-import { GameEngine } from "./core/GameEngine";
-import { Player } from "./components/Player";
-import fs from "fs/promises";
-import { join } from "path";
 
-const directoryPath = "../cards";
-const fileName = "card.json";
-
-const getDirectories = async (): Promise<string[]> => {
-  const entries = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  return entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => join(directoryPath, entry.name));
-};
-
-const getFile = async (path: string): Promise<string | null> => {
-  const files = await fs.readdir(path);
-
-  for (const file of files) {
-    if (file === fileName) {
-      return join(path, file);
-    }
-  }
-  return null;
-};
-
-const readCardFile = async (filePath: string): Promise<FormattedCard> => {
-  const data = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(data) as FormattedCard;
-};
-
-const main = async () => {
+const initializePlayers = async (): Promise<Player[]> => {
   const directories = await getDirectories();
-  const cards: Cards[] = [];
+  const cards: Card[] = [];
 
-  for (let i = 0; i < directories.length; i++) {
-    const filePath = await getFile(directories[i]);
+  // Load all cards from directories
+  for (const directory of directories) {
+    const filePath = await getFile(directory);
 
     if (filePath) {
-      const card = await readCardFile(filePath);
-      const newCard = new Card(
-        card.name,
-        card.effectData ?? "",
-        card.categoryData as CardType,
-        "None",
-        "None",
-        "None",
-        "None",
-        "None",
-        "None",
-        1,
-        false
-      );
-
+      const cardData = (await readCardFile(filePath)) as FormattedCard;
+      const newCard = createCard(cardData);
       cards.push(newCard);
     }
   }
 
-  const playerOneActionPointCards: ActionPointCardType[] = [];
-  const playerTwoActionPointCards: ActionPointCardType[] = [];
+  // Create Action Point Cards for each player
+  const createActionPointCards = (count: number): ActionPointCardType[] => {
+    return Array.from(
+      { length: count },
+      (_, index) => new ActionPointCard(`actionPointCard${index}`)
+    );
+  };
 
-  for (let i = 0; i < 2; i++) {
-    playerOneActionPointCards.push(new ActionPointCard(`actionPointCard${i}`));
-    playerTwoActionPointCards.push(new ActionPointCard(`actionPointCard${i}`));
-  }
+  const playerOneActionPointCards = createActionPointCards(2);
+  const playerTwoActionPointCards = createActionPointCards(2);
 
+  // Initialize Players
   const playerOne = new Player(
     "Player One",
     [...cards],
@@ -84,9 +47,18 @@ const main = async () => {
     [...playerTwoActionPointCards]
   );
 
-  const game = new GameEngine([playerOne, playerTwo]);
+  return [playerOne, playerTwo];
+};
 
+const main = async () => {
+  // Initialize players
+  const players = await initializePlayers();
+
+  // Initialize the game engine
+  const game = new GameEngine(players);
+
+  // Start the game
   game.startGame();
 };
 
-main();
+main().catch((error) => console.error("Error starting the game:", error));

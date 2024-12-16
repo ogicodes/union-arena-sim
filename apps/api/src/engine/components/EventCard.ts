@@ -19,7 +19,9 @@ export class EventCard extends Card {
     keyword: Keyword,
     keywordAbility: KeywordAbility,
     activationTimingAbility: ActivationTimingAbility,
-    activationCondition: ActivationCondition
+    activationCondition: ActivationCondition,
+    cost: number,
+    generatedEnergy: number
   ) {
     super(
       name,
@@ -30,7 +32,10 @@ export class EventCard extends Card {
       keyword,
       keywordAbility,
       activationTimingAbility,
-      activationCondition
+      activationCondition,
+      cost,
+      generatedEnergy,
+      false
     );
   }
 }
