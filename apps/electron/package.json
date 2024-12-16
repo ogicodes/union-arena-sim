@@ -4,6 +4,7 @@
   "description": "",
   "main": "./out/main/index.js",
   "scripts": {
+    "test": "echo ok",
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
