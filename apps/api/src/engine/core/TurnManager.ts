@@ -1,10 +1,11 @@
 import { GameBoard, GameState, Phases, Player } from "../../types";
-import { Card } from "../components/Card";
+import { Card } from "../../engine/components/Card";
 import {
   getRaidTarget,
   parseEffects,
   containsRaid,
 } from "../../utils/parse-effects";
+
 export class TurnManager {
   public phase: Phases;
   private gameState: GameState;
@@ -374,7 +375,7 @@ export class TurnManager {
   /** Attack Phase
    * handles events that happen in attack phase
    */
-  private handleAttackPhase(attackingCardIdx?: number): void {
+  public handleAttackPhase(attackingCardIdx?: number): void {
     if (attackingCardIdx === undefined) return;
 
     const attackingCard = this.currentPlayerBoard.frontLine[attackingCardIdx];
@@ -386,31 +387,25 @@ export class TurnManager {
     const hasDamage2 = effects.some((effect) => effect.includes("Damage 2"));
     const damage = hasDamage2 ? 2 : 1;
 
-    if (!hasSnipe) {
-      // Handle life point damage
-      for (let i = 0; i < damage; i++) {
-        const lifeCard = opponent.lifePoints.pop();
-        if (!lifeCard) {
-          this.gameState.endGame();
-          return;
+    if (!hasSnipe && opponent.lifePoints.length > 0) {
+      console.log("Before attack:", opponent.lifePoints.length);
+      const removedCard = opponent.lifePoints.pop();
+      console.log("After attack:", opponent.lifePoints.length);
+
+      if (removedCard) {
+        // Check for trigger
+        if (removedCard.trigger === "Draw") {
+          const activePlayer = this.gameState.getActivePlayer();
+          activePlayer.hand.push(removedCard);
         }
 
-        // Check for trigger effects
-        const cardEffects = parseEffects(lifeCard.effectData);
-        if (cardEffects.some((effect) => effect.includes("Trigger"))) {
-          console.log(`${lifeCard.name} trigger effect activated!`);
-          // TODO: Handle trigger resolution
-        }
-
-        // Move to removal area
-        const removalArea = this.gameState.RemovalArea.get(opponent.id);
-        if (removalArea) {
-          removalArea.push(lifeCard);
-        }
+        // Add to removal area
+        const removalArea = this.gameState.RemovalArea.get(opponent.id) || [];
+        this.gameState.RemovalArea.set(opponent.id, [
+          ...removalArea,
+          removedCard,
+        ]);
       }
-      console.log(
-        `${attackingCard.name} attacked life points. Opponent has ${opponent.lifePoints.length} life points remaining`
-      );
     }
 
     attackingCard.restCard();

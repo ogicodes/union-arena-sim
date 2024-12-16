@@ -34,11 +34,11 @@ export type Trigger =
 export type TriggerEffect =
   | "Add this card to your hand, or if you have the required energy, perform Raid with it."
   | "Choose one character with 3500 or less BP on your opponent's front line and return it to their hand."
-  | "Choose one character on your oponents field and sideline it"
+  | "Choose one character on your oponents field and sideline it."
   | "If you have zero life, place the top card of your deck into your life area."
-  | "Draw 1 Card"
-  | "Add this card to your hand"
-  | "Choose one character on your field and switchit to active. It Gains 3000 BP until the end of the turn"
+  | "Draw 1 Card."
+  | "Add this card to your hand."
+  | "Choose one character on your field and switch it to active. It Gains 3000 BP until the end of the turn"
   | "None";
 
 export type Keyword =
@@ -98,7 +98,7 @@ export interface FormattedCard {
   categoryData: string;
   bpData: number | null;
   attributeData: string | null;
-  generatedEnergyData: number | null;
+  generatedEnergyData: number;
   effectData: string | null;
   triggerData: string | null;
   getInfoData: string | null;
