@@ -17,7 +17,7 @@ describe("Card Class", () => {
     name: "Test Card",
     effectData: "Test Effect",
     cardType: "Monster" as CardType,
-    trigger: "None" as Trigger,
+    trigger: "Draw" as Trigger,
     triggerEffect: "Draw 1" as TriggerEffect,
     keyword: "Test Keyword" as Keyword,
     keywordAbility: "Test Ability" as KeywordAbility,
@@ -25,6 +25,7 @@ describe("Card Class", () => {
     activationCondition: "None" as ActivationCondition,
     apCost: 2,
     isRaidable: true,
+    generatedEnergyData: 2,
   };
 
   beforeEach(() => {
@@ -39,6 +40,7 @@ describe("Card Class", () => {
       mockCard.activationTimingAbility,
       mockCard.activationCondition,
       mockCard.apCost,
+      mockCard.generatedEnergyData,
       mockCard.isRaidable,
     );
   });
