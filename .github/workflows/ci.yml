@@ -5,10 +5,16 @@ on:
     branches:
       - main
       - dev
+    paths:
+      - 'apps/api/**'
+      - 'apps/electron/**'
   pull_request:
     branches:
       - main
       - dev
+    paths:
+      - 'apps/api/**'
+      - 'apps/electron/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -55,8 +61,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Install dependencies and run tests for API
+        working-directory: ./apps/api
+        run: |
+          pnpm install
+          pnpm test
 
-      - name: Run Tests
-        run: pnpm test
+      - name: Install dependencies and run tests for Electron
+        working-directory: ./apps/electron
+        run: |
+          pnpm install
+          pnpm test
