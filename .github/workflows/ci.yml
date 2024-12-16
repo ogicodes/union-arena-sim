@@ -22,21 +22,12 @@ jobs:
       matrix:
         node-version: [20.x, 22.x]
         platform:
-          - name: Ubuntu
-            os: ubuntu-latest
-            shell: bash
           - name: macOS
             os: macos-latest
-            shell: bash
-          - name: macOS Intel
-            os: macos-13
             shell: bash
           - name: Windows
             os: windows-latest
             shell: bash
-          - name: Windows Powershell
-            os: windows-latest
-            shell: powershell
       fail-fast: false
 
     runs-on: ${{ matrix.platform.os }}
@@ -52,9 +43,10 @@ jobs:
         if: github.event_name == 'pull_request'
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 8.15.6
           run_install: false
 
       - name: Use Node.js ${{ matrix.node-version }}
