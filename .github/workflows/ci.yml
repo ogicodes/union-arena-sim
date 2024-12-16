@@ -57,7 +57,7 @@ jobs:
           version: 9
           run_install: false
 
-      - name: Use Nodejs ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -65,8 +65,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        with:
-          cache: pnpm
 
       - name: Run Tests
         run: pnpm test
