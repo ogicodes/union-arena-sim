@@ -1,4 +1,4 @@
-import type { Card, ActionPointCard } from "../../types/index";
+import type { Card, ActionPointCard, GameState } from "../../types/index";
 
 export class Player {
   public id: string;
@@ -67,13 +67,23 @@ export class Player {
   }
 
   setLifePoints(card: Card): void {
-    this.lifePoints.push(card);
+    if (card) {
+      this.lifePoints.push(card);
+      console.log(`Added card ${card.name} to life points.`);
+    } else {
+      console.log("Attempted to set a null card to life points.");
+    }
   }
 
-  takeDamage(cardIdx: number): void {
-    this.lifePoints[cardIdx].flip();
-
-    console.log(`player took damage`);
+  takeDamage(cardIdx: number, gameState: GameState): void {
+    if (this.lifePoints[cardIdx]) {
+      this.lifePoints[cardIdx].flip(gameState);
+      console.log(
+        `Player took damage, flipped card: ${this.lifePoints[cardIdx].name}`
+      );
+    } else {
+      console.log(`No card found at life point index ${cardIdx}.`);
+    }
   }
 
   hasLost(): boolean {

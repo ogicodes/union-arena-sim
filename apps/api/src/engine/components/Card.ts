@@ -6,7 +6,9 @@ import type {
   KeywordAbility,
   ActivationTimingAbility,
   ActivationCondition,
+  GameState as GameStateType,
 } from "../../types";
+import { GameState } from "../core/GameState";
 
 export class Card {
   public name: string;
@@ -43,6 +45,7 @@ export class Card {
     activationTimingAbility: ActivationTimingAbility,
     activationCondition: ActivationCondition,
     apCost: number,
+    generatedEnergyData: number,
     isRaidable: boolean
   ) {
     this.name = name;
@@ -59,7 +62,7 @@ export class Card {
     this.activationTimingAbility = activationTimingAbility;
     this.activationCondition = activationCondition;
     this.needEnergyData = 0;
-    this.generatedEnergyData = 0;
+    this.generatedEnergyData = generatedEnergyData;
     this.apCost = apCost;
     this.isRaidable = isRaidable;
   }
@@ -85,18 +88,75 @@ export class Card {
   }
 
   /**
-   * this function takes the current card and flips it face up
-   * @returns boolean - returns true if the card is face up
+   * Flip the card face up and activate its trigger if present.
+   * @param gameState - The current game state
+   * @returns Card - The flipped card
    */
-  flip(): boolean {
+  flip(gameState: GameState): Card | null {
     this.isFaceUp = !this.isFaceUp;
-    console.log(`face up now`);
-    if (this.trigger !== "None") {
-      console.log(this.triggerEffect);
-    } else {
-      console.log(`no trigger`);
+    console.log(`Card flipped: ${this.isFaceUp ? "Face Up" : "Face Down"}`);
+
+    if (this.isFaceUp && this.trigger !== "None") {
+      console.log(`Trigger activated: ${this.trigger}`);
+      this.activateTrigger(gameState);
     }
-    return this.isFaceUp;
+
+    return this.isFaceUp ? this : null;
+  }
+
+  /**
+   * Activate the card's trigger effect.
+   */
+  activateTrigger(gameState: GameState): void {
+    if (this.triggerEffect !== "None") {
+      console.log(`Trigger Effect: ${this.triggerEffect}`);
+      // Add logic to handle each trigger effect
+      switch (this.trigger) {
+        case "Raid":
+          console.log(
+            "Effect: Add this card to your hand, or if you have the required energy, perform Raid with it."
+          );
+          // Example: Write the logic to handle this trigger
+          break;
+        case "Color":
+          console.log(
+            "Effect: Choose one character with 3500 or less BP on your opponent's front line and return it to their hand."
+          );
+          // Example: Write the logic to handle this trigger
+          break;
+        case "Special":
+          console.log(
+            "Effect: Choose one character on your oponents field and sideline it."
+          );
+          // Example: Write the logic to handle this trigger
+          break;
+        case "Final":
+          console.log(
+            "Effect: If you have zero life, place the top card of your deck into your life area."
+          );
+          // Example: Write the logic to handle this trigger
+          break;
+        case "Draw":
+          console.log("Effect: Draw 1 Card.");
+          // Example: Write the logic to handle this trigger
+          break;
+        case "Get":
+          console.log("Effect: Add this card to your hand.");
+          // Example: Write the logic to handle this trigger
+          break;
+        case "Active":
+          console.log(
+            "Effect: Choose one character on your field and switch it to active. It Gains 3000 BP until the end of the turn."
+          );
+          // Example: Write the logic to handle this trigger
+          break;
+        default:
+          console.log("Trigger effect handled.");
+          break;
+      }
+    } else {
+      console.log("No trigger effect available.");
+    }
   }
 
   /**

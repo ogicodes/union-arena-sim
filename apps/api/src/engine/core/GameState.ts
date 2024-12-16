@@ -1,10 +1,11 @@
 import type {
   Player,
-  Card,
+  Card as CardType,
   Phases,
   GameBoard,
   ActionPointCard,
 } from "../../types";
+import { Card } from "../components/Card";
 
 export class GameState {
   players: Player[];
@@ -44,32 +45,53 @@ export class GameState {
 
   initialize(): void {
     this.players.forEach((player) => {
+      // Ensure each player has at least 50 cards in their deck
+      if (player.deck.length < 50) {
+        for (let i = player.deck.length; i < 50; i++) {
+          player.deck.push(
+            new Card(
+              `Card ${i + 1}`,
+              "Generated card for testing",
+              "character",
+              "None",
+              "None",
+              "None",
+              "None",
+              "None",
+              "None",
+              1,
+              0,
+              false
+            )
+          );
+        }
+      }
+
       this.board.set(player.id, {
         frontLine: new Array(4).fill(null),
         energyLine: new Array(4).fill(null),
         actionPointsLine: player.actionPoints,
       });
 
-      // empty sidelines
       this.sideline.set(player.id, []);
-
-      // empty removal area
       this.RemovalArea.set(player.id, []);
-
-      // fill the deck
       this.deck.set(player.id, [...player.deck]);
 
-      // draw initial hand of 7 cards and set 7 life points
-      for (let i = 0; i < 7; i++) {
-        const card = player.drawCard();
-        const card2 = player.drawCard();
+      // Modify this part to not set life points if they're already set
+      if (player.lifePoints.length === 0) {
+        for (let i = 0; i < 7; i++) {
+          const lifeCard = player.drawCard();
+          if (lifeCard) {
+            player.setLifePoints(lifeCard);
+          }
+        }
+      }
 
-        if (card && card2) {
-          player.setLifePoints(card);
-          player.addToHand(card2);
-        } else {
-          this.endGame();
-          return;
+      // Draw initial hand of 7 cards
+      for (let i = 0; i < 7; i++) {
+        const handCard = player.drawCard();
+        if (handCard) {
+          player.addToHand(handCard);
         }
       }
     });
