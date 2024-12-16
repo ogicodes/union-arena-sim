@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'apps/api/**'
+      - 'apps/electron/**'
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'apps/api/**'
+      - 'apps/electron/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        platform:
+          - name: macOS
+            os: macos-latest
+            shell: bash
+          - name: Windows
+            os: windows-latest
+            shell: bash
+      fail-fast: false
+
+    runs-on: ${{ matrix.platform.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.platform.shell }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Fetch base ref
+        if: github.event_name == 'pull_request'
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
+          run_install: false
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: Install dependencies and run tests for API
+        working-directory: ./apps/api
+        run: |
+          pnpm install
+          pnpm test
+
+      - name: Install dependencies and run tests for Electron
+        working-directory: ./apps/electron
+        run: |
+          pnpm install
+          pnpm test
