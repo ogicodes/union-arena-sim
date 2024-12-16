@@ -6,7 +6,6 @@ import type {
   KeywordAbility,
   ActivationTimingAbility,
   ActivationCondition,
-  GameState as GameStateType,
 } from "../../types";
 import { GameState } from "../core/GameState";
 
@@ -46,7 +45,7 @@ export class Card {
     activationCondition: ActivationCondition,
     apCost: number,
     generatedEnergyData: number,
-    isRaidable: boolean
+    isRaidable: boolean,
   ) {
     this.name = name;
     this.effectData = effectData;
@@ -114,25 +113,25 @@ export class Card {
       switch (this.trigger) {
         case "Raid":
           console.log(
-            "Effect: Add this card to your hand, or if you have the required energy, perform Raid with it."
+            "Effect: Add this card to your hand, or if you have the required energy, perform Raid with it.",
           );
           // Example: Write the logic to handle this trigger
           break;
         case "Color":
           console.log(
-            "Effect: Choose one character with 3500 or less BP on your opponent's front line and return it to their hand."
+            "Effect: Choose one character with 3500 or less BP on your opponent's front line and return it to their hand.",
           );
           // Example: Write the logic to handle this trigger
           break;
         case "Special":
           console.log(
-            "Effect: Choose one character on your oponents field and sideline it."
+            "Effect: Choose one character on your oponents field and sideline it.",
           );
           // Example: Write the logic to handle this trigger
           break;
         case "Final":
           console.log(
-            "Effect: If you have zero life, place the top card of your deck into your life area."
+            "Effect: If you have zero life, place the top card of your deck into your life area.",
           );
           // Example: Write the logic to handle this trigger
           break;
@@ -146,7 +145,7 @@ export class Card {
           break;
         case "Active":
           console.log(
-            "Effect: Choose one character on your field and switch it to active. It Gains 3000 BP until the end of the turn."
+            "Effect: Choose one character on your field and switch it to active. It Gains 3000 BP until the end of the turn.",
           );
           // Example: Write the logic to handle this trigger
           break;

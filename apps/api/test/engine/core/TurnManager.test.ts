@@ -1,7 +1,7 @@
-import { GameState } from "../GameState";
-import { TurnManager } from "../TurnManager";
-import { Player } from "../../components/Player";
-import { Card } from "../../components/Card";
+import { GameState } from "../../../src/engine/core/GameState";
+import { TurnManager } from "../../../src/engine/core/TurnManager";
+import { Player } from "../../../src/engine/components/Player";
+import { Card } from "../../../src/engine/components/Card";
 
 describe("TurnManager - Attack Phase with Triggers", () => {
   it("should activate a trigger when a life card is flipped", () => {
@@ -19,7 +19,7 @@ describe("TurnManager - Attack Phase with Triggers", () => {
           "None",
           1,
           0,
-          true
+          true,
         );
       });
 
@@ -42,7 +42,7 @@ describe("TurnManager - Attack Phase with Triggers", () => {
       "None",
       1,
       0,
-      true
+      true,
     );
 
     const playerOneDeck = createMockDeck(50);
@@ -90,8 +90,8 @@ describe("TurnManager - Attack Phase with Triggers", () => {
               "None",
               1,
               0,
-              true
-            )
+              true,
+            ),
       );
     }
 
@@ -110,7 +110,7 @@ describe("TurnManager - Attack Phase with Triggers", () => {
       "None",
       1,
       0,
-      true
+      true,
     );
     attackingCard.isRested = false; // Ensure card is not rested
     gameState.getBoard(playerOne.id).frontLine[0] = attackingCard;
@@ -125,7 +125,7 @@ describe("TurnManager - Attack Phase with Triggers", () => {
     expect(playerOne.hand[0].name).toBe("Trigger Card");
     expect(gameState.RemovalArea.get(playerTwo.id)?.length).toBe(1);
     expect(gameState.RemovalArea.get(playerTwo.id)?.[0].name).toBe(
-      "Trigger Card"
+      "Trigger Card",
     );
   });
 });

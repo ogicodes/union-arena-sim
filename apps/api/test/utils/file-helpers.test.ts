@@ -1,5 +1,9 @@
 import * as fs from "fs/promises";
-import { getDirectories, getFile, readCardFile } from "../file-helpers";
+import {
+  getDirectories,
+  getFile,
+  readCardFile,
+} from "../../src/utils/file-helpers";
 import { join } from "path";
 
 jest.mock("fs/promises");
@@ -52,7 +56,7 @@ describe("file-helpers", () => {
     it("should return parsed JSON data", async () => {
       const mockCardData = { name: "Test Card", effectData: "Test Effect" };
       (fs.readFile as jest.Mock).mockResolvedValue(
-        JSON.stringify(mockCardData)
+        JSON.stringify(mockCardData),
       );
 
       const cardData = await readCardFile("/some/path/card.json");

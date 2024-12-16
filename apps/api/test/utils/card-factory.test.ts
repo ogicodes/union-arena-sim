@@ -1,6 +1,6 @@
-import { createCard } from "../card-factory";
-import { Card } from "../../engine/components/Card";
-import { FormattedCard, CardType } from "../../types";
+import { createCard } from "../../src/utils/card-factory";
+import { Card } from "../../src/engine/components/Card";
+import { FormattedCard, CardType } from "../../src/types";
 
 describe("Card Factory", () => {
   it("should create a Card instance with all properties mapped correctly", () => {
