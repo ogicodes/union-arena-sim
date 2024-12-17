@@ -4,12 +4,20 @@ import {
   CardType,
   Trigger,
   TriggerEffect,
+  CardColor,
+  BpData,
+  AttributeData,
+  GeneratedEnergyData,
 } from '../types'
+import { parseActivationTimingAbilities } from './parse-activation-timing-abilities'
 
 export const createCard = (cardData: FormattedCard): Card => {
   // Parse trigger data (if available)
   let trigger: Trigger = 'None'
   let triggerEffect: TriggerEffect = 'None'
+  /*let keyword: Keyword = "None";
+  let keywordAbility: KeywordAbility = "None";
+  let activationCondition: ActivationCondition = "None";*/
 
   if (cardData.triggerData) {
     const [parsedTrigger, parsedTriggerEffect] =
@@ -17,6 +25,10 @@ export const createCard = (cardData: FormattedCard): Card => {
     trigger = parsedTrigger as Trigger
     triggerEffect = parsedTriggerEffect as TriggerEffect
   }
+
+  const activationTimingAbility = parseActivationTimingAbilities(
+    cardData.effectData ?? '',
+  )
 
   return new Card(
     cardData.name,
@@ -26,10 +38,14 @@ export const createCard = (cardData: FormattedCard): Card => {
     triggerEffect,
     'None', // Keyword
     'None', // KeywordAbility
-    'None', // ActivationTimingAbility
+    activationTimingAbility, // ActivationTimingAbility
     'None', // ActivationCondition
     cardData.apData,
-    cardData.generatedEnergyData,
-    cardData.categoryData === 'character', // isRaidable is true for characters
+    false, // isRaidable
+    cardData.color as CardColor,
+    cardData.bpData as BpData,
+    cardData.attributeData as AttributeData,
+    cardData.needEnergyData as number,
+    cardData.generatedEnergyData as GeneratedEnergyData,
   )
 }

@@ -1,4 +1,4 @@
-type EventCallback = (payload?: any) => void
+/*type EventCallback = (payload?: any) => void;
 
 export class EventEmitter {
   private events: Record<string, EventCallback[]> = {}
@@ -12,3 +12,4 @@ export class EventEmitter {
     ;(this.events[event] || []).forEach(callback => callback(payload))
   }
 }
+*/

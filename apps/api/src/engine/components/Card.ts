@@ -6,8 +6,11 @@ import type {
   KeywordAbility,
   ActivationTimingAbility,
   ActivationCondition,
+  BpData,
+  CardColor,
+  GeneratedEnergyData,
+  AttributeData,
 } from '../../types'
-import { GameState } from '../core/GameState'
 
 export class Card {
   public name: string
@@ -26,13 +29,17 @@ export class Card {
   public keyword: Keyword
   public keywordAbility: KeywordAbility
 
-  public activationTimingAbility: ActivationTimingAbility
+  public activationTimingAbility: ActivationTimingAbility[]
   public activationCondition: ActivationCondition
 
   public needEnergyData: number
-  public generatedEnergyData: number
   public apCost: number
   public isRaidable: boolean
+  public color: CardColor
+  public bpData: BpData
+  public attributeData: AttributeData
+  public generatedEnergyData: GeneratedEnergyData
+
   constructor(
     name: string,
     effectData: string,
@@ -41,11 +48,15 @@ export class Card {
     triggerEffect: TriggerEffect,
     keyword: Keyword,
     keywordAbility: KeywordAbility,
-    activationTimingAbility: ActivationTimingAbility,
+    activationTimingAbility: ActivationTimingAbility[],
     activationCondition: ActivationCondition,
     apCost: number,
-    generatedEnergyData: number,
     isRaidable: boolean,
+    color: CardColor,
+    bpData: BpData,
+    attributeData: AttributeData,
+    needEnergyData: number,
+    generatedEnergyData: GeneratedEnergyData,
   ) {
     this.name = name
     this.effectData = effectData
@@ -60,10 +71,13 @@ export class Card {
     this.keywordAbility = keywordAbility
     this.activationTimingAbility = activationTimingAbility
     this.activationCondition = activationCondition
-    this.needEnergyData = 0
     this.generatedEnergyData = generatedEnergyData
     this.apCost = apCost
     this.isRaidable = isRaidable
+    this.color = color
+    this.bpData = bpData
+    this.attributeData = attributeData
+    this.needEnergyData = needEnergyData
   }
 
   /**
@@ -91,7 +105,7 @@ export class Card {
    * @param gameState - The current game state
    * @returns Card - The flipped card
    */
-  flip(gameState: GameState): Card | null {
+  flip(/*gameState: GameState */): Card | null {
     this.isFaceUp = !this.isFaceUp
     console.log(
       `Card flipped: ${this.isFaceUp ? 'Face Up' : 'Face Down'}`,
@@ -99,7 +113,7 @@ export class Card {
 
     if (this.isFaceUp && this.trigger !== 'None') {
       console.log(`Trigger activated: ${this.trigger}`)
-      this.activateTrigger(gameState)
+      this.activateTrigger(/*gameState*/)
     }
 
     return this.isFaceUp ? this : null
@@ -108,7 +122,7 @@ export class Card {
   /**
    * Activate the card's trigger effect.
    */
-  activateTrigger(gameState: GameState): void {
+  activateTrigger(/*gameState: GameState */): void {
     if (this.triggerEffect !== 'None') {
       console.log(`Trigger Effect: ${this.triggerEffect}`)
       // Add logic to handle each trigger effect
@@ -193,5 +207,20 @@ export class Card {
     }
     console.log(`raided`)
     return true
+  }
+
+  /**
+   * this function takes the current card and increments or decrements the bp data
+   * @returns BpData - increments or decrements the bp data
+   */
+  updateBpData(bpData: BpData): BpData {
+    if (bpData && this.bpData) {
+      this.bpData = (
+        bpData > 0 ?
+          this.bpData - bpData
+        : this.bpData + bpData) as BpData
+      return this.bpData
+    }
+    return this.bpData
   }
 }

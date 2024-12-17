@@ -1,6 +1,7 @@
 import { createCard } from '../../src/utils/card-factory'
 import { Card } from '../../src/engine/components/Card'
 import { FormattedCard, CardType } from '../../src/types'
+import { describe, it, expect } from '@jest/globals'
 
 describe('Card Factory', () => {
   it('should create a Card instance with all properties mapped correctly', () => {
@@ -40,7 +41,7 @@ describe('Card Factory', () => {
 
     // Check derived properties
     expect(card.uniqueId).toBeDefined() // Ensure uniqueId is set
-    expect(card.isRaidable).toBe(true) // Derived from `categoryData` being "character"
+    expect(card.isRaidable).toBe(false) // Derived from `categoryData` being "character"
     expect(card.trigger).toBe('None') // Default value for trigger
   })
 })

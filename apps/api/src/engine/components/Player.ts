@@ -1,8 +1,4 @@
-import type {
-  Card,
-  ActionPointCard,
-  GameState,
-} from '../../types/index'
+import type { Card, ActionPointCard } from '../../types/index'
 
 export class Player {
   public id: string
@@ -38,7 +34,7 @@ export class Player {
   private shuffleDeck(deck: Card[]): Card[] {
     for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
-      ;[deck[i], (deck[j] = deck[j]), deck[i]]
+      ;[deck[i], deck[j]] = [deck[j], deck[i]]
     }
     return deck
   }
@@ -83,9 +79,9 @@ export class Player {
     }
   }
 
-  takeDamage(cardIdx: number, gameState: GameState): void {
+  takeDamage(cardIdx: number /*gameState: GameState*/): void {
     if (this.lifePoints[cardIdx]) {
-      this.lifePoints[cardIdx].flip(gameState)
+      this.lifePoints[cardIdx].flip(/*gameState*/)
       console.log(
         `Player took damage, flipped card: ${this.lifePoints[cardIdx].name}`,
       )

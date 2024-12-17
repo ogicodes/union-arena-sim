@@ -29,7 +29,7 @@ export const getFile = async (
 
 export const readCardFile = async (
   filePath: string,
-): Promise<any> => {
+): Promise<Record<string, unknown>> => {
   const data = await fs.readFile(filePath, 'utf-8')
   return JSON.parse(data)
 }

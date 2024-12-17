@@ -2,6 +2,7 @@ import { GameState } from '../../../src/engine/core/GameState'
 import { TurnManager } from '../../../src/engine/core/TurnManager'
 import { Player } from '../../../src/engine/components/Player'
 import { Card } from '../../../src/engine/components/Card'
+import { describe, it, expect } from '@jest/globals'
 
 describe('TurnManager - Attack Phase with Triggers', () => {
   it('should activate a trigger when a life card is flipped', () => {
@@ -11,18 +12,22 @@ describe('TurnManager - Attack Phase with Triggers', () => {
     ): Card[] => {
       const deck = Array.from({ length: size }, (_, i) => {
         return new Card(
-          `Deck Card ${i + 1}`,
-          'Effect description',
+          `Card ${i + 1}`,
+          'Generated card for testing',
           'character',
           'None',
           'None',
           'None',
           'None',
-          'None',
+          [],
           'None',
           1,
-          0,
           true,
+          'blue',
+          1000,
+          'None',
+          1,
+          1,
         )
       })
 
@@ -41,11 +46,15 @@ describe('TurnManager - Attack Phase with Triggers', () => {
       'Draw 1 Card.',
       'None',
       'None',
-      'None',
+      [],
       'None',
       1,
-      0,
       true,
+      'blue',
+      1000,
+      'None',
+      1,
+      1,
     )
 
     const playerOneDeck = createMockDeck(50)
@@ -88,18 +97,21 @@ describe('TurnManager - Attack Phase with Triggers', () => {
             'None',
             'None',
             'None',
-            'None',
+            [],
             'None',
             1,
-            0,
             true,
+            'blue',
+            1000,
+            'None',
+            1,
+            1,
           )
         ),
       )
     }
 
     const turnManager = new TurnManager(gameState)
-
     // Create and set up attacking card
     const attackingCard = new Card(
       'Attacking Card',
@@ -109,11 +121,15 @@ describe('TurnManager - Attack Phase with Triggers', () => {
       'None',
       'None',
       'None',
-      'None',
+      [],
       'None',
       1,
-      0,
       true,
+      'blue',
+      1000,
+      'None',
+      1,
+      1,
     )
     attackingCard.isRested = false // Ensure card is not rested
     gameState.getBoard(playerOne.id).frontLine[0] = attackingCard
