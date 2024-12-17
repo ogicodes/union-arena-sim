@@ -128,4 +128,4 @@ jobs:
         working-directory: ./apps/electron
         run: |
           pnpm install
-          pnpn test
+          pnpm test
