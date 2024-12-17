@@ -1,4 +1,5 @@
 import * as fs from 'fs/promises'
+import { Dirent } from 'fs'
 import {
   getDirectories,
   getFile,
@@ -7,7 +8,10 @@ import {
 import { join } from 'path'
 import { jest, describe, afterEach, it, expect } from '@jest/globals'
 
-jest.mock('fs/promises')
+jest.mock('fs/promises', () => ({
+  readdir: jest.fn(),
+  readFile: jest.fn(),
+}))
 
 describe('file-helpers', () => {
   const mockDirectoryPath = '../cards'
@@ -19,10 +23,22 @@ describe('file-helpers', () => {
 
   describe('getDirectories', () => {
     it('should return a list of directories', async () => {
-      ;(fs.readdir as jest.Mock).mockResolvedValue([
-        { name: 'dir1', isDirectory: () => true },
-        { name: 'dir2', isDirectory: () => true },
-        { name: 'file1', isDirectory: () => false },
+      const mockReaddir = fs.readdir as jest.MockedFunction<
+        typeof fs.readdir
+      >
+      mockReaddir.mockResolvedValue([
+        {
+          name: 'dir1',
+          isDirectory: () => true,
+        } as unknown as Dirent,
+        {
+          name: 'dir2',
+          isDirectory: () => true,
+        } as unknown as Dirent,
+        {
+          name: 'file1',
+          isDirectory: () => false,
+        } as unknown as Dirent,
       ])
 
       const directories = await getDirectories()
@@ -35,7 +51,11 @@ describe('file-helpers', () => {
 
   describe('getFile', () => {
     it('should return the file path if the file exists', async () => {
-      ;(fs.readdir as jest.Mock).mockResolvedValue([
+      const mockReaddir = fs.readdir as jest.MockedFunction<
+        typeof fs.readdir
+      > &
+        jest.MockedFunction<(path: string) => Promise<string[]>>
+      mockReaddir.mockResolvedValue([
         'file1.json',
         'card.json',
         'file3.txt',
@@ -46,9 +66,18 @@ describe('file-helpers', () => {
     })
 
     it('should return null if the file does not exist', async () => {
-      ;(fs.readdir as jest.Mock).mockResolvedValue([
-        'file1.json',
-        'file3.txt',
+      const mockReaddir = fs.readdir as jest.MockedFunction<
+        typeof fs.readdir
+      >
+      mockReaddir.mockResolvedValue([
+        {
+          name: 'file1.json',
+          isFile: () => true,
+        } as unknown as Dirent,
+        {
+          name: 'file3.txt',
+          isFile: () => true,
+        } as unknown as Dirent,
       ])
 
       const filePath = await getFile('/some/path')
@@ -62,18 +91,20 @@ describe('file-helpers', () => {
         name: 'Test Card',
         effectData: 'Test Effect',
       }
-      ;(fs.readFile as jest.Mock).mockResolvedValue(
-        JSON.stringify(mockCardData),
-      )
+      const mockReadFile = fs.readFile as jest.MockedFunction<
+        typeof fs.readFile
+      >
+      mockReadFile.mockResolvedValue(JSON.stringify(mockCardData))
 
       const cardData = await readCardFile('/some/path/card.json')
       expect(cardData).toEqual(mockCardData)
     })
 
     it('should throw an error for invalid JSON', async () => {
-      ;(fs.readFile as jest.Mock).mockResolvedValue(
-        '{ invalid json }',
-      )
+      const mockReadFile = fs.readFile as jest.MockedFunction<
+        typeof fs.readFile
+      >
+      mockReadFile.mockResolvedValue('{ invalid json }')
 
       await expect(
         readCardFile('/some/path/card.json'),
