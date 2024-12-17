@@ -2,7 +2,6 @@
   "name": "api",
   "version": "1.0.0",
   "main": "./build/index.js",
-  "type": "module",
   "scripts": {
     "test": "jest",
     "dev": "tsc-watch -p tsconfig.json --onSuccess \"npm run start\"",
@@ -32,6 +31,5 @@
     "express": "^4.21.1",
     "tsc-watch": "^6.2.1",
     "ws": "^8.18.0"
-  },
-  "type": "module"
+  }
 }

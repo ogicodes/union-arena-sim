@@ -1,9 +1,9 @@
 /* eslint-disable */
 
-import { WebSocket } from "ws";
+import { WebSocket } from 'ws'
 
-declare module "ws" {
+declare module 'ws' {
   interface WebSocket {
-    isAlive: boolean;
+    isAlive: boolean
   }
 }

@@ -51,6 +51,34 @@ jobs:
         working-directory: ./apps/api
         run: pnpm lint
 
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
+          run_install: false
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Format Check (root)
+        run: pnpm format:check
+
   test:
     name: Test - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
     strategy:
@@ -100,4 +128,4 @@ jobs:
         working-directory: ./apps/electron
         run: |
           pnpm install
-          pnpm test
+          pnpn test
