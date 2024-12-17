@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint Code
+    name: Lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
