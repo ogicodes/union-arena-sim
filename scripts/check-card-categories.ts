@@ -1,6 +1,6 @@
-import fs from "fs/promises";
-import { join } from "path";
-import type { FormattedCard } from "../packages/scrapper/src/types/";
+import fs from 'fs/promises'
+import { join } from 'path'
+import type { FormattedCard } from '../packages/scrapper/src/types/'
 
 /**
  * This CLI tools checks a directory of cards,
@@ -16,57 +16,57 @@ import type { FormattedCard } from "../packages/scrapper/src/types/";
  * ```
  * */
 
-const args = process.argv.slice(2);
+const args = process.argv.slice(2)
 
 const findArg = (key: string): string | undefined => {
-  const arg = args.find((arg) => arg.startsWith(`${key}=`));
-  return arg ? arg.split("=")[1] : undefined;
-};
+  const arg = args.find(arg => arg.startsWith(`${key}=`))
+  return arg ? arg.split('=')[1] : undefined
+}
 
 const getDirectories = async (path: string): Promise<string[]> => {
-  const entries = await fs.readdir(path, { withFileTypes: true });
+  const entries = await fs.readdir(path, { withFileTypes: true })
   return entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => join(path, entry.name));
-};
+    .filter(entry => entry.isDirectory())
+    .map(entry => join(path, entry.name))
+}
 
 const findFile = async (
   dir: string,
-  target: string
+  target: string,
 ): Promise<string | null> => {
-  const files = await fs.readdir(dir);
+  const files = await fs.readdir(dir)
   for (const file of files) {
     if (file === target) {
-      return join(dir, file);
+      return join(dir, file)
     }
   }
-  return null;
-};
+  return null
+}
 
 const parseFile = async (path: string): Promise<FormattedCard> => {
-  const content = await fs.readFile(path, "utf8");
-  return JSON.parse(content) as FormattedCard;
-};
+  const content = await fs.readFile(path, 'utf8')
+  return JSON.parse(content) as FormattedCard
+}
 
-const dir = findArg("--dir");
+const dir = findArg('--dir')
 
-if (!dir) throw new Error("no directory specified.");
+if (!dir) throw new Error('no directory specified.')
 
 const main = async () => {
-  const dirs = await getDirectories(dir);
-  const CARD_FILE_NAME = "card.json";
-  const categories: string[] = [];
+  const dirs = await getDirectories(dir)
+  const CARD_FILE_NAME = 'card.json'
+  const categories: string[] = []
   for (let i = 0; i < dirs.length; i++) {
-    const file = await findFile(dirs[i], CARD_FILE_NAME);
+    const file = await findFile(dirs[i], CARD_FILE_NAME)
     if (!file)
       throw new Error(
-        `file with name: ${CARD_FILE_NAME} not located in: ${dirs[i]}`
-      );
-    const { categoryData } = await parseFile(file);
-    categories.push(categoryData);
+        `file with name: ${CARD_FILE_NAME} not located in: ${dirs[i]}`,
+      )
+    const { categoryData } = await parseFile(file)
+    categories.push(categoryData)
   }
-  const uniqueCategories = [...new Set(categories)];
-  console.log(uniqueCategories);
-};
+  const uniqueCategories = [...new Set(categories)]
+  console.log(uniqueCategories)
+}
 
-main();
+main()

@@ -1,5 +1,9 @@
-import { JSDOM } from "jsdom";
-import { ParserResultOrder, ParserResult, ParsedImage } from "../types";
+import { JSDOM } from 'jsdom'
+import {
+  ParserResultOrder,
+  ParserResult,
+  ParsedImage,
+} from '../types'
 
 /**
  * Takes data in the shape of a dom representation
@@ -8,35 +12,41 @@ import { ParserResultOrder, ParserResult, ParsedImage } from "../types";
  * returns an object
  * */
 export const domParser = (data: string): ParserResult => {
-  const result: ParserResult = { images: [], text: [], parserResultOrder: [] };
+  const result: ParserResult = {
+    images: [],
+    text: [],
+    parserResultOrder: [],
+  }
 
-  const dom = new JSDOM(data);
-  const document = dom.window.document;
+  const dom = new JSDOM(data)
+  const document = dom.window.document
 
-  let currentNode: ChildNode | null = document.body.firstChild;
+  let currentNode: ChildNode | null = document.body.firstChild
 
   while (currentNode) {
     if (currentNode.nodeType === dom.window.Node.TEXT_NODE) {
-      const textContent = currentNode.textContent?.trim();
+      const textContent = currentNode.textContent?.trim()
       if (textContent) {
-        result.text.push(textContent);
-        result.parserResultOrder.push("text_node");
+        result.text.push(textContent)
+        result.parserResultOrder.push('text_node')
       }
-    } else if (currentNode.nodeType === dom.window.Node.ELEMENT_NODE) {
-      const element = currentNode as Element;
-      if (element.tagName === "IMG") {
+    } else if (
+      currentNode.nodeType === dom.window.Node.ELEMENT_NODE
+    ) {
+      const element = currentNode as Element
+      if (element.tagName === 'IMG') {
         result.images.push({
-          src: element.getAttribute("src") as string,
-          alt: element.getAttribute("alt") as string,
-        });
-        result.parserResultOrder.push("img");
+          src: element.getAttribute('src') as string,
+          alt: element.getAttribute('alt') as string,
+        })
+        result.parserResultOrder.push('img')
       }
     }
-    currentNode = currentNode.nextSibling;
+    currentNode = currentNode.nextSibling
   }
 
-  return result;
-};
+  return result
+}
 
 /**
  * Takes an array of agnostic strings:
@@ -51,10 +61,10 @@ export const domParser = (data: string): ParserResult => {
  * */
 export const dashProp = (data: string[]): string => {
   const str = data
-    .map((word) => word?.toLowerCase().replace(/\s+/g, "-"))
-    .join("%");
-  return str === "null" ? "" : str;
-};
+    .map(word => word?.toLowerCase().replace(/\s+/g, '-'))
+    .join('%')
+  return str === 'null' ? '' : str
+}
 
 /**
  * Takes the parserResultOrder, image object and text object
@@ -66,8 +76,8 @@ export function buildParsedOrder(
   _images: ParsedImage[],
   _text: string[],
 ): string[] {
-  const args = arguments;
-  return parserResultOrder.map((i) =>
-    i === "img" ? args[1].shift().alt : args[2].shift(),
-  );
+  const args = arguments
+  return parserResultOrder.map(i =>
+    i === 'img' ? args[1].shift().alt : args[2].shift(),
+  )
 }

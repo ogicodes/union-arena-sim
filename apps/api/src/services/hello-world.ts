@@ -1,7 +1,7 @@
 export const helloWorld = async (): Promise<string> => {
   try {
-    return "Hello World!";
+    return 'Hello World!'
   } catch (e) {
-    throw e;
+    throw e
   }
-};
+}

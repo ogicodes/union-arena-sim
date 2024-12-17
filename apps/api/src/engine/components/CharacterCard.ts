@@ -6,8 +6,8 @@ import type {
   KeywordAbility,
   ActivationTimingAbility,
   ActivationCondition,
-} from "../../types";
-import { Card } from "./Card";
+} from '../../types'
+import { Card } from './Card'
 
 export class CharacterCard extends Card {
   constructor(
@@ -21,7 +21,7 @@ export class CharacterCard extends Card {
     activationTimingAbility: ActivationTimingAbility,
     activationCondition: ActivationCondition,
     cost: number,
-    generatedEnergy: number
+    generatedEnergy: number,
   ) {
     super(
       name,
@@ -35,7 +35,7 @@ export class CharacterCard extends Card {
       activationCondition,
       cost,
       generatedEnergy,
-      true
-    );
+      true,
+    )
   }
 }

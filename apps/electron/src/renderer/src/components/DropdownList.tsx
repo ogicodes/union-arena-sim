@@ -33,13 +33,18 @@ const DropdownList: React.FC<DropdownListProps> = ({
   disabled = false
 }) => {
   const variantStyles = {
-    primary: 'bg-[#fafafa] border border-[#3d3d3d] text-center text-white focus:ring focus:ring-gray-300',
-    secondary: 'bg-[#585858] border border-gray-600 text-center text-white focus:ring focus:ring-green-300',
-    tertiary: 'bg-[#121212] border border-[#3d3d3d] text-center text-white focus:ring focus:ring-gray-300',
-    danger: 'bg-red-50 border border-red-500 text-center text-red-700 focus:ring focus:ring-red-300',
+    primary:
+      'bg-[#fafafa] border border-[#3d3d3d] text-center text-white focus:ring focus:ring-gray-300',
+    secondary:
+      'bg-[#585858] border border-gray-600 text-center text-white focus:ring focus:ring-green-300',
+    tertiary:
+      'bg-[#121212] border border-[#3d3d3d] text-center text-white focus:ring focus:ring-gray-300',
+    danger:
+      'bg-red-50 border border-red-500 text-center text-red-700 focus:ring focus:ring-red-300',
     warning:
       'bg-yellow-50 border border-yellow-500 text-center text-yellow-700 focus:ring focus:ring-yellow-300',
-    default: 'bg-gray-100 border border-gray-500 text-center text-black focus:ring focus:ring-gray-300'
+    default:
+      'bg-gray-100 border border-gray-500 text-center text-black focus:ring focus:ring-gray-300'
   }
 
   const sizeStyles = {
@@ -70,7 +75,8 @@ const DropdownList: React.FC<DropdownListProps> = ({
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       }`}
       style={{
-        clipPath: 'polygon(1% 0%, 99% 0%, 100% 100%, 0% 100%)', backgroundColor: 'black'
+        clipPath: 'polygon(1% 0%, 99% 0%, 100% 100%, 0% 100%)',
+        backgroundColor: 'black'
       }}
     >
       <option value="" disabled>

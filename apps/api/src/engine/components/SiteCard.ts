@@ -6,8 +6,8 @@ import type {
   KeywordAbility,
   Trigger,
   TriggerEffect,
-} from "../../types";
-import { Card } from "./Card";
+} from '../../types'
+import { Card } from './Card'
 
 export class SiteCard extends Card {
   constructor(
@@ -21,7 +21,7 @@ export class SiteCard extends Card {
     activationTimingAbility: ActivationTimingAbility,
     activationCondition: ActivationCondition,
     cost: number,
-    generatedEnergy: number
+    generatedEnergy: number,
   ) {
     super(
       name,
@@ -35,7 +35,7 @@ export class SiteCard extends Card {
       activationCondition,
       cost,
       generatedEnergy,
-      false
-    );
+      false,
+    )
   }
 }

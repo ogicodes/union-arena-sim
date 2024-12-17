@@ -1,60 +1,65 @@
-import inquirer from "inquirer";
-import { exit } from "process";
-import type { FormattedCard, Card } from "./types";
-import { join } from "path";
-import { createDir, writeFile, writeImage } from "./utils/fs";
-import { buildParsedOrder, dashProp, domParser } from "./utils/parsers";
+import inquirer from 'inquirer'
+import { exit } from 'process'
+import type { FormattedCard, Card } from './types'
+import { join } from 'path'
+import { createDir, writeFile, writeImage } from './utils/fs'
+import {
+  buildParsedOrder,
+  dashProp,
+  domParser,
+} from './utils/parsers'
 
 const main = async () => {
   try {
     const answers = await inquirer.prompt([
       {
-        type: "input",
-        name: "path",
-        message: "Enter Directory to save to: ",
+        type: 'input',
+        name: 'path',
+        message: 'Enter Directory to save to: ',
       },
       {
-        type: "input",
-        name: "url",
-        message: "Enter URL: ",
+        type: 'input',
+        name: 'url',
+        message: 'Enter URL: ',
       },
       {
-        type: "input",
-        name: "resumeIndex",
-        message: "Resume from idx? (enter to restart): ",
-        default: "",
+        type: 'input',
+        name: 'resumeIndex',
+        message: 'Resume from idx? (enter to restart): ',
+        default: '',
       },
-    ]);
+    ])
 
     // Useful if script starts hanging.
-    const resumeIndex = answers.resumeIndex ? Number(answers.resumeIndex) : 0;
+    const resumeIndex =
+      answers.resumeIndex ? Number(answers.resumeIndex) : 0
 
     /**
      * Set the directory to save the data to.
      * */
-    await createDir(answers.path);
+    await createDir(answers.path)
 
-    const data = await scrape(answers.url);
+    const data = await scrape(answers.url)
 
     /**
      * Perform a loop to save each card into a dir.
      * */
-    let saved = 0;
+    let saved = 0
     for (let i = resumeIndex; i < data.length; i++) {
-      const card = data[i];
-      const savedCard = await saveCard(card, answers.path);
-      saved++;
-      console.info(`${i} - saved: ${savedCard}`);
+      const card = data[i]
+      const savedCard = await saveCard(card, answers.path)
+      saved++
+      console.info(`${i} - saved: ${savedCard}`)
     }
 
     console.info(
-      `${saved}/${data.length} @ ${((saved / data.length) * 100).toFixed(2)}%`
-    );
+      `${saved}/${data.length} @ ${((saved / data.length) * 100).toFixed(2)}%`,
+    )
   } catch (e) {
-    console.error("An error occurred:", e);
-    exit(1);
+    console.error('An error occurred:', e)
+    exit(1)
   }
-};
+}
 
 /**
  * Handles the saving of a card, returns the card name
@@ -62,23 +67,26 @@ const main = async () => {
  * */
 const saveCard = async (card: Card, dir: string): Promise<string> => {
   try {
-    const CARD_FILE_NAME: string = "card.json";
+    const CARD_FILE_NAME: string = 'card.json'
     const cardDir = card.cardNo
-      .split(" ")
-      .join("-")
+      .split(' ')
+      .join('-')
       .toLowerCase()
-      .replace(/[<>:"\/\\|?*]/g, "");
+      .replace(/[<>:"\/\\|?*]/g, '')
 
     // Create directories
-    const constructedDir = join(dir, cardDir);
-    const assetsDir = join(constructedDir, "assets");
-    await Promise.all([createDir(constructedDir), createDir(assetsDir)]);
+    const constructedDir = join(dir, cardDir)
+    const assetsDir = join(constructedDir, 'assets')
+    await Promise.all([
+      createDir(constructedDir),
+      createDir(assetsDir),
+    ])
 
     // Parse effect and trigger data first
     const [parsedEffectData, parsedTriggerData] = await Promise.all([
       domParser(card.effectData),
       domParser(card.triggerData),
-    ]);
+    ])
 
     // Prepare all image saving promises
     const imagePromises = [
@@ -87,29 +95,29 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
 
       // Effect images
       ...parsedEffectData.images.map((img, i) =>
-        writeImage(img.src, join(assetsDir, `effect-${i}.webp`))
+        writeImage(img.src, join(assetsDir, `effect-${i}.webp`)),
       ),
 
       // Trigger images
       ...parsedTriggerData.images.map((img, i) =>
-        writeImage(img.src, join(assetsDir, `trigger-${i}.webp`))
+        writeImage(img.src, join(assetsDir, `trigger-${i}.webp`)),
       ),
-    ];
+    ]
 
     // Wait for all images to be saved
-    await Promise.all(imagePromises);
+    await Promise.all(imagePromises)
 
     const builtEffectDataText = buildParsedOrder(
       parsedEffectData.parserResultOrder,
       parsedEffectData.images,
-      parsedEffectData.text
-    );
+      parsedEffectData.text,
+    )
 
     const builtTriggerDataText = buildParsedOrder(
       parsedTriggerData.parserResultOrder,
       parsedTriggerData.images,
-      parsedTriggerData.text
-    );
+      parsedTriggerData.text,
+    )
 
     const formattedCardData: FormattedCard = {
       cardNo: card.cardNo,
@@ -117,49 +125,54 @@ const saveCard = async (card: Card, dir: string): Promise<string> => {
       name: card.name.toLowerCase(),
       seriesName: card.seriesName.toLowerCase(),
       series: card.series.toLowerCase(),
-      needEnergyData: card.needEnergyData ? Number(card.needEnergyData) : null,
+      needEnergyData:
+        card.needEnergyData ? Number(card.needEnergyData) : null,
       color: card.color ? card.color.toLowerCase() : null,
       apData: Number(card.apData),
       categoryData: card.categoryData.toLowerCase(),
       bpData: card.bpData ? Number(card.bpData) : null,
       attributeData: card.attributeData ? card.attributeData : null,
-      generatedEnergyData: card.generatedEnergyData
-        ? Number(card.generatedEnergyData)
+      generatedEnergyData:
+        card.generatedEnergyData ?
+          Number(card.generatedEnergyData)
         : null,
       effectData:
-        card.effectData !== ""
-          ? dashProp(builtEffectDataText)
-            ? dashProp(builtEffectDataText)
-            : null
-          : null,
+        card.effectData !== '' ?
+          dashProp(builtEffectDataText) ?
+            dashProp(builtEffectDataText)
+          : null
+        : null,
       triggerData:
-        card.triggerData !== ""
-          ? dashProp(builtTriggerDataText)
-            ? dashProp(builtTriggerDataText)
-            : null
-          : null,
+        card.triggerData !== '' ?
+          dashProp(builtTriggerDataText) ?
+            dashProp(builtTriggerDataText)
+          : null
+        : null,
       getInfoData: card.getInfoData ? card.getInfoData : null,
-    };
+    }
 
-    await writeFile(formattedCardData, join(constructedDir, CARD_FILE_NAME));
-    return formattedCardData.name;
+    await writeFile(
+      formattedCardData,
+      join(constructedDir, CARD_FILE_NAME),
+    )
+    return formattedCardData.name
   } catch (e) {
-    throw new Error(`Unable to save card ${card.name}: ${e}`);
+    throw new Error(`Unable to save card ${card.name}: ${e}`)
   }
-};
+}
 
 const scrape = async (url: string): Promise<Card[]> => {
   try {
-    const response = await fetch(url, { method: "GET" });
+    const response = await fetch(url, { method: 'GET' })
 
     if (!response.ok) {
-      throw new Error(`Unable to fetch data: ${response.statusText}`);
+      throw new Error(`Unable to fetch data: ${response.statusText}`)
     }
 
-    return (await response.json()) as Card[];
+    return (await response.json()) as Card[]
   } catch (e) {
-    throw new Error(`Unable to scrape data from URL ${url}: ${e}`);
+    throw new Error(`Unable to scrape data from URL ${url}: ${e}`)
   }
-};
+}
 
-main();
+main()
