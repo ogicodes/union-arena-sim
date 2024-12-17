@@ -27,11 +27,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        platform:
-          - name: macOS
-            os: macos-latest
-          - name: Windows
-            os: windows-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
