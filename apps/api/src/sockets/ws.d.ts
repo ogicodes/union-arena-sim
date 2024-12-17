@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { WebSocket } from "ws";
 
 declare module "ws" {

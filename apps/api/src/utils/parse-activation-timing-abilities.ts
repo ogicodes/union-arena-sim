@@ -3,7 +3,7 @@ import { ActivationTimingAbility } from "../types";
 export const parseActivationTimingAbilities = (
   effectData: string
 ): ActivationTimingAbility[] => {
-  let activationTimingAbility: ActivationTimingAbility[] = [];
+  const activationTimingAbility: ActivationTimingAbility[] = [];
 
   if (effectData?.toLowerCase().includes("when-played")) {
     activationTimingAbility.push("When Played");

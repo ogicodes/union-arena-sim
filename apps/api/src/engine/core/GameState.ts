@@ -1,10 +1,4 @@
-import type {
-  Player,
-  Card as CardType,
-  Phases,
-  GameBoard,
-  ActionPointCard,
-} from "../../types";
+import type { Player, Phases, GameBoard, ActionPointCard } from "../../types";
 import { Card } from "../components/Card";
 
 export class GameState {

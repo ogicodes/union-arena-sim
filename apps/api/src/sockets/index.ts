@@ -31,7 +31,7 @@ export const configure = (s: Server) => {
     });
   });
 
-  wss.on("connection", (ws: WebSocket, _req) => {
+  wss.on("connection", (ws: WebSocket) => {
     ws.isAlive = true;
     ws.on("error", onSocketError);
 

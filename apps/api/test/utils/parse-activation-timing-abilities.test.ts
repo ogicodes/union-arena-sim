@@ -1,4 +1,4 @@
-import { describe, it, expect, test } from "@jest/globals";
+import { describe, it, expect } from "@jest/globals";
 import { parseActivationTimingAbilities } from "../../src/utils/parse-activation-timing-abilities";
 import { ActivationTimingAbility } from "../../src/types";
 

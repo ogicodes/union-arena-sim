@@ -8,10 +8,6 @@ import {
   BpData,
   AttributeData,
   GeneratedEnergyData,
-  Keyword,
-  ActivationCondition,
-  ActivationTimingAbility,
-  KeywordAbility,
 } from "../types";
 import { parseActivationTimingAbilities } from "./parse-activation-timing-abilities";
 
@@ -19,9 +15,9 @@ export const createCard = (cardData: FormattedCard): Card => {
   // Parse trigger data (if available)
   let trigger: Trigger = "None";
   let triggerEffect: TriggerEffect = "None";
-  let keyword: Keyword = "None";
+  /*let keyword: Keyword = "None";
   let keywordAbility: KeywordAbility = "None";
-  let activationCondition: ActivationCondition = "None";
+  let activationCondition: ActivationCondition = "None";*/
 
   if (cardData.triggerData) {
     const [parsedTrigger, parsedTriggerEffect] =

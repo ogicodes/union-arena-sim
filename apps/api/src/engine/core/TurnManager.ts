@@ -1,10 +1,6 @@
 import { GameBoard, GameState, Phases, Player } from "../../types";
 import { Card } from "../../engine/components/Card";
-import {
-  getRaidTarget,
-  parseEffects,
-  containsRaid,
-} from "../../utils/parse-effects";
+import { getRaidTarget, parseEffects } from "../../utils/parse-effects";
 
 export class TurnManager {
   public phase: Phases;
@@ -386,6 +382,7 @@ export class TurnManager {
     const hasSnipe = effects.some((effect) => effect.includes("Snipe"));
     const hasDamage2 = effects.some((effect) => effect.includes("Damage 2"));
     const damage = hasDamage2 ? 2 : 1;
+    console.log("damage", damage);
 
     if (!hasSnipe && opponent.lifePoints.length > 0) {
       console.log("Before attack:", opponent.lifePoints.length);

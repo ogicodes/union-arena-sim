@@ -23,7 +23,9 @@ export const getFile = async (path: string): Promise<string | null> => {
   return null;
 };
 
-export const readCardFile = async (filePath: string): Promise<any> => {
+export const readCardFile = async (
+  filePath: string
+): Promise<Record<string, unknown>> => {
   const data = await fs.readFile(filePath, "utf-8");
   return JSON.parse(data);
 };

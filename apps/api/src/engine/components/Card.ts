@@ -11,7 +11,6 @@ import type {
   GeneratedEnergyData,
   AttributeData,
 } from "../../types";
-import { GameState } from "../core/GameState";
 
 export class Card {
   public name: string;
@@ -106,13 +105,13 @@ export class Card {
    * @param gameState - The current game state
    * @returns Card - The flipped card
    */
-  flip(gameState: GameState): Card | null {
+  flip(/*gameState: GameState */): Card | null {
     this.isFaceUp = !this.isFaceUp;
     console.log(`Card flipped: ${this.isFaceUp ? "Face Up" : "Face Down"}`);
 
     if (this.isFaceUp && this.trigger !== "None") {
       console.log(`Trigger activated: ${this.trigger}`);
-      this.activateTrigger(gameState);
+      this.activateTrigger(/*gameState*/);
     }
 
     return this.isFaceUp ? this : null;
@@ -121,7 +120,7 @@ export class Card {
   /**
    * Activate the card's trigger effect.
    */
-  activateTrigger(gameState: GameState): void {
+  activateTrigger(/*gameState: GameState */): void {
     if (this.triggerEffect !== "None") {
       console.log(`Trigger Effect: ${this.triggerEffect}`);
       // Add logic to handle each trigger effect
@@ -213,7 +212,12 @@ export class Card {
    * @returns BpData - increments or decrements the bp data
    */
   updateBpData(bpData: BpData): BpData {
-    bpData! > 0 ? this.bpData! - bpData! : this.bpData! + bpData!;
-    return this.bpData!;
+    if (bpData && this.bpData) {
+      this.bpData = (
+        bpData > 0 ? this.bpData - bpData : this.bpData + bpData
+      ) as BpData;
+      return this.bpData;
+    }
+    return this.bpData;
   }
 }
