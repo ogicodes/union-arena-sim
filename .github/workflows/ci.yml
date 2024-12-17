@@ -73,12 +73,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
 
-      - name: Install dependencies for API
-        working-directory: ./apps/api
+      - name: Install dependencies
         run: pnpm install
 
-      - name: Run Format Check
-        working-directory: ./apps/api
+      - name: Run Format Check (root)
         run: pnpm format:check
 
   test:
