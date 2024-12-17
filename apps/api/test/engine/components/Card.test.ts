@@ -8,6 +8,10 @@ import type {
   KeywordAbility,
   ActivationTimingAbility,
   ActivationCondition,
+  CardColor,
+  BpData,
+  AttributeData,
+  GeneratedEnergyData as GeneratedEnergyDataType,
 } from "../../../src/types";
 
 describe("Card Class", () => {
@@ -25,7 +29,11 @@ describe("Card Class", () => {
     activationCondition: "None" as ActivationCondition,
     apCost: 2,
     isRaidable: true,
-    generatedEnergyData: 2,
+    generatedEnergyData: 2 as GeneratedEnergyDataType,
+    color: "blue" as CardColor,
+    bpData: 1000 as BpData,
+    attributeData: "None" as AttributeData,
+    needEnergyData: 1,
   };
 
   beforeEach(() => {
@@ -37,11 +45,15 @@ describe("Card Class", () => {
       mockCard.triggerEffect,
       mockCard.keyword,
       mockCard.keywordAbility,
-      mockCard.activationTimingAbility,
+      [mockCard.activationTimingAbility],
       mockCard.activationCondition,
       mockCard.apCost,
-      mockCard.generatedEnergyData,
       mockCard.isRaidable,
+      mockCard.color,
+      mockCard.bpData,
+      mockCard.attributeData,
+      mockCard.needEnergyData,
+      mockCard.generatedEnergyData
     );
   });
 

@@ -71,7 +71,7 @@ export type ActivationTimingAbility =
   | "When Attacking"
   | "When Blocking"
   | "During Your Turn"
-  | "During Opponents Turn"
+  | "During Opponent's Turn"
   | "Activate: Main"
   | "Raid"
   | "None";
@@ -113,3 +113,48 @@ export interface GameBoard {
 export interface PlayerState {
   player: Player;
 }
+
+export type CardColor = "red" | "blue" | "green" | "yellow" | "purple";
+
+export type ApData = 1 | 2;
+
+export type BpData =
+  | 500
+  | 1000
+  | 1500
+  | 2000
+  | 2500
+  | 3000
+  | 3500
+  | 4000
+  | 4500
+  | 5000
+  | null;
+
+export type AttributeData =
+  | "Ashford Academy"
+  | "Ashford Academy / KMF"
+  | "Cursed Spirit"
+  | "Holy Britannian Empire"
+  | "Holy Britannian Empire / KGF"
+  | "Holy Britannian Empire / KMF"
+  | "Holy Britannian Empire / Pureblood Faction"
+  | "Holy Britannian Empire / Royal Guards"
+  | "Kyoto Jujutsu High"
+  | "Order of the Black Knights"
+  | "Order of the Black Knights / Four Holy Swords"
+  | "Order of the Black Knights / KMF"
+  | "Order of the Black Knights / KMF / Four Holy Swords"
+  | "Phantom Troupe"
+  | "Pizza"
+  | "Shikigami"
+  | "Specified Slot"
+  | "Squad Zero"
+  | "Stern Ritters"
+  | "The Bomber"
+  | "Thirteen Court Guard Squads"
+  | "Transfigured Human"
+  | "Zoldyck Family"
+  | "None";
+
+export type GeneratedEnergyData = 1 | 2 | 3;

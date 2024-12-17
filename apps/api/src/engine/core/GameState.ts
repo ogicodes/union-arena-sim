@@ -57,11 +57,15 @@ export class GameState {
               "None",
               "None",
               "None",
-              "None",
+              [],
               "None",
               1,
-              0,
-              false
+              true,
+              "blue",
+              1000,
+              "None",
+              1,
+              1
             )
           );
         }

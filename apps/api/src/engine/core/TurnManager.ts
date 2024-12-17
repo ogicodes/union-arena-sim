@@ -269,7 +269,7 @@ export class TurnManager {
 
     // Check for "When Played" activation timing ability on the newly played card
     const checkForWhenPlayedAbility = (card: Card) => {
-      if (card.activationTimingAbility === "When Played") {
+      if (card.activationTimingAbility.includes("When Played")) {
         card.activateCardEffect();
       }
     };
@@ -294,7 +294,7 @@ export class TurnManager {
     if (cardIdx !== undefined) {
       const selectedCard = this.currentPlayer.hand[cardIdx];
       if (selectedCard) {
-        if (selectedCard.activationTimingAbility === "Raid") {
+        if (selectedCard.activationTimingAbility.includes("Raid")) {
           // Check front line and energy line for matching raid target
           const parsedEffect = parseEffects(selectedCard.effectData);
           const raidTarget = getRaidTarget(parsedEffect);
@@ -357,11 +357,11 @@ export class TurnManager {
 
     // use the Activate: Main ability of a card on the front line or energy line
     // check the frontline and energyline for cards with the Activate: Main ability
-    const frontLineCard = this.currentPlayerBoard.frontLine.find(
-      (card) => card?.activationTimingAbility === "Activate: Main"
+    const frontLineCard = this.currentPlayerBoard.frontLine.find((card) =>
+      card?.activationTimingAbility.includes("Activate: Main")
     );
-    const energyLineCard = this.currentPlayerBoard.energyLine.find(
-      (card) => card?.activationTimingAbility === "Activate: Main"
+    const energyLineCard = this.currentPlayerBoard.energyLine.find((card) =>
+      card?.activationTimingAbility.includes("Activate: Main")
     );
 
     if (frontLineCard) {
