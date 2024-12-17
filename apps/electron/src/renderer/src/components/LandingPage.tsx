@@ -12,25 +12,31 @@ const LandingPage = () => {
           className="flex flex-col items-center justify-center h-full w-full bg-cover bg-center rounded-3xl"
           style={{ backgroundImage: `url(${LandingPageBG})` }}
         >
-          <h1 className="text-8xl font-bold text-white mb-20">Union <span className="text-[#3a3939] hover:text-gray-300 transition duration-300">Arena</span> Simulation</h1>
+          <h1 className="text-8xl font-bold text-white mb-20">
+            Union{' '}
+            <span className="text-[#3a3939] hover:text-gray-300 transition duration-300">
+              Arena
+            </span>{' '}
+            Simulation
+          </h1>
           <div className=" flex gap-20">
             <NavButton
               text="Deck Builder"
               onClick={() => navigate('/decks')}
               variant="tertiary"
-              size='full'
+              size="full"
             />
             <NavButton
               text="Solo vs. Self"
               onClick={() => navigate('/solo')}
               variant="secondary"
-              size='full'
+              size="full"
             />
             <NavButton
               text="Multiplayer"
               onClick={() => navigate('/multiplayer')}
               variant="primary"
-              size='full'
+              size="full"
             />
           </div>
         </div>

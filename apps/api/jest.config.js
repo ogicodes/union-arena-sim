@@ -1,10 +1,10 @@
 const config = {
-  preset: "ts-jest",
-  testEnvironment: "node",
-  roots: ["./test"],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  roots: ['./test'],
   transform: {
-    "^.+.tsx?$": "ts-jest",
+    '^.+.tsx?$': 'ts-jest',
   },
-};
+}
 
-export default config;
+export default config
