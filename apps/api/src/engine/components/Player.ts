@@ -1,4 +1,5 @@
 import type { Card, ActionPointCard } from '../../types/index'
+import { generateId } from '../../utils/generate-id'
 
 export class Player {
   public id: string
@@ -18,7 +19,7 @@ export class Player {
     deck: Card[],
     actionPoints: ActionPointCard[],
   ) {
-    this.id = 'hello' // generate this later
+    this.id = generateId()
     this.name = name
     this.lifePoints = []
     this.deck = this.shuffleDeck(deck)
