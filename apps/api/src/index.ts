@@ -1,20 +1,21 @@
 import 'dotenv/config'
-import cors from 'cors'
-import express from 'express'
-import router from './routes'
-import { configure as configureSockets } from './sockets'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import { helloModule } from './modules/helloModule'
 
-const PORT = process.env.API_PORT || 1930
+const PORT = process.env.API_PORT || 1234
 
-const api = express()
+const server = createServer()
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+})
 
-api.use(cors())
-api.use(express.json())
+/** configure modules */
+helloModule(io)
 
-api.use(router)
-
-configureSockets(
-  api.listen(PORT, () => {
-    console.log(`🚀 API took off on PORT: ${PORT}`)
-  }),
-)
+server.listen(PORT, () => {
+  console.log(`Listening on port: ${PORT}`)
+})
