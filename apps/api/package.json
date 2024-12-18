@@ -2,7 +2,6 @@
   "name": "api",
   "version": "1.0.0",
   "main": "./build/index.js",
-  "type": "module",
   "scripts": {
     "test": "jest",
     "dev": "tsc-watch -p tsconfig.json --onSuccess \"npm run start\"",
