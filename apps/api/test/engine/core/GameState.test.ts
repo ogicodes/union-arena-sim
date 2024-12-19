@@ -136,10 +136,10 @@ describe('GameState', () => {
     expect(playerTwo.actionPoints.length).toBe(0)
 
     /** gameboard should match */
-    expect(gameState.board.get(playerOne.id)).toEqual(
+    expect(gameState.getBoard(playerOne.id)).toEqual(
       expectedPlayerOneBoard,
     )
-    expect(gameState.board.get(playerTwo.id)).toEqual(
+    expect(gameState.getBoard(playerTwo.id)).toEqual(
       expectedPlayerTwoBoard,
     )
 

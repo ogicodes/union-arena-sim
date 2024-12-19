@@ -1,18 +1,27 @@
 import { Card as CardClass } from '../engine/components/Card'
 import { Player as PlayerClass } from '../engine/components/Player'
 import { GameState as GameStateClass } from '../engine/core/GameState'
-//import { TurnManager as TurnManagerClass } from "../engine/core/TurnManager";
 import { GameEngine as GameEngineClass } from '../engine/core/GameEngine'
 import { ActionPointCard as ActionPointCardClass } from '../engine/components/ActionPointCard'
 
 export type Card = InstanceType<typeof CardClass>
 export type Player = InstanceType<typeof PlayerClass>
 export type GameState = InstanceType<typeof GameStateClass>
-//export type TurnManager = InstanceType<typeof TurnManagerClass>;
 export type GameEngine = InstanceType<typeof GameEngineClass>
 export type ActionPointCard = InstanceType<
   typeof ActionPointCardClass
 >
+
+export interface PlayerBoard {
+  frontLine: Card[]
+  energyLine: Card[]
+  actionPointsLine: ActionPointCard[]
+  sideline: Card[]
+  removalArea: Card[]
+  lifePoints: Card[]
+}
+
+export type Board = Map<string, PlayerBoard>
 
 export type Phases =
   | 'Start Phase'
@@ -104,12 +113,6 @@ export interface FormattedCard {
   effectData: string | null
   triggerData: string | null
   getInfoData: string | null
-}
-
-export interface GameBoard {
-  frontLine: (Card | null)[]
-  energyLine: (Card | null)[]
-  actionPointsLine: ActionPointCard[]
 }
 
 export interface PlayerState {

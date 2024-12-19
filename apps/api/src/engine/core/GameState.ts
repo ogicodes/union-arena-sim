@@ -1,41 +1,37 @@
 import type {
   Player,
   Phases,
-  GameBoard,
   ActionPointCard,
   Card,
+  Board,
+  PlayerBoard,
 } from '../../types'
 
 /**
  * GameState
  *
  * Handles the state of the current game.
+ *
+ * Serves as the single source of truth for all game states,
+ * objects and current data.
+ *
+ * @param players Player[]
  * */
 export class GameState {
-  players: Player[]
-  activePlayerIndex: number
-  turnCount: number
-  phase: Phases
-  board: Map<
-    string,
-    {
-      frontLine: Card[]
-      energyLine: Card[]
-      actionPointsLine: ActionPointCard[]
-      sideline: Card[]
-      removalArea: Card[]
-      lifePoints: Card[]
-    }
-  >
-  gameOver: boolean
+  private _players: Player[]
+  private _activePlayerIndex: number
+  private _turnCount: number
+  private _phase: Phases
+  private _board: Board
+  private _gameOver: boolean
 
   constructor(players: Player[]) {
-    this.players = players
-    this.activePlayerIndex = 0
-    this.turnCount = 1
-    this.phase = 'Start Phase'
-    this.board = new Map()
-    this.gameOver = false
+    this._players = players
+    this._activePlayerIndex = 0
+    this._turnCount = 1
+    this._phase = 'Start Phase'
+    this._board = new Map()
+    this._gameOver = false
   }
 
   /**
@@ -51,12 +47,12 @@ export class GameState {
    * @returns void
    * */
   initialize(): void {
-    this.gameOver = false
+    this._gameOver = false
     // Draw 7 cards for the lifepoints
-    for (let i = 0; i < this.players.length; i++) {
+    for (let i = 0; i < this._players.length; i++) {
       const lifePointCardDraw: Card[] = []
       for (let j = 0; j < 7; j++) {
-        const drawnCard = this.players[i].drawCard()
+        const drawnCard = this._players[i].drawCard()
         if (drawnCard) {
           lifePointCardDraw.push(drawnCard)
         } else {
@@ -66,9 +62,9 @@ export class GameState {
 
       // Draw 7 cards for player hand
       for (let j = 0; j < 7; j++) {
-        const drawnCard = this.players[i].drawCard()
+        const drawnCard = this._players[i].drawCard()
         if (drawnCard) {
-          this.players[i].addToHand(drawnCard)
+          this._players[i].addToHand(drawnCard)
         } else {
           console.error('no cards to draw for the hand.')
         }
@@ -77,11 +73,11 @@ export class GameState {
       // Draw 3 AP Cards
       const apCardDraw: ActionPointCard[] = []
       for (let j = 0; j < 3; j++) {
-        apCardDraw.push(this.players[i].drawActionPointCard())
+        apCardDraw.push(this._players[i].drawActionPointCard())
       }
 
       // Put the cards on the board
-      this.board.set(this.players[i].id, {
+      this._board.set(this._players[i].id, {
         frontLine: [],
         energyLine: [],
         actionPointsLine: apCardDraw,
@@ -124,8 +120,8 @@ export class GameState {
       'Attack Phase',
       'End Phase',
     ]
-    const currentPhaseIdx = phases.indexOf(this.phase)
-    this.phase = phases[(currentPhaseIdx + 1) % phases.length]
+    const currentPhaseIdx = phases.indexOf(this._phase)
+    this._phase = phases[(currentPhaseIdx + 1) % phases.length]
   }
 
   /**
@@ -138,9 +134,9 @@ export class GameState {
    *  @returns void
    * */
   endTurn(): void {
-    this.activePlayerIndex =
-      (this.activePlayerIndex + 1) % this.players.length
-    this.turnCount++
+    this._activePlayerIndex =
+      (this._activePlayerIndex + 1) % this._players.length
+    this._turnCount++
     console.log(`turn ended`)
   }
 
@@ -152,7 +148,7 @@ export class GameState {
    * @returns Player
    * */
   get activePlayer(): Player {
-    return this.players[this.activePlayerIndex]
+    return this._players[this._activePlayerIndex]
   }
 
   /**
@@ -164,9 +160,9 @@ export class GameState {
    * */
   get inactivePlayer(): Player {
     return (
-      this.players.find(
-        p => p.id !== this.players[this.activePlayerIndex].id,
-      ) || this.players[0]
+      this._players.find(
+        p => p.id !== this._players[this._activePlayerIndex].id,
+      ) || this._players[0]
     )
   }
 
@@ -176,11 +172,11 @@ export class GameState {
    * This method will return the board of the player with the given id.
    *
    * @param playerId string
-   * @returns GameBoard
+   * @returns PlayerBoard
    * @throws will throw an error if the player's id does not exist on the GameState
    */
-  getBoard(playerId: string): GameBoard {
-    return this.board.get(playerId)!
+  getBoard(playerId: string): PlayerBoard {
+    return this._board.get(playerId)!
   }
 
   /**
@@ -191,8 +187,30 @@ export class GameState {
    * @returns boolean
    * */
   endGame(): boolean {
-    this.gameOver = true
+    this._gameOver = true
     console.log(`game over`)
-    return this.gameOver
+    return this._gameOver
+  }
+
+  /**
+   * get gameOver
+   *
+   * Read-only access to gameOver, Returns if the game is over.
+   *
+   * @returns boolean
+   * */
+  get gameOver(): boolean {
+    return this._gameOver
+  }
+
+  /**
+   * get players
+   *
+   * Read-only access to players.
+   *
+   * @returns players Player[] - Players
+   * */
+  get players(): Player[] {
+    return this._players
   }
 }
