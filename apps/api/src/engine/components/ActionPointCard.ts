@@ -1,3 +1,5 @@
+import { generateId } from '../../utils/generate-id'
+
 /**
  * ActionPointCard
  *
@@ -7,11 +9,24 @@ export class ActionPointCard {
   private _name: string
   private _isFaceUp: boolean
   private _isRested: boolean
+  private _id: string
 
   constructor(name: string) {
     this._name = name
     this._isFaceUp = false
     this._isRested = false
+    this._id = generateId()
+  }
+
+  /**
+   * get id
+   *
+   * Read-only access to the cards id
+   *
+   * @returns string
+   * */
+  get id(): string {
+    return this._id
   }
 
   /**

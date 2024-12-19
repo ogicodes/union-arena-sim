@@ -25,5 +25,6 @@ describe('ActionPointCard', () => {
     expect(apCard.name).toBe(mockActionCardData.name)
     expect(apCard.isFaceUp).toBeFalsy()
     expect(apCard.isRested).toBeFalsy()
+    expect(apCard.id).toBeDefined()
   })
 })
