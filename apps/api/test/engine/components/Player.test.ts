@@ -15,6 +15,7 @@ import {
   mockDeckCardData,
   mockActionCardData,
 } from '../../fixtures/card-fixture'
+import { mockPlayerData } from '../../fixtures/player-fixture'
 import { Card } from '../../../src/engine/components/Card'
 import { ActionPointCard } from '../../../src/engine/components/ActionPointCard'
 
@@ -22,10 +23,6 @@ describe('Player', () => {
   let player: PlayerType
   let mockCard: CardType
   let mockApCard: ActionPointCardType
-
-  const mockPlayerData = {
-    name: 'mock-player',
-  }
 
   beforeEach(done => {
     const deck: CardType[] = []
