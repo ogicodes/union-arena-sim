@@ -1,41 +1,85 @@
 /**
- * ActionPointCard class represents a card that can be used to perform an action in the game.
- */
+ * ActionPointCard
+ *
+ * The AP Card
+ * */
 export class ActionPointCard {
-  public name: string
-  public isFaceUp: boolean = false
-  public isRested: boolean = false
+  private _name: string
+  private _isFaceUp: boolean
+  private _isRested: boolean
+
   constructor(name: string) {
-    this.name = name
+    this._name = name
+    this._isFaceUp = false
+    this._isRested = false
   }
 
   /**
-   * this function takes the current card and flips it face up
+   * get name
+   *
+   * Read-only access to the AP Card name
+   *
+   * @returns string
+   * */
+  get name(): string {
+    return this._name
+  }
+
+  /**
+   * get isFaceUp
+   *
+   * Read-only access if the card is face up
+   *
+   * @returns boolean
+   * */
+  get isFaceUp(): boolean {
+    return this._isFaceUp
+  }
+
+  /**
+   * get isRested
+   *
+   * Read-only access if the card is rested
+   *
+   * @returns boolean
+   * */
+  get isRested(): boolean {
+    return this._isRested
+  }
+
+  /**
+   * flip
+   *
+   * Takes the current card and flips it face up.
+   *
    * @returns boolean - returns true if the card is face up
    */
-  flip(): boolean {
-    this.isFaceUp = !this.isFaceUp
-    console.log(`face up is now ${this.isFaceUp}`)
-    return this.isFaceUp
+  public flip(): boolean {
+    this._isFaceUp = !this._isFaceUp
+    return this._isFaceUp
   }
 
   /**
-   * this function takes the current card and activates the card
-   * @returns boolean - returns true if the card is active
+   * activateCard
+   *
+   * Takes the current card and activates the card.
+   *
+   * @returns boolean
    */
-  activateCard(): boolean {
-    this.isRested = !this.isRested
-    console.log(`Card is now active.`)
-    return this.isRested
+  public activateCard(): boolean {
+    this._isRested = !this._isRested
+    return this._isRested
   }
 
   /**
-   * this function takes the current card and rests it
-   * @returns boolean - returns true if the card is rested
+   * restCard
+   *
+   * Takes the current card and rests it.
+   *
+   * @returns boolean
    */
-  restCard(): boolean {
-    this.isRested = !this.isRested
-    console.log(`Card is rested.`)
-    return this.isRested
+  public restCard(): boolean {
+    this._isRested = !this._isRested
+    return this._isRested
   }
 }
