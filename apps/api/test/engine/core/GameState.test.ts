@@ -42,16 +42,16 @@ describe('GameState', () => {
     actionPointCard = new ActionPointCard(mockActionCardData.name)
 
     /** create the player decks */
-    let playerOneDeck: Card[] = []
-    let playerTwoDeck: Card[] = []
+    const playerOneDeck: Card[] = []
+    const playerTwoDeck: Card[] = []
     for (let i = 0; i < 50; i++) {
       playerOneDeck.push(mockCard)
       playerTwoDeck.push(mockCard)
     }
 
     /** give each player action points */
-    let playerOneActionPoints: ActionPointCard[] = []
-    let playerTwoActionPoints: ActionPointCard[] = []
+    const playerOneActionPoints: ActionPointCard[] = []
+    const playerTwoActionPoints: ActionPointCard[] = []
     for (let i = 0; i < 3; i++) {
       playerOneActionPoints.push(actionPointCard)
       playerTwoActionPoints.push(actionPointCard)

@@ -28,8 +28,8 @@ describe('Player', () => {
   }
 
   beforeEach(done => {
-    let deck: CardType[] = []
-    let apCards: ActionPointCardType[] = []
+    const deck: CardType[] = []
+    const apCards: ActionPointCardType[] = []
 
     mockCard = new Card(
       mockDeckCardData.name,

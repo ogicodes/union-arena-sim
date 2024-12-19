@@ -54,7 +54,7 @@ export class GameState {
     this.gameOver = false
     // Draw 7 cards for the lifepoints
     for (let i = 0; i < this.players.length; i++) {
-      let lifePointCardDraw: Card[] = []
+      const lifePointCardDraw: Card[] = []
       for (let j = 0; j < 7; j++) {
         const drawnCard = this.players[i].drawCard()
         if (drawnCard) {
@@ -75,7 +75,7 @@ export class GameState {
       }
 
       // Draw 3 AP Cards
-      let apCardDraw: ActionPointCard[] = []
+      const apCardDraw: ActionPointCard[] = []
       for (let j = 0; j < 3; j++) {
         apCardDraw.push(this.players[i].drawActionPointCard())
       }

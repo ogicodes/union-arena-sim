@@ -14,7 +14,7 @@ export class TurnManager {
   constructor(gamestate: GameState) {
     this.phase = 'Start Phase'
     this.gameState = gamestate
-    this.currentPlayer = gamestate.getActivePlayer()
+    this.currentPlayer = gamestate.activePlayer
 
     // Add null check and throw meaningful error if board is not initialized
     const board = gamestate.getBoard(this.currentPlayer.id)
@@ -49,7 +49,7 @@ export class TurnManager {
         this.phase = 'Attack Phase'
         break
       case 'End Phase':
-        this.handleEndPhase([0])
+        //this.handleEndPhase([0])
         console.log('End phase actions')
         this.phase = 'End Phase'
         break
@@ -139,7 +139,7 @@ export class TurnManager {
      * Draw a card (player 1 does not draw in their first turn)
      */
     if (this.gameState.turnCount > 1) {
-      this.gameState.getActivePlayer().drawCard()
+      this.gameState.activePlayer.drawCard()
     }
     // Once per turn you may pay 1 AP (by switching an AP card to resting) to draw a card
     if (this.currentPlayer.payApToDraw) {
@@ -173,7 +173,7 @@ export class TurnManager {
     if (cardIdx !== undefined && frontLineSpace === 0) {
       const selectedCard = this.currentPlayerBoard.frontLine[cardIdx]
       if (selectedCard) {
-        this.currentPlayer.sendToRemovalArea(selectedCard)
+        //this.currentPlayer.sendToRemovalArea(selectedCard)
         this.currentPlayerBoard.frontLine[cardIdx] = null
       }
     }
@@ -407,36 +407,36 @@ export class TurnManager {
       this.currentPlayerBoard.frontLine[attackingCardIdx]
     if (!attackingCard || attackingCard.isRested) return
 
-    const opponent = this.gameState.getInactivePlayer()
+    //const opponent = this.gameState.inactivePlayer
     const effects = parseEffects(attackingCard.effectData)
-    const hasSnipe = effects.some(effect => effect.includes('Snipe'))
+    //const hasSnipe = effects.some(effect => effect.includes('Snipe'))
     const hasDamage2 = effects.some(effect =>
       effect.includes('Damage 2'),
     )
     const damage = hasDamage2 ? 2 : 1
     console.log('damage', damage)
 
-    if (!hasSnipe && opponent.lifePoints.length > 0) {
-      console.log('Before attack:', opponent.lifePoints.length)
-      const removedCard = opponent.lifePoints.pop()
-      console.log('After attack:', opponent.lifePoints.length)
-
-      if (removedCard) {
-        // Check for trigger
-        if (removedCard.trigger === 'Draw') {
-          const activePlayer = this.gameState.getActivePlayer()
-          activePlayer.hand.push(removedCard)
-        }
-
-        // Add to removal area
-        const removalArea =
-          this.gameState.RemovalArea.get(opponent.id) || []
-        this.gameState.RemovalArea.set(opponent.id, [
-          ...removalArea,
-          removedCard,
-        ])
-      }
-    }
+    //if (!hasSnipe && opponent.lifePoints.length > 0) {
+    //  console.log('Before attack:', opponent.lifePoints.length)
+    //  const removedCard = opponent.lifePoints.pop()
+    //  console.log('After attack:', opponent.lifePoints.length)
+    //
+    //  if (removedCard) {
+    //    // Check for trigger
+    //    if (removedCard.trigger === 'Draw') {
+    //      const activePlayer = this.gameState.getActivePlayer()
+    //      activePlayer.hand.push(removedCard)
+    //    }
+    //
+    //    // Add to removal area
+    //    const removalArea =
+    //      this.gameState.RemovalArea.get(opponent.id) || []
+    //    this.gameState.RemovalArea.set(opponent.id, [
+    //      ...removalArea,
+    //      removedCard,
+    //    ])
+    //  }
+    //}
 
     attackingCard.restCard()
   }
@@ -444,52 +444,52 @@ export class TurnManager {
   /** End Phase
    * handles events that happen in end phase
    */
-  private handleEndPhase(cardIdxs: number[]): void {
-    // if there are any abilities that activate at the start of the end phase, activate and resolve them now.
-
-    /**
-     * Switch all resting cards to active
-     */
-    if (
-      this.currentPlayerBoard.frontLine &&
-      this.currentPlayerBoard.energyLine &&
-      this.currentPlayerBoard.actionPointsLine
-    ) {
-      this.currentPlayerBoard.frontLine.map(card =>
-        card?.activateCard(),
-      )
-      this.currentPlayerBoard.energyLine.map(card =>
-        card?.activateCard(),
-      )
-      this.currentPlayerBoard.actionPointsLine.map(card =>
-        card?.activateCard(),
-      )
-    }
-
-    /**
-     * if you have more than 8 cards in your hand, chose cards to discard until you have 8 cards in your hand
-     */
-    if (this.currentPlayer.hand.length > 8) {
-      // discard cards
-      for (let i = 0; i < this.currentPlayer.hand.length - 8; i++) {
-        const [card] = this.currentPlayer.hand.splice(cardIdxs[i], 1)
-        this.currentPlayer.sendToRemovalArea(card)
-      }
-    }
-
-    /**
-     * any abilities that state that they are active until the end of the turn now become inactive
-     */
-    if (
-      this.currentPlayerBoard.frontLine &&
-      this.currentPlayerBoard.energyLine
-    ) {
-      this.currentPlayerBoard.frontLine.map(card =>
-        card?.deactivateCardEffect(),
-      )
-      this.currentPlayerBoard.energyLine.map(card =>
-        card?.deactivateCardEffect(),
-      )
-    }
-  }
+  //private handleEndPhase(cardIdxs: number[]): void {
+  //  // if there are any abilities that activate at the start of the end phase, activate and resolve them now.
+  //
+  //  /**
+  //   * Switch all resting cards to active
+  //   */
+  //  if (
+  //    this.currentPlayerBoard.frontLine &&
+  //    this.currentPlayerBoard.energyLine &&
+  //    this.currentPlayerBoard.actionPointsLine
+  //  ) {
+  //    this.currentPlayerBoard.frontLine.map(card =>
+  //      card?.activateCard(),
+  //    )
+  //    this.currentPlayerBoard.energyLine.map(card =>
+  //      card?.activateCard(),
+  //    )
+  //    this.currentPlayerBoard.actionPointsLine.map(card =>
+  //      card?.activateCard(),
+  //    )
+  //  }
+  //
+  //  /**
+  //   * if you have more than 8 cards in your hand, chose cards to discard until you have 8 cards in your hand
+  //   */
+  //  if (this.currentPlayer.hand.length > 8) {
+  //    // discard cards
+  //    for (let i = 0; i < this.currentPlayer.hand.length - 8; i++) {
+  //      //const [card] = this.currentPlayer.hand.splice(cardIdxs[i], 1)
+  //      //this.currentPlayer.sendToRemovalArea(card)
+  //    }
+  //  }
+  //
+  //  /**
+  //   * any abilities that state that they are active until the end of the turn now become inactive
+  //   */
+  //  if (
+  //    this.currentPlayerBoard.frontLine &&
+  //    this.currentPlayerBoard.energyLine
+  //  ) {
+  //    this.currentPlayerBoard.frontLine.map(card =>
+  //      card?.deactivateCardEffect(),
+  //    )
+  //    this.currentPlayerBoard.energyLine.map(card =>
+  //      card?.deactivateCardEffect(),
+  //    )
+  //  }
+  //}
 }
