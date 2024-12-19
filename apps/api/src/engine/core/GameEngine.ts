@@ -12,17 +12,11 @@ export class GameEngine {
   }
 
   public startGame(): void {
-    console.log(`game has started`)
+    console.info(`game has started`)
+
     this.gameState.initialize()
 
-    const hasLost = this.gameState.players.some(
-      player => player.lifePoints.length <= 0,
-    )
-    const hasCards = this.gameState.players.some(
-      player => player.deck.length > 0,
-    )
-
-    while (!hasLost && hasCards && !this.gameState.gameOver) {
+    while (!this.gameState.gameOver) {
       this.turnManager.nextPhase()
     }
   }
