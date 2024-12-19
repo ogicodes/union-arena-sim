@@ -4,12 +4,9 @@ import { generateId } from '../../utils/generate-id'
 export class Player {
   public id: string
   public name: string
-  public lifePoints: Card[]
   public deck: Card[]
   public hand: Card[]
   public actionPoints: ActionPointCard[]
-  public removalArea: Card[]
-  public sideline: Card[]
   public mulligan: boolean
   public turnCount: number
   public payApToDraw: boolean
@@ -21,11 +18,8 @@ export class Player {
   ) {
     this.id = generateId()
     this.name = name
-    this.lifePoints = []
     this.deck = this.shuffleDeck(deck)
     this.hand = []
-    this.removalArea = []
-    this.sideline = []
     this.mulligan = false
     this.turnCount = 1
     this.payApToDraw = false
@@ -53,6 +47,22 @@ export class Player {
     this.hand.push(card)
   }
 
+  /**
+   * drawActionPointCard
+   *
+   * Pops and returns an action point card
+   *
+   * @returns ActionPointCard
+   * */
+  drawActionPointCard(): ActionPointCard {
+    // Remove and return the card from the actionPoints array
+    const card = this.actionPoints.pop()
+    if (!card) {
+      throw new Error('No AP card available.')
+    }
+    return card
+  }
+
   playCard(cardIndex: number): Card | null {
     if (cardIndex < 0 || cardIndex >= this.hand.length) {
       console.log(`invalid`)
@@ -63,34 +73,6 @@ export class Player {
     return card
   }
 
-  sendToSideline(card: Card): void {
-    this.sideline.push(card)
-  }
-
-  sendToRemovalArea(card: Card): void {
-    this.removalArea.push(card)
-  }
-
-  setLifePoints(card: Card): void {
-    if (card) {
-      this.lifePoints.push(card)
-      console.log(`Added card ${card.name} to life points.`)
-    } else {
-      console.log('Attempted to set a null card to life points.')
-    }
-  }
-
-  takeDamage(cardIdx: number /*gameState: GameState*/): void {
-    if (this.lifePoints[cardIdx]) {
-      this.lifePoints[cardIdx].flip(/*gameState*/)
-      console.log(
-        `Player took damage, flipped card: ${this.lifePoints[cardIdx].name}`,
-      )
-    } else {
-      console.log(`No card found at life point index ${cardIdx}.`)
-    }
-  }
-
   hasLost(): boolean {
     console.log(`You have lost. Goodbye.`)
     return true
@@ -98,13 +80,5 @@ export class Player {
 
   getHand(): Card[] {
     return this.hand
-  }
-
-  getSideline(): Card[] {
-    return this.sideline
-  }
-
-  getRemovalArea(): Card[] {
-    return this.removalArea
   }
 }
