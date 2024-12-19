@@ -48,6 +48,11 @@ export class GameState {
    * */
   initialize(): void {
     this._gameOver = false
+
+    if (this.players.length > 2) {
+      throw new Error(`A game cannot exceed more than 2 players.`)
+    }
+
     // Draw 7 cards for the lifepoints
     for (let i = 0; i < this._players.length; i++) {
       const lifePointCardDraw: Card[] = []
