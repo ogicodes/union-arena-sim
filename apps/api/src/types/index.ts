@@ -12,6 +12,7 @@ export type ActionPointCard = InstanceType<
   typeof ActionPointCardClass
 >
 
+/** A players board */
 export interface PlayerBoard {
   frontLine: Card[]
   energyLine: Card[]
@@ -21,6 +22,7 @@ export interface PlayerBoard {
   lifePoints: Card[]
 }
 
+/** The GameState Board */
 export type Board = Map<string, PlayerBoard>
 
 export type Phases =

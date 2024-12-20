@@ -19,47 +19,26 @@ export class ActionPointCard {
   }
 
   /**
-   * get id
+   * get data
    *
-   * Read-only access to the cards id
-   *
-   * @returns string
+   * A single getter for all card information.
    * */
-  get id(): string {
-    return this._id
-  }
-
-  /**
-   * get name
-   *
-   * Read-only access to the AP Card name
-   *
-   * @returns string
-   * */
-  get name(): string {
-    return this._name
-  }
-
-  /**
-   * get isFaceUp
-   *
-   * Read-only access if the card is face up
-   *
-   * @returns boolean
-   * */
-  get isFaceUp(): boolean {
-    return this._isFaceUp
-  }
-
-  /**
-   * get isRested
-   *
-   * Read-only access if the card is rested
-   *
-   * @returns boolean
-   * */
-  get isRested(): boolean {
-    return this._isRested
+  get data(): {
+    name: string
+    id: string
+    state: {
+      isFaceUp: boolean
+      isRested: boolean
+    }
+  } {
+    return {
+      name: this._name,
+      id: this._id,
+      state: {
+        isFaceUp: this._isFaceUp,
+        isRested: this._isRested,
+      },
+    }
   }
 
   /**

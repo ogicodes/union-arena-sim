@@ -22,9 +22,9 @@ describe('ActionPointCard', () => {
   })
 
   it('initializes a card correctly', () => {
-    expect(apCard.name).toBe(mockActionCardData.name)
-    expect(apCard.isFaceUp).toBeFalsy()
-    expect(apCard.isRested).toBeFalsy()
-    expect(apCard.id).toBeDefined()
+    expect(apCard.data.name).toBe(mockActionCardData.name)
+    expect(apCard.data.state.isFaceUp).toBeFalsy()
+    expect(apCard.data.state.isRested).toBeFalsy()
+    expect(apCard.data.id).toBeDefined()
   })
 })

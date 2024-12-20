@@ -13,11 +13,6 @@ import type {
 } from '../../types'
 import { generateId } from '../../utils/generate-id'
 
-// TODO:
-// CHORES
-//
-// Create a standard getter/output of the card object to use
-
 /**
  * Card
  *
