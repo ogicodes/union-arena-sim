@@ -3,6 +3,8 @@ import { Player as PlayerClass } from '../engine/components/Player'
 import { GameState as GameStateClass } from '../engine/core/GameState'
 import { GameEngine as GameEngineClass } from '../engine/core/GameEngine'
 import { ActionPointCard as ActionPointCardClass } from '../engine/components/ActionPointCard'
+import { Phase as PhaseClass } from '../engine/phases/Phase'
+import { TurnManager as TurnManagerClass } from '../engine/core/TurnManager'
 
 export type Card = InstanceType<typeof CardClass>
 export type Player = InstanceType<typeof PlayerClass>
@@ -11,6 +13,8 @@ export type GameEngine = InstanceType<typeof GameEngineClass>
 export type ActionPointCard = InstanceType<
   typeof ActionPointCardClass
 >
+export type Phase = InstanceType<typeof PhaseClass>
+export type TurnManager = InstanceType<typeof TurnManagerClass>
 
 /** A players board */
 export interface PlayerBoard {

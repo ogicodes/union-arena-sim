@@ -76,6 +76,16 @@ describe('GameState', () => {
     done()
   })
 
+  it('should throw an error if more than 2 players are added', () => {
+    const playerOne = new Player('Player 1', [], [])
+    const playerTwo = new Player('Player 2', [], [])
+    const playerThree = new Player('Player 3', [], [])
+
+    expect(() => {
+      new GameState([playerOne, playerTwo, playerThree]).initialize()
+    }).toThrow('A game cannot exceed more than 2 players.')
+  })
+
   it('should initialize correctly', done => {
     gameState.initialize()
 
@@ -142,7 +152,30 @@ describe('GameState', () => {
     expect(gameState.getBoard(playerTwo.id)).toEqual(
       expectedPlayerTwoBoard,
     )
-
     done()
+  })
+
+  it('should end the game', () => {
+    const endGameMethod = jest.spyOn(gameState, 'endGame')
+    gameState.endGame()
+    expect(endGameMethod).toHaveBeenCalled()
+    expect(gameState.gameOver).toBeTruthy()
+  })
+
+  it('should end the turn', () => {
+    const endTurnMethod = jest.spyOn(gameState, 'endTurn')
+    gameState.endTurn()
+    expect(endTurnMethod).toHaveBeenCalled()
+    expect(gameState.turnCount).toBe(2)
+  })
+
+  it('gets the active player', () => {
+    const activePlayer = gameState.activePlayer
+    expect(activePlayer).toBe(playerOne)
+  })
+
+  it('gets the inactive player', () => {
+    const inactivePlayer = gameState.inactivePlayer
+    expect(inactivePlayer).toBe(playerTwo)
   })
 })

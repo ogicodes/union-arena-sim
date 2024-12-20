@@ -1,6 +1,5 @@
 import type {
   Player,
-  Phases,
   ActionPointCard,
   Card,
   Board,
@@ -21,7 +20,7 @@ export class GameState {
   private _players: Player[]
   private _activePlayerIndex: number
   private _turnCount: number
-  private _phase: Phases
+  private _currentPhaseIdx: number
   private _board: Board
   private _gameOver: boolean
 
@@ -29,7 +28,7 @@ export class GameState {
     this._players = players
     this._activePlayerIndex = 0
     this._turnCount = 1
-    this._phase = 'Start Phase'
+    this._currentPhaseIdx = 0
     this._board = new Map()
     this._gameOver = false
   }
@@ -111,25 +110,6 @@ export class GameState {
   // [] player 2 does their thing.
 
   /**
-   * nextPhase
-   *
-   * Handles rotating the current phase to the next phase.
-   *
-   * @returns void
-   * */
-  nextPhase(): void {
-    const phases: Phases[] = [
-      'Start Phase',
-      'Movement Phase',
-      'Main Phase',
-      'Attack Phase',
-      'End Phase',
-    ]
-    const currentPhaseIdx = phases.indexOf(this._phase)
-    this._phase = phases[(currentPhaseIdx + 1) % phases.length]
-  }
-
-  /**
    * endPhase
    *
    * Handles ending the current turn:
@@ -172,14 +152,55 @@ export class GameState {
   }
 
   /**
+   * get turnCount
+   *
+   * Read-only access to the turnCount
+   *
+   * @returns number
+   * */
+  get turnCount(): number {
+    return this._turnCount
+  }
+
+  /**
    * get phase
    *
-   * Read-only access to the current phase
+   * Read-only access to the current phase's idx
+   * on the TurnManager
    *
-   * @returns Phase
+   * @returns number
    * */
-  get phase(): Phases {
-    return this._phase
+  get currentPhaseIdx(): number {
+    return this._currentPhaseIdx
+  }
+
+  /**
+   * nextPhase
+   *
+   * Increments the currentPhaseIdx
+   *
+   * @returns number
+   * */
+  public nextPhase(): number {
+    return (this._currentPhaseIdx += 1)
+  }
+
+  /**
+   * nextPhase
+   *
+   * Increments the currentPhaseIdx
+   *
+   * @returns number
+   * */
+  /**
+   * nextPhase
+   *
+   * Increments the currentPhaseIdx
+   *
+   * @returns number - current phase idx
+   * */
+  public setPhase(idx: number): number {
+    return (this._currentPhaseIdx = idx)
   }
 
   /**

@@ -54,18 +54,6 @@ export class ActionPointCard {
   }
 
   /**
-   * activateCard
-   *
-   * Takes the current card and activates the card.
-   *
-   * @returns boolean
-   */
-  public activateCard(): boolean {
-    this._isRested = !this._isRested
-    return this._isRested
-  }
-
-  /**
    * restCard
    *
    * Takes the current card and rests it.

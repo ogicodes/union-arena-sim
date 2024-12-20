@@ -75,4 +75,72 @@ describe('Player', () => {
     expect(player.actionPoints).toHaveLength(2)
     done()
   })
+
+  it('gets the turn count', () => {
+    expect(player.turnCount).toBe(1)
+  })
+
+  it('returns the correct player name', () => {
+    expect(player.name).toBe(mockPlayerData.name)
+  })
+
+  it('draws a card from the players deck', () => {
+    const mockDrawMethod = jest.spyOn(player, 'drawCard')
+
+    const card = player.drawCard()
+
+    expect(mockDrawMethod).toHaveBeenCalled()
+    expect(player.deck).toHaveLength(49)
+    expect(card).toBeDefined()
+  })
+
+  it('logs a message when attempting to draw more cards than available', () => {
+    const mockDrawMethod = jest.spyOn(player, 'drawCard')
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation()
+
+    for (let i = 0; i < 51; i++) {
+      const card = player.drawCard()
+      if (i < 50) {
+        expect(card).toBeDefined()
+      } else {
+        expect(card).toBeNull()
+      }
+    }
+
+    expect(mockDrawMethod).toHaveBeenCalledTimes(51)
+    expect(consoleSpy).toHaveBeenCalledWith('no cards left')
+
+    consoleSpy.mockRestore()
+    mockDrawMethod.mockRestore()
+  })
+
+  it('successfully draws an action point card', () => {
+    const mockAPDrawMethod = jest.spyOn(player, 'drawActionPointCard')
+
+    const card = player.drawActionPointCard()
+
+    expect(mockAPDrawMethod).toHaveBeenCalledTimes(1)
+    expect(card).toBeDefined()
+
+    mockAPDrawMethod.mockRestore()
+  })
+
+  it('throws an error when more action point cards are drawn than available', () => {
+    const mockAPDrawMethod = jest.spyOn(player, 'drawActionPointCard')
+
+    for (let i = 0; i < 4; i++) {
+      if (i < 3) {
+        const card = player.drawActionPointCard()
+        expect(card).toBeDefined()
+      } else {
+        expect(() => player.drawActionPointCard()).toThrow(
+          'No AP card available.',
+        )
+      }
+    }
+
+    expect(mockAPDrawMethod).toHaveBeenCalledTimes(4)
+
+    mockAPDrawMethod.mockRestore()
+  })
 })

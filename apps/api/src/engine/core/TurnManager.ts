@@ -1,4 +1,5 @@
-import type { GameState } from '../../types'
+import type { GameState, Phase } from '../../types'
+import { StartPhase } from '../phases'
 
 /**
  * TurnManager
@@ -11,9 +12,11 @@ import type { GameState } from '../../types'
  * */
 export class TurnManager {
   private _gameState: GameState
+  private _phases: Phase[] = []
 
-  constructor(gamestate: GameState) {
-    this._gameState = gamestate
+  constructor(gameState: GameState) {
+    this._gameState = gameState
+    this._phases = [new StartPhase(gameState)]
   }
 
   /**
@@ -24,23 +27,39 @@ export class TurnManager {
    * @returns void
    * */
   public executePhase(): void {
-    const currentPhase = this._gameState.phase
-    switch (currentPhase) {
+    const currentPhase = this._phases[this._gameState.currentPhaseIdx]
+    switch (currentPhase.name) {
       case 'Start Phase':
+        currentPhase.execute()
+        this.advancePhase()
         break
       case 'Movement Phase':
+        console.log('Movement Phase')
         break
       case 'Main Phase':
+        console.log('Main Phase')
         break
       case 'Attack Phase':
+        console.log('Attack Phase')
         break
       case 'End Phase':
+        console.log('End Phase')
         break
     }
   }
 
-  /** for test purposes only */
-  public readGameState() {
-    console.log(this._gameState)
+  /**
+   * advancePhase
+   *
+   * Advances to the next phase after completion.
+   *
+   * @returns number - current phase idx
+   * */
+  private advancePhase(): number {
+    this._gameState.nextPhase()
+    if (this._gameState.currentPhaseIdx >= this._phases.length) {
+      this._gameState.setPhase(0)
+    }
+    return this._gameState.currentPhaseIdx
   }
 }

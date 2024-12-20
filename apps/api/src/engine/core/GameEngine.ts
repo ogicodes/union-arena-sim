@@ -25,8 +25,10 @@ export class GameEngine {
   public startGame(): void {
     console.info(`game has started`)
 
+    this.gameState.initialize()
+
     while (!this.gameState.gameOver) {
-      /* do something */
+      this.turnManager.executePhase()
     }
   }
 }

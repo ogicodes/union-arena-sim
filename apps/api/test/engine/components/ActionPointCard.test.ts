@@ -27,4 +27,22 @@ describe('ActionPointCard', () => {
     expect(apCard.data.state.isRested).toBeFalsy()
     expect(apCard.data.id).toBeDefined()
   })
+
+  it('should flip', () => {
+    const mockFlipMethod = jest.spyOn(apCard, 'flip')
+
+    apCard.flip()
+
+    expect(mockFlipMethod).toHaveBeenCalled()
+    expect(apCard.data.state.isFaceUp).toBeTruthy()
+  })
+
+  it('should activate', () => {
+    const mockRestMethod = jest.spyOn(apCard, 'restCard')
+
+    apCard.restCard()
+
+    expect(mockRestMethod).toHaveBeenCalled()
+    expect(apCard.data.state.isRested).toBeTruthy()
+  })
 })
