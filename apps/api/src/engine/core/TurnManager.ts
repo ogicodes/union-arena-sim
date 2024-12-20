@@ -16,6 +16,29 @@ export class TurnManager {
     this._gameState = gamestate
   }
 
+  /**
+   * executePhase
+   *
+   * Executes the current phase's actions.
+   *
+   * @returns void
+   * */
+  public executePhase(): void {
+    const currentPhase = this._gameState.phase
+    switch (currentPhase) {
+      case 'Start Phase':
+        break
+      case 'Movement Phase':
+        break
+      case 'Main Phase':
+        break
+      case 'Attack Phase':
+        break
+      case 'End Phase':
+        break
+    }
+  }
+
   /** for test purposes only */
   public readGameState() {
     console.log(this._gameState)

@@ -124,7 +124,6 @@ export class Player {
    * @returns ActionPointCard
    * */
   public drawActionPointCard(): ActionPointCard {
-    // Remove and return the card from the actionPoints array
     const card = this._actionPoints.pop()
     if (!card) {
       throw new Error('No AP card available.')

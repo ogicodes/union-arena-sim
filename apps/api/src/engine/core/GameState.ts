@@ -172,6 +172,17 @@ export class GameState {
   }
 
   /**
+   * get phase
+   *
+   * Read-only access to the current phase
+   *
+   * @returns Phase
+   * */
+  get phase(): Phases {
+    return this._phase
+  }
+
+  /**
    * getBoard
    *
    * This method will return the board of the player with the given id.
