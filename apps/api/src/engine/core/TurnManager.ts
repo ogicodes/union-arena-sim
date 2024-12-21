@@ -44,6 +44,11 @@ export class TurnManager {
         break
       case 'End Phase':
         console.log('End Phase')
+        /**
+         * end phase logic:
+         *
+         * should increment the gameState turncount by 1
+         * */
         break
     }
   }
