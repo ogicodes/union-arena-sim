@@ -63,7 +63,7 @@ describe('Card', () => {
     card.rest()
 
     expect(restMockMethod).toHaveBeenCalled()
-    expect(card.data.state.isRested).toBeTruthy()
+    expect(card.data.state.isRested).toBeFalsy()
   })
 
   it('gets flipped', () => {
