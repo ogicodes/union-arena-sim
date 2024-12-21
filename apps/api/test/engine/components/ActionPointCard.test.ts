@@ -38,9 +38,9 @@ describe('ActionPointCard', () => {
   })
 
   it('should activate', () => {
-    const mockRestMethod = jest.spyOn(apCard, 'restCard')
+    const mockRestMethod = jest.spyOn(apCard, 'rest')
 
-    apCard.restCard()
+    apCard.rest()
 
     expect(mockRestMethod).toHaveBeenCalled()
     expect(apCard.data.state.isRested).toBeTruthy()

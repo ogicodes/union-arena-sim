@@ -79,6 +79,30 @@ export class Card {
   }
 
   /**
+   * restCard
+   *
+   * Takes the current card and rests it.
+   *
+   * @returns boolean
+   */
+  public rest(): boolean {
+    this._isRested = !this._isRested
+    return this._isRested
+  }
+
+  /**
+   * flip
+   *
+   * Takes the current card and flips it face up.
+   *
+   * @returns boolean - returns true if the card is face up
+   */
+  public flip(): boolean {
+    this._isFaceUp = !this._isFaceUp
+    return this._isFaceUp
+  }
+
+  /**
    * get data
    *
    * A single getter for all card information.

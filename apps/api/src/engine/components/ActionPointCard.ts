@@ -60,7 +60,7 @@ export class ActionPointCard {
    *
    * @returns boolean
    */
-  public restCard(): boolean {
+  public rest(): boolean {
     this._isRested = !this._isRested
     return this._isRested
   }

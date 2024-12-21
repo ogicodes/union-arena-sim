@@ -56,4 +56,22 @@ describe('Card', () => {
     expect(card.data.costs.needEnergyData).toBeDefined()
     expect(card.data.costs.generatedEnergyData).toBeDefined()
   })
+
+  it('gets rested', () => {
+    const restMockMethod = jest.spyOn(card, 'rest')
+
+    card.rest()
+
+    expect(restMockMethod).toHaveBeenCalled()
+    expect(card.data.state.isRested).toBeTruthy()
+  })
+
+  it('gets flipped', () => {
+    const flipMockMethod = jest.spyOn(card, 'flip')
+
+    card.flip()
+
+    expect(flipMockMethod).toHaveBeenCalled()
+    expect(card.data.state.isFaceUp).toBeFalsy()
+  })
 })
