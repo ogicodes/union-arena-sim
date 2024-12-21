@@ -72,6 +72,6 @@ describe('Card', () => {
     card.flip()
 
     expect(flipMockMethod).toHaveBeenCalled()
-    expect(card.data.state.isFaceUp).toBeFalsy()
+    expect(card.data.state.isFaceUp).toBeTruthy()
   })
 })
