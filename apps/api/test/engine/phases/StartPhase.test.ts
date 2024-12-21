@@ -27,7 +27,8 @@ describe('StartPhase', () => {
 
   beforeEach(done => {
     const mockPlayerDeck: CardType[] = []
-    const mockActionCardCollection: ActionPointCardType[] = []
+    const mockActionCardCollectionOne: ActionPointCardType[] = []
+    const mockActionCardCollectionTwo: ActionPointCardType[] = []
 
     const mockCard = new Card(
       mockDeckCardData.name,
@@ -57,21 +58,23 @@ describe('StartPhase', () => {
     }
 
     for (let i = 0; i < 3; i++) {
-      mockActionCardCollection.push(mockActionCard)
+      mockActionCardCollectionOne.push(mockActionCard)
+      mockActionCardCollectionTwo.push(mockActionCard)
     }
 
     const mockPlayerOne = new Player(
       'player-one',
       mockPlayerDeck,
-      mockActionCardCollection,
+      mockActionCardCollectionOne,
     )
     const mockPlayerTwo = new Player(
       'player-two',
       mockPlayerDeck,
-      mockActionCardCollection,
+      mockActionCardCollectionTwo,
     )
 
     gameState = new GameState([mockPlayerOne, mockPlayerTwo])
+    gameState.initialize()
 
     startPhase = new StartPhase(gameState)
     done()

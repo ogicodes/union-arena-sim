@@ -22,14 +22,16 @@ describe('TurnManager', () => {
   beforeEach(done => {
     const playerOneDeck: CardType[] = []
     const playerTwoDeck: CardType[] = []
-    const actionPointCollection: ActionPointCardType[] = []
+    const actionPointCollectionOne: ActionPointCardType[] = []
+    const actionPointCollectionTwo: ActionPointCardType[] = []
 
     const actionPointCard = new ActionPointCard(
       mockActionCardData.name,
     )
 
     for (let i = 0; i < 3; i++) {
-      actionPointCollection.push(actionPointCard)
+      actionPointCollectionOne.push(actionPointCard)
+      actionPointCollectionTwo.push(actionPointCard)
     }
 
     const mockCard = new Card(
@@ -59,14 +61,15 @@ describe('TurnManager', () => {
     const playerOne = new Player(
       'player-one',
       playerOneDeck,
-      actionPointCollection,
+      actionPointCollectionOne,
     )
     const playerTwo = new Player(
       'player-two',
       playerTwoDeck,
-      actionPointCollection,
+      actionPointCollectionTwo,
     )
     gameState = new GameState([playerOne, playerTwo])
+    gameState.initialize()
 
     turnManager = new TurnManager(gameState)
     done()
