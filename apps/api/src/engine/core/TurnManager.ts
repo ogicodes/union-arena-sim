@@ -1,5 +1,5 @@
 import type { GameState, Phase } from '../../types'
-import { StartPhase } from '../phases'
+import { StartPhase, EndPhase } from '../phases'
 
 /**
  * TurnManager
@@ -43,12 +43,8 @@ export class TurnManager {
         console.log('Attack Phase')
         break
       case 'End Phase':
-        console.log('End Phase')
-        /**
-         * end phase logic:
-         *
-         * should increment the gameState turncount by 1
-         * */
+        currentPhase.execute()
+        this.advancePhase()
         break
     }
   }
