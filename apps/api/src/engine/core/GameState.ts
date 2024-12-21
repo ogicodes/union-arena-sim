@@ -92,23 +92,6 @@ export class GameState {
     }
   }
 
-  // INITIALIZE STAGE:
-  //
-  // [x] each player draws 7 cards
-  // [x] each player draws another 7 cards, puts in life area.
-  //
-  // [x] each player puts 3 ap cards into the action point line.
-  //
-  // --------------------------------------------------------
-
-  // GAME STAGE:
-  //
-  // [] player 1 flips 1 ap card upright
-  // [] player 1 does their thing.
-  //
-  // [] player 2 flips 2 ap cards upright
-  // [] player 2 does their thing.
-
   /**
    * endPhase
    *
@@ -154,7 +137,7 @@ export class GameState {
   /**
    * get turnCount
    *
-   * Read-only access to the turnCount
+   * Read-only access to the turnCount.
    *
    * @returns number
    * */
@@ -166,7 +149,7 @@ export class GameState {
    * get phase
    *
    * Read-only access to the current phase's idx
-   * on the TurnManager
+   * on the TurnManager.
    *
    * @returns number
    * */
@@ -177,7 +160,7 @@ export class GameState {
   /**
    * nextPhase
    *
-   * Increments the currentPhaseIdx
+   * Increments the currentPhaseIdx.
    *
    * @returns number
    * */
@@ -186,16 +169,9 @@ export class GameState {
   }
 
   /**
-   * nextPhase
+   * setPhase
    *
-   * Increments the currentPhaseIdx
-   *
-   * @returns number
-   * */
-  /**
-   * nextPhase
-   *
-   * Increments the currentPhaseIdx
+   * Sets the phase with a zero-based idx.
    *
    * @returns number - current phase idx
    * */
