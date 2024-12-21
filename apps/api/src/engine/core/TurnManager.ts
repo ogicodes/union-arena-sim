@@ -16,7 +16,10 @@ export class TurnManager {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
-    this._phases = [new StartPhase(gameState)]
+    this._phases = [
+      new StartPhase(gameState),
+      new EndPhase(gameState),
+    ]
   }
 
   /**

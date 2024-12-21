@@ -17,6 +17,7 @@ class EventEmitter {
     )
   }
 
+  // eslint-disable-next-line
   emit(event: string, payload?: any): void {
     if (!this.listeners[event]) return
     this.listeners[event].forEach(cb => cb(payload))

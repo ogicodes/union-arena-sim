@@ -85,6 +85,6 @@ describe('TurnManager', () => {
     turnManager.executePhase()
 
     expect(executePhaseMock).toHaveBeenCalled()
-    expect(gameState.currentPhaseIdx).toBe(0)
+    expect(gameState.currentPhaseIdx).toBe(1)
   })
 })
