@@ -1,5 +1,5 @@
 import type { GameState, Phase } from '../../types'
-import { StartPhase, EndPhase } from '../phases'
+import { StartPhase, MovementPhase, EndPhase } from '../phases'
 
 /**
  * TurnManager
@@ -16,8 +16,19 @@ export class TurnManager {
 
   constructor(gameState: GameState) {
     this._gameState = gameState
+    /**
+     * this._phases
+     *
+     * The phases in order:
+     * 1. Start Phase
+     * 2. Movement Phase
+     * 3. Main Phase
+     * 4. Attack Phase
+     * 5. End Phase
+     * */
     this._phases = [
       new StartPhase(gameState),
+      new MovementPhase(gameState),
       new EndPhase(gameState),
     ]
   }
