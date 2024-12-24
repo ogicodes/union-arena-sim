@@ -97,14 +97,17 @@ export class GameState {
    *
    * Handles ending the current turn:
    *  1. Sets the current activePlayerIndex on the GameState to the next player.
-   *  2. Increments the turn on the GameState.
+   *  2. Only increments the turnCount when reached the last player.
    *
    *  @returns void
    * */
   endTurn(): void {
     this._activePlayerIndex =
       (this._activePlayerIndex + 1) % this._players.length
-    this._turnCount++
+
+    if (this._activePlayerIndex === 0) {
+      this._turnCount++
+    }
     console.log(`turn ended`)
   }
 
@@ -117,6 +120,17 @@ export class GameState {
    * */
   get activePlayer(): Player {
     return this._players[this._activePlayerIndex]
+  }
+
+  /**
+   * get activePlayerIndex
+   *
+   * Retuns the active player index on GameState
+   *
+   * @returns number
+   * */
+  get activePlayerIndex(): number {
+    return this._activePlayerIndex
   }
 
   /**
