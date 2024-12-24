@@ -143,4 +143,18 @@ describe('Player', () => {
 
     mockAPDrawMethod.mockRestore()
   })
+
+  it('plucks a card from the players hand', () => {
+    for (let i = 0; i < 7; i++) {
+      player.addToHand(mockCard)
+    }
+
+    const pluckMethod = jest.spyOn(player, 'pluck')
+
+    const card = player.pluck(1)
+
+    expect(card).toBeDefined()
+    expect(pluckMethod).toHaveBeenCalledWith(1)
+    expect(player.hand).toHaveLength(6)
+  })
 })
