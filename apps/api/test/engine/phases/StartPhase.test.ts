@@ -92,4 +92,17 @@ describe('StartPhase', () => {
     expect(mockExecute).toHaveBeenCalled()
     expect(startPhase.name).toBe('Start Phase')
   })
+
+  it('should unrest the AP cards', () => {
+    const { activePlayer } = gameState
+    const { actionPointsLine } = gameState.getBoard(activePlayer.id)
+
+    actionPointsLine.forEach(card => {
+      const mockRestMethod = jest.spyOn(card, 'rest')
+      if (card.data.state.isRested) {
+        expect(mockRestMethod).toHaveBeenCalled()
+      }
+      expect(card.data.state.isRested).toBeFalsy()
+    })
+  })
 })

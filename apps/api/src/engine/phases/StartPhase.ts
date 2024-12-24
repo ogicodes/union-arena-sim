@@ -20,31 +20,43 @@ class StartPhase extends Phase {
   protected _execute(): void {
     this.unrestCards()
     this.flipActionPoints()
+    this.drawCard()
+  }
+
+  /**
+   * private drawCard
+   *
+   * At the start of the turn, players draw a card from their deck into their hands.
+   * If there are no cards in the deck, it is gameover.
+   *
+   * @returns void
+   * */
+  private drawCard(): void {
+    const { turnCount, activePlayer } = this._gameState
+    if (turnCount !== 1) {
+      const drawnCard = activePlayer.drawCard()
+      if (drawnCard) {
+        activePlayer.addToHand(drawnCard)
+      } else {
+        this._gameState.endGame()
+      }
+    }
   }
 
   /**
    * private unrestCards
    *
-   * Takes the current activePlayer and unrests
-   * any cards that are currently resting
+   * At the start of the turn, switch all AP cards
+   * on the gameState board to be unrested.
    *
    * @returns void
    * */
   private unrestCards(): void {
     const { activePlayer } = this._gameState
-    const { actionPointsLine, frontLine, energyLine } =
-      this._gameState.getBoard(activePlayer.id)
+    const { actionPointsLine } = this._gameState.getBoard(
+      activePlayer.id,
+    )
     actionPointsLine.forEach(card => {
-      if (card.data.state.isRested) {
-        card.rest()
-      }
-    })
-    frontLine.forEach(card => {
-      if (card.data.state.isRested) {
-        card.rest()
-      }
-    })
-    energyLine.forEach(card => {
       if (card.data.state.isRested) {
         card.rest()
       }

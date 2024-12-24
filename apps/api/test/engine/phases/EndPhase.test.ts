@@ -4,6 +4,7 @@ import {
   it,
   beforeEach,
   afterEach,
+  jest,
 } from '@jest/globals'
 import { EndPhase } from '../../../src/engine/phases'
 import { GameState } from '../../../src/engine/core/GameState'
@@ -96,5 +97,28 @@ describe('EndPhase', () => {
   it('should end the turn', () => {
     endPhase.execute()
     expect(gameState.turnCount).toBe(2)
+  })
+
+  it('should unrest the cards', () => {
+    const { activePlayer } = gameState
+    const { frontLine, energyLine } = gameState.getBoard(
+      activePlayer.id,
+    )
+
+    frontLine.forEach(card => {
+      const mockRestMethod = jest.spyOn(card, 'rest')
+      if (card.data.state.isRested) {
+        expect(mockRestMethod).toHaveBeenCalled()
+      }
+      expect(card.data.state.isRested).toBeFalsy()
+    })
+
+    energyLine.forEach(card => {
+      const mockRestMethod = jest.spyOn(card, 'rest')
+      if (card.data.state.isRested) {
+        expect(mockRestMethod).toHaveBeenCalled()
+      }
+      expect(card.data.state.isRested).toBeFalsy()
+    })
   })
 })
