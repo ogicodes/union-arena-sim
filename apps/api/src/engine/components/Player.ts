@@ -95,6 +95,13 @@ export class Player {
     return this._name
   }
 
+  /**
+   * private shuffleDeck
+   *
+   * Shuffles the deck to assemble a random deck.
+   *
+   * @returns Card[]
+   * */
   private shuffleDeck(deck: Card[]): Card[] {
     for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
@@ -103,6 +110,25 @@ export class Player {
     return deck
   }
 
+  /**
+   * public pluck
+   *
+   * Removes a single card from the players hand, and returns it.
+   *
+   * @param cardIdx number
+   * @returns Card | null
+   * */
+  public pluck(cardIdx: number): Card | null {
+    return this._hand.splice(cardIdx, 1)[0] ?? null
+  }
+
+  /**
+   * public drawCard
+   *
+   * Draws a card from the deck to the players hand.
+   *
+   * @returns Card | null
+   * */
   public drawCard(): Card | null {
     if (this._deck.length === 0) {
       console.log(`no cards left`)
@@ -112,6 +138,13 @@ export class Player {
     return card || null
   }
 
+  /**
+   * public addToHand
+   *
+   * Adds a card to the players hand.
+   *
+   * @returns void
+   * */
   public addToHand(card: Card): void {
     this._hand.push(card)
   }
