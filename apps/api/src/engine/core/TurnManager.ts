@@ -1,5 +1,10 @@
 import type { GameState, Phase } from '../../types'
-import { StartPhase, MovementPhase, EndPhase } from '../phases'
+import {
+  StartPhase,
+  MovementPhase,
+  MainPhase,
+  EndPhase,
+} from '../phases'
 
 /**
  * TurnManager
@@ -29,6 +34,7 @@ export class TurnManager {
     this._phases = [
       new StartPhase(gameState),
       new MovementPhase(gameState),
+      new MainPhase(gameState),
       new EndPhase(gameState),
     ]
   }
@@ -48,10 +54,10 @@ export class TurnManager {
         this.advancePhase()
         break
       case 'Movement Phase':
-        console.log('Movement Phase')
+        currentPhase.execute()
         break
       case 'Main Phase':
-        console.log('Main Phase')
+        currentPhase.execute()
         break
       case 'Attack Phase':
         console.log('Attack Phase')

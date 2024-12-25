@@ -19,4 +19,6 @@ export type MovementPhaseMovement =
   | 'FRONTLINE_TO_ENERGYLINE'
   | 'ENERGYLINE_TO_FRONTLINE'
 
-export type MainPhaseMovement = ''
+export type MainPhaseMovement =
+  | 'HAND_TO_ENERGYLINE'
+  | 'HAND_TO_FRONTLINE'
