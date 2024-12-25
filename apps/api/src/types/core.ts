@@ -15,7 +15,8 @@ export type Phases =
   | 'Attack Phase'
   | 'End Phase'
 
-export type Movement =
-  | 'HAND_TO_FRONTLINE'
+export type MovementPhaseMovement =
   | 'FRONTLINE_TO_ENERGYLINE'
   | 'ENERGYLINE_TO_FRONTLINE'
+
+export type MainPhaseMovement = ''

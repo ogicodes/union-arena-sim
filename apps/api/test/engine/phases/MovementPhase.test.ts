@@ -4,7 +4,6 @@ import {
   it,
   beforeEach,
   afterEach,
-  jest,
 } from '@jest/globals'
 import { MovementPhase } from '../../../src/engine/phases'
 import { GameState } from '../../../src/engine/core/GameState'
@@ -12,8 +11,6 @@ import { Card } from '../../../src/engine/components/Card'
 import { Player } from '../../../src/engine/components/Player'
 import { ActionPointCard } from '../../../src/engine/components/ActionPointCard'
 import type {
-  Movement,
-  Phase,
   GameState as GameStateType,
   ActionPointCard as ActionPointCardType,
   Card as CardType,
@@ -88,14 +85,7 @@ describe('EndPhase', () => {
     done()
   })
 
-  it('should move a card from the active players hand to the frontline', () => {
-    const { activePlayer } = gameState
-
-    const movementSpy = jest.spyOn(movementPhase, 'movement')
-
-    movementPhase.movement('HAND_TO_FRONTLINE', 1, 1)
-
-    expect(movementSpy).toHaveBeenCalled()
-    expect(activePlayer.hand).toHaveLength(6)
+  it('should initialize', () => {
+    expect(movementPhase.name).toBe('Movement Phase')
   })
 })

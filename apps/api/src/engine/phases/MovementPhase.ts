@@ -1,4 +1,8 @@
-import type { Movement, GameState, Phases } from '../../types'
+import type {
+  MovementPhaseMovement as Movement,
+  GameState,
+  Phases,
+} from '../../types'
 import { Phase } from './Phase'
 
 class MovementPhase extends Phase {
@@ -37,9 +41,6 @@ class MovementPhase extends Phase {
     targetIdx: number,
   ): void {
     switch (type) {
-      case 'HAND_TO_FRONTLINE':
-        this.moveHandToFrontLine(cardIdx, targetIdx)
-        break
       case 'FRONTLINE_TO_ENERGYLINE':
         this.moveFrontLineToEnergyLine(cardIdx, targetIdx)
         break
@@ -71,6 +72,10 @@ class MovementPhase extends Phase {
       throw new Error(
         'No card exists at the specified energyLine index.',
       )
+    }
+
+    if (card.data.abilities.keyword !== 'Step') {
+      throw new Error("Card must have the keyword 'step'")
     }
 
     if (energyLine[energyLineIdx]) {
@@ -118,47 +123,6 @@ class MovementPhase extends Phase {
     }
 
     energyLine.splice(energyLineIdx, 1)
-    frontLine.splice(frontLineIdx, 0, card)
-
-    return frontLineIdx
-  }
-
-  /**
-   * private moveHandToFrontLine
-   *
-   * Handles the movement of a card from the hand to the frontLine
-   *
-   * @param handIdx number - The index of the Card on the hand to move.
-   * @param frontLineIdx number - the index position on the frontLine to move the Card to.
-   * @returns idx number - The Card position on the frontLine.
-   * */
-  private moveHandToFrontLine(
-    handIdx: number,
-    frontLineIdx: number,
-  ): number {
-    const { activePlayer } = this._gameState
-    const { energyLine, frontLine } = this._gameState.getBoard(
-      activePlayer.id,
-    )
-
-    const totalEnergy = energyLine.reduce(
-      (acc, card) => acc + card.data.costs.generatedEnergyData,
-      0,
-    )
-    const card = activePlayer.pluck(handIdx)
-
-    if (!card || card.data.costs.needEnergyData > totalEnergy) {
-      throw new Error(
-        'Card cannot be moved to the frontLine due to insufficient energy.',
-      )
-    }
-
-    if (frontLine[frontLineIdx]) {
-      throw new Error(
-        'The specified frontLine position is already occupied.',
-      )
-    }
-
     frontLine.splice(frontLineIdx, 0, card)
 
     return frontLineIdx
