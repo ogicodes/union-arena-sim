@@ -74,7 +74,7 @@ jobs:
         run: pnpm format:check
 
   test:
-    name: Test - macOS
+    name: Test
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
