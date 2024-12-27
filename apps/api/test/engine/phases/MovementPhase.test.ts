@@ -20,7 +20,7 @@ import {
   mockDeckCardData,
 } from '../../fixtures/card-fixture'
 
-describe('EndPhase', () => {
+describe('MovementPhase', () => {
   let movementPhase: InstanceType<typeof MovementPhase>
   let gameState: GameStateType
 
