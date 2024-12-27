@@ -53,6 +53,8 @@ class MovementPhase extends Phase {
   /**
    * private moveFrontLineToEnergyLine
    *
+   * Handles the movement of a card from the frontLine to the energyLine.
+   *
    * @param frontLineIdx number - The index of the Card on the frontLine to move.
    * @param energyLineIdx number - The index position on the energyLine to move the Card to.
    * @returns idx number - The Card position on the energyLine.
@@ -93,7 +95,7 @@ class MovementPhase extends Phase {
   /**
    * private moveEnergyLineToFrontLine
    *
-   * Handles the movement of a card from the energyLine to the frontLine
+   * Handles the movement of a card from the energyLine to the frontLine.
    *
    * @param energyLineIdx number - The index of the Card on the energyLine to move.
    * @param frontLineIdx number - The index position on the frontLine to move the Card to.
