@@ -15,6 +15,7 @@ import type {
   GameState as GameStateType,
   ActionPointCard as ActionPointCardType,
   Card as CardType,
+  Player as PlayerType,
 } from '../../../src/types'
 import {
   mockActionCardData,
@@ -24,6 +25,7 @@ import {
 describe('MainPhase', () => {
   let mainPhase: InstanceType<typeof MainPhase>
   let gameState: GameStateType
+  let mockPlayerOne: PlayerType
 
   beforeEach(done => {
     const mockPlayerDeck: CardType[] = []
@@ -62,7 +64,7 @@ describe('MainPhase', () => {
       mockActionCardCollectionTwo.push(mockActionCard)
     }
 
-    const mockPlayerOne = new Player(
+    mockPlayerOne = new Player(
       'player-one',
       mockPlayerDeck,
       mockActionCardCollectionOne,
@@ -86,6 +88,18 @@ describe('MainPhase', () => {
 
   it('should initalize correctly', () => {
     expect(mainPhase.name).toBe('Main Phase')
+  })
+
+  it('should call the execute function', () => {
+    const executeSpy = jest.spyOn(mainPhase, 'execute')
+    const consoleSpy = jest.spyOn(console, 'log')
+
+    mainPhase.execute()
+
+    expect(executeSpy).toHaveBeenCalled()
+    expect(consoleSpy).toHaveBeenCalledWith(
+      `Main Phase: ${mockPlayerOne.id}`,
+    )
   })
 
   it('should allow a card to move from the hand to the frontLine', () => {
