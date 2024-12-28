@@ -10,7 +10,7 @@ const gameModule = (io: Server) => {
     console.info(`Player connected: ${socket.id}`)
 
     socket.on('game:join', payload =>
-      onJoinController(socket, payload),
+      onJoinController(socket, payload, gameNamespace),
     )
     socket.on('game:endPhase', payload =>
       onEndPhaseController(socket, payload),
