@@ -1,16 +1,4 @@
-import type {
-  CardType,
-  Trigger,
-  TriggerEffect,
-  Keyword,
-  KeywordAbility,
-  ActivationTimingAbility,
-  ActivationCondition,
-  BpData,
-  CardColor,
-  GeneratedEnergyData,
-  AttributeData,
-} from '../../types'
+import type { CardType, CardColor } from '../../types'
 import { generateId } from '../../utils/generate-id'
 
 /**
@@ -22,40 +10,26 @@ export class Card {
   private _name: string
   private _effectData: string
   private _cardType: CardType
+  private _triggerData: string | null
   private _uniqueId: string
   private _isFaceUp: boolean
   private _isRested: boolean
-  private _trigger: Trigger
-  private _triggerEffect: TriggerEffect
-  private _keyword: Keyword
-  private _keywordAbility: KeywordAbility
-  private _activationTimingAbility: ActivationTimingAbility[]
-  private _activationCondition: ActivationCondition
   private _needEnergyData: number
   private _apCost: number
-  private _isRaidable: boolean
   private _color: CardColor
-  private _bpData: BpData
-  private _attributeData: AttributeData
-  private _generatedEnergyData: GeneratedEnergyData
+  private _bpData: number | null
+  private _generatedEnergyData: number
 
   constructor(
     name: string,
     effectData: string,
     cardType: CardType,
-    trigger: Trigger,
-    triggerEffect: TriggerEffect,
-    keyword: Keyword,
-    keywordAbility: KeywordAbility,
-    activationTimingAbility: ActivationTimingAbility[],
-    activationCondition: ActivationCondition,
+    triggerData: string | null,
     apCost: number,
-    isRaidable: boolean,
     color: CardColor,
-    bpData: BpData,
-    attributeData: AttributeData,
+    bpData: number | null,
     needEnergyData: number,
-    generatedEnergyData: GeneratedEnergyData,
+    generatedEnergyData: number,
   ) {
     this._name = name
     this._effectData = effectData
@@ -63,18 +37,11 @@ export class Card {
     this._uniqueId = generateId()
     this._isFaceUp = false
     this._isRested = true
-    this._trigger = trigger
-    this._triggerEffect = triggerEffect
-    this._keyword = keyword
-    this._keywordAbility = keywordAbility
-    this._activationTimingAbility = activationTimingAbility
-    this._activationCondition = activationCondition
+    this._triggerData = triggerData
     this._generatedEnergyData = generatedEnergyData
     this._apCost = apCost
-    this._isRaidable = isRaidable
     this._color = color
     this._bpData = bpData
-    this._attributeData = attributeData
     this._needEnergyData = needEnergyData
   }
 
@@ -112,23 +79,16 @@ export class Card {
     id: string
     cardType: CardType
     color: CardColor
-    isRaidable: boolean
-    bpData: BpData
-    attributeData: AttributeData
+    bpData: number | null
     state: { isFaceUp: boolean; isRested: boolean }
     abilities: {
       effectData: string
-      trigger: Trigger
-      triggerEffect: TriggerEffect
-      keyword: Keyword
-      keywordAbility: KeywordAbility
-      activationTimingAbility: ActivationTimingAbility[]
-      activationCondition: ActivationCondition
+      triggerData: string | null
     }
     costs: {
       apCost: number
       needEnergyData: number
-      generatedEnergyData: GeneratedEnergyData
+      generatedEnergyData: number
     }
   } {
     return {
@@ -136,21 +96,14 @@ export class Card {
       id: this._uniqueId,
       cardType: this._cardType,
       color: this._color,
-      isRaidable: this._isRaidable,
       bpData: this._bpData,
-      attributeData: this._attributeData,
       state: {
         isFaceUp: this._isFaceUp,
         isRested: this._isRested,
       },
       abilities: {
         effectData: this._effectData,
-        trigger: this._trigger,
-        triggerEffect: this._triggerEffect,
-        keyword: this._keyword,
-        keywordAbility: this._keywordAbility,
-        activationTimingAbility: this._activationTimingAbility,
-        activationCondition: this._activationCondition,
+        triggerData: this._triggerData,
       },
       costs: {
         apCost: this._apCost,

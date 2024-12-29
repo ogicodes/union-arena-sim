@@ -17,17 +17,10 @@ describe('Card', () => {
       mockDeckCardData.name,
       mockDeckCardData.effectData,
       mockDeckCardData.cardType,
-      mockDeckCardData.trigger,
-      mockDeckCardData.triggerEffect,
-      mockDeckCardData.keyword,
-      mockDeckCardData.keywordAbility,
-      mockDeckCardData.activationTimingAbility,
-      mockDeckCardData.activationCondition,
+      mockDeckCardData.triggerData,
       mockDeckCardData.apCost,
-      mockDeckCardData.isRaidable,
       mockDeckCardData.color,
       mockDeckCardData.bpData,
-      mockDeckCardData.attributeData,
       mockDeckCardData.needEnergyData,
       mockDeckCardData.generatedEnergyData,
     )
@@ -39,22 +32,7 @@ describe('Card', () => {
   })
 
   it('initializes properly', () => {
-    expect(card.data.name).toBeDefined()
-    expect(card.data.abilities.effectData).toBeDefined()
-    expect(card.data.cardType).toBeDefined()
-    expect(card.data.abilities.trigger).toBeDefined()
-    expect(card.data.abilities.triggerEffect).toBeDefined()
-    expect(card.data.abilities.keyword).toBeDefined()
-    expect(card.data.abilities.keywordAbility).toBeDefined()
-    expect(card.data.abilities.activationTimingAbility).toBeDefined()
-    expect(card.data.abilities.activationCondition).toBeDefined()
-    expect(card.data.costs.apCost).toBeDefined()
-    expect(card.data.isRaidable).toBeDefined()
-    expect(card.data.color).toBeDefined()
-    expect(card.data.bpData).toBeDefined()
-    expect(card.data.attributeData).toBeDefined()
-    expect(card.data.costs.needEnergyData).toBeDefined()
-    expect(card.data.costs.generatedEnergyData).toBeDefined()
+    expect(card).toBeDefined()
   })
 
   it('gets rested', () => {

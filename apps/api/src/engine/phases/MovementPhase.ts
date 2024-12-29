@@ -76,10 +76,6 @@ class MovementPhase extends Phase {
       )
     }
 
-    if (card.data.abilities.keyword !== 'Step') {
-      throw new Error("Card must have the keyword 'step'")
-    }
-
     if (energyLine[energyLineIdx]) {
       throw new Error(
         'The specified energyLine position is already occupied.',
