@@ -104,7 +104,10 @@ class MainPhase extends Phase {
       )
     }
 
-    if (card.data.costs.needEnergyData > totalEnergy) {
+    if (
+      card.data.costs.needEnergyData &&
+      card.data.costs.needEnergyData > totalEnergy
+    ) {
       throw new Error(
         'The card does not meet the total energy requirement generated on the energyLine.',
       )

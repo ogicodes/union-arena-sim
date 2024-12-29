@@ -8,13 +8,13 @@ import { generateId } from '../../utils/generate-id'
  * */
 export class Card {
   private _name: string
-  private _effectData: string
+  private _effectData: string | null
   private _cardType: CardType
   private _triggerData: string | null
   private _uniqueId: string
   private _isFaceUp: boolean
   private _isRested: boolean
-  private _needEnergyData: number
+  private _needEnergyData: number | null
   private _apCost: number
   private _color: CardColor
   private _bpData: number | null
@@ -22,13 +22,13 @@ export class Card {
 
   constructor(
     name: string,
-    effectData: string,
+    effectData: string | null,
     cardType: CardType,
     triggerData: string | null,
     apCost: number,
     color: CardColor,
     bpData: number | null,
-    needEnergyData: number,
+    needEnergyData: number | null,
     generatedEnergyData: number,
   ) {
     this._name = name
@@ -82,12 +82,12 @@ export class Card {
     bpData: number | null
     state: { isFaceUp: boolean; isRested: boolean }
     abilities: {
-      effectData: string
+      effectData: string | null
       triggerData: string | null
     }
     costs: {
       apCost: number
-      needEnergyData: number
+      needEnergyData: number | null
       generatedEnergyData: number
     }
   } {
