@@ -24,9 +24,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -37,10 +34,10 @@ jobs:
           version: 8.15.6
           run_install: false
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
           cache: pnpm
 
       - name: Install dependencies for API
@@ -54,9 +51,6 @@ jobs:
   format-check:
     name: Format Check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -67,42 +61,26 @@ jobs:
           version: 8.15.6
           run_install: false
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run Format Check (root)
+      - name: Run Format Check
         run: pnpm format:check
 
   test:
-    name: Test - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
-    strategy:
-      matrix:
-        node-version: [22.x]
-        platform:
-          - name: macOS
-            os: macos-latest
-            shell: bash
-          - name: Windows
-            os: windows-latest
-            shell: bash
-      fail-fast: false
-
-    runs-on: ${{ matrix.platform.os }}
-    defaults:
-      run:
-        shell: ${{ matrix.platform.shell }}
-
+    name: Test
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Fetch base ref
+      - name: Fetch Base Ref
         if: github.event_name == 'pull_request'
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
 
@@ -112,10 +90,10 @@ jobs:
           version: 8.15.6
           run_install: false
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
           cache: pnpm
 
       - name: Install dependencies and run tests for API

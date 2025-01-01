@@ -25,17 +25,10 @@ describe('GameState', () => {
       mockDeckCardData.name,
       mockDeckCardData.effectData,
       mockDeckCardData.cardType,
-      mockDeckCardData.trigger,
-      mockDeckCardData.triggerEffect,
-      mockDeckCardData.keyword,
-      mockDeckCardData.keywordAbility,
-      mockDeckCardData.activationTimingAbility,
-      mockDeckCardData.activationCondition,
+      mockDeckCardData.triggerData,
       mockDeckCardData.apCost,
-      mockDeckCardData.isRaidable,
       mockDeckCardData.color,
       mockDeckCardData.bpData,
-      mockDeckCardData.attributeData,
       mockDeckCardData.needEnergyData,
       mockDeckCardData.generatedEnergyData,
     )
@@ -74,6 +67,16 @@ describe('GameState', () => {
 
   afterEach(done => {
     done()
+  })
+
+  it('should throw an error if more than 2 players are added', () => {
+    const playerOne = new Player('Player 1', [], [])
+    const playerTwo = new Player('Player 2', [], [])
+    const playerThree = new Player('Player 3', [], [])
+
+    expect(() => {
+      new GameState([playerOne, playerTwo, playerThree]).initialize()
+    }).toThrow('A game cannot exceed more than 2 players.')
   })
 
   it('should initialize correctly', done => {
@@ -136,13 +139,38 @@ describe('GameState', () => {
     expect(playerTwo.actionPoints.length).toBe(0)
 
     /** gameboard should match */
-    expect(gameState.board.get(playerOne.id)).toEqual(
+    expect(gameState.getBoard(playerOne.id)).toEqual(
       expectedPlayerOneBoard,
     )
-    expect(gameState.board.get(playerTwo.id)).toEqual(
+    expect(gameState.getBoard(playerTwo.id)).toEqual(
       expectedPlayerTwoBoard,
     )
-
     done()
+  })
+
+  it('should end the game', () => {
+    const endGameMethod = jest.spyOn(gameState, 'endGame')
+    gameState.endGame()
+    expect(endGameMethod).toHaveBeenCalled()
+    expect(gameState.gameOver).toBeTruthy()
+  })
+
+  it('should end the turn', () => {
+    const endTurnMethod = jest.spyOn(gameState, 'endTurn')
+    gameState.endTurn()
+    expect(endTurnMethod).toHaveBeenCalled()
+    if (gameState.activePlayerIndex === 0) {
+      expect(gameState.turnCount).toBe(2)
+    }
+  })
+
+  it('gets the active player', () => {
+    const activePlayer = gameState.activePlayer
+    expect(activePlayer).toBe(playerOne)
+  })
+
+  it('gets the inactive player', () => {
+    const inactivePlayer = gameState.inactivePlayer
+    expect(inactivePlayer).toBe(playerTwo)
   })
 })

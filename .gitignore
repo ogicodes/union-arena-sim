@@ -41,3 +41,9 @@ yarn-error.log*
 .DS_Store
 *.pem
 **/*.toc
+
+# Cards
+cards-jjk
+cards-blc
+cards-htr
+cards-cgh

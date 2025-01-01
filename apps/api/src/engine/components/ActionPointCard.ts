@@ -1,41 +1,67 @@
+import { generateId } from '../../utils/generate-id'
+
 /**
- * ActionPointCard class represents a card that can be used to perform an action in the game.
- */
+ * ActionPointCard
+ *
+ * The AP Card
+ * */
 export class ActionPointCard {
-  public name: string
-  public isFaceUp: boolean = false
-  public isRested: boolean = false
+  private _name: string
+  private _isFaceUp: boolean
+  private _isRested: boolean
+  private _id: string
+
   constructor(name: string) {
-    this.name = name
+    this._name = name
+    this._isFaceUp = false
+    this._isRested = false
+    this._id = generateId()
   }
 
   /**
-   * this function takes the current card and flips it face up
+   * get data
+   *
+   * A single getter for all card information.
+   * */
+  get data(): {
+    name: string
+    id: string
+    state: {
+      isFaceUp: boolean
+      isRested: boolean
+    }
+  } {
+    return {
+      name: this._name,
+      id: this._id,
+      state: {
+        isFaceUp: this._isFaceUp,
+        isRested: this._isRested,
+      },
+    }
+  }
+
+  /**
+   * flip
+   *
+   * Takes the current card and flips it face up.
+   *
    * @returns boolean - returns true if the card is face up
    */
-  flip(): boolean {
-    this.isFaceUp = !this.isFaceUp
-    console.log(`face up is now ${this.isFaceUp}`)
-    return this.isFaceUp
+  public flip(): boolean {
+    this._isFaceUp = !this._isFaceUp
+    return this._isFaceUp
   }
 
   /**
-   * this function takes the current card and activates the card
-   * @returns boolean - returns true if the card is active
+   * restCard
+   *
+   * Takes the current card and rests it.
+   *
+   * @returns boolean
    */
-  activateCard(): boolean {
-    this.isRested = !this.isRested
-    console.log(`Card is now active.`)
-    return this.isRested
-  }
-
-  /**
-   * this function takes the current card and rests it
-   * @returns boolean - returns true if the card is rested
-   */
-  restCard(): boolean {
-    this.isRested = !this.isRested
-    console.log(`Card is rested.`)
-    return this.isRested
+  public rest(): boolean {
+    this._isRested = !this._isRested
+    return this._isRested
   }
 }
