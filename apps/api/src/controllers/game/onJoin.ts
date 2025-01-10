@@ -1,8 +1,8 @@
-import { Socket, Namespace } from 'socket.io'
 import { GameEngine } from '../../engine/core/GameEngine'
-import type { JoinGamePayload } from '../../types'
 import { createPlayer } from '../../utils/create-player'
 import { roomGameData } from '../../lib/roomGameData'
+import type { Socket, Namespace } from 'socket.io'
+import type { JoinGamePayload } from '../../types'
 
 /**
  * onJoin
@@ -53,7 +53,11 @@ export const onJoin = (
     )
     roomData.player2 = player2
 
-    const gameEngine = new GameEngine([roomData.player1!, player2])
+    const gameEngine = new GameEngine(
+      [roomData.player1!, player2],
+      socket,
+      roomName,
+    )
     roomData.gameEngine = gameEngine
 
     gameEngine.startGame()

@@ -40,7 +40,7 @@ export class TurnManager {
   }
 
   /**
-   * executePhase
+   * pbulic executePhase
    *
    * Executes the current phase's actions.
    *
@@ -70,13 +70,13 @@ export class TurnManager {
   }
 
   /**
-   * advancePhase
+   * public advancePhase
    *
    * Advances to the next phase after completion.
    *
    * @returns number - current phase idx
    * */
-  private advancePhase(): number {
+  public advancePhase(): number {
     this._gameState.nextPhase()
     if (this._gameState.currentPhaseIdx >= this._phases.length) {
       this._gameState.setPhase(0)

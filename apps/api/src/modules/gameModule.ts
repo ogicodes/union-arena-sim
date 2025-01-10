@@ -1,4 +1,4 @@
-import { Server } from 'socket.io'
+import type { Server } from 'socket.io'
 import { onJoin } from '../controllers/game'
 import { onEndPhase } from '../controllers/game'
 

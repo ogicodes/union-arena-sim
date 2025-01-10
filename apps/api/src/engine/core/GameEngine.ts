@@ -1,6 +1,11 @@
 import { GameState } from './GameState'
 import { TurnManager } from './TurnManager'
-import type { Player } from '../../types'
+import type { Socket } from 'socket.io'
+import type {
+  Player,
+  GameState as GameStateType,
+  TurnManager as TurnManagerType,
+} from '../../types'
 
 /**
  * GameEngine
@@ -14,21 +19,28 @@ import type { Player } from '../../types'
  * @param players Player[] - The array of 2 player models.
  * */
 export class GameEngine {
-  private gameState
-  public turnManager
+  private _gameState: GameStateType
+  private _io: Socket
+  private _roomName: string
+  public turnManager: TurnManagerType
 
-  constructor(players: Player[]) {
-    this.gameState = new GameState(players)
-    this.turnManager = new TurnManager(this.gameState)
+  constructor(players: Player[], io: Socket, roomName: string) {
+    this._gameState = new GameState(players, io, roomName)
+    this.turnManager = new TurnManager(this._gameState)
+    this._io = io
+    this._roomName = roomName
   }
 
+  /**
+   * public startGame
+   *
+   * Serves as the main entry point for the game engine.
+   *
+   * @returns void
+   * */
   public startGame(): void {
     console.info(`game has started`)
 
-    this.gameState.initialize()
-
-    while (!this.gameState.gameOver) {
-      this.turnManager.executePhase()
-    }
+    this._gameState.initialize()
   }
 }
