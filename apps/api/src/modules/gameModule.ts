@@ -1,6 +1,6 @@
 import type { Server } from 'socket.io'
-import { onJoin } from '../controllers/game'
-import { onEndPhase } from '../controllers/game'
+import { onJoin, onMove } from '../controllers/game'
+import { onEndTurn } from '../controllers/game'
 
 const gameModule = (io: Server) => {
   const gameNamespace = io.of('/game')
@@ -10,7 +10,12 @@ const gameModule = (io: Server) => {
     socket.on('game:join', payload =>
       onJoin(socket, payload, gameNamespace),
     )
-    socket.on('game:endPhase', payload => onEndPhase(socket, payload))
+    socket.on('turn:end', payload =>
+      onEndTurn(socket, payload, gameNamespace),
+    )
+    socket.on('action:move', payload =>
+      onMove(socket, payload, gameNamespace),
+    )
 
     socket.on('disconnect', () => {
       console.info(`Player disconnected: ${socket.id}`)

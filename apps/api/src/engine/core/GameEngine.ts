@@ -1,6 +1,5 @@
 import { GameState } from './GameState'
 import { TurnManager } from './TurnManager'
-import type { Socket } from 'socket.io'
 import type {
   Player,
   GameState as GameStateType,
@@ -20,15 +19,33 @@ import type {
  * */
 export class GameEngine {
   private _gameState: GameStateType
-  private _io: Socket
-  private _roomName: string
-  public turnManager: TurnManagerType
+  private _turnManager: TurnManagerType
 
-  constructor(players: Player[], io: Socket, roomName: string) {
-    this._gameState = new GameState(players, io, roomName)
-    this.turnManager = new TurnManager(this._gameState)
-    this._io = io
-    this._roomName = roomName
+  constructor(players: Player[]) {
+    this._gameState = new GameState(players)
+    this._turnManager = new TurnManager(this._gameState)
+  }
+
+  /**
+   * get turnManager
+   *
+   * Returns read-only access to the TurnManager
+   *
+   * @returns TurnManagerType
+   * */
+  get turnManager(): TurnManagerType {
+    return this._turnManager
+  }
+
+  /**
+   * get gameState
+   *
+   * Returns read-only access to the GameState
+   *
+   * @returns GameStateType
+   * */
+  get gameState(): GameStateType {
+    return this._gameState
   }
 
   /**
@@ -40,7 +57,20 @@ export class GameEngine {
    * */
   public startGame(): void {
     console.info(`game has started`)
-
     this._gameState.initialize()
+  }
+
+  /**
+   * public endTurn
+   *
+   * Ends the current turn and advances the phase if at the last player.
+   *
+   * @returns void
+   * */
+  public endTurn(): void {
+    this._gameState.endTurn()
+    if (this._gameState.activePlayerIndex === 1) {
+      this._turnManager.advancePhase()
+    }
   }
 }

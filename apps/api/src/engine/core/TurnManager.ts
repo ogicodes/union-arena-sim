@@ -40,7 +40,18 @@ export class TurnManager {
   }
 
   /**
-   * pbulic executePhase
+   * get currentPhase
+   *
+   * Returns read-only access to the currentPhase
+   *
+   * @returns Phase
+   * */
+  get currentPhase(): Phase {
+    return this._phases[this._gameState.currentPhaseIdx]
+  }
+
+  /**
+   * public executePhase
    *
    * Executes the current phase's actions.
    *

@@ -5,7 +5,6 @@ import type {
   Board,
   PlayerBoard,
 } from '../../types'
-import type { Socket } from 'socket.io'
 
 /**
  * GameState
@@ -24,18 +23,14 @@ export class GameState {
   private _currentPhaseIdx: number
   private _board: Board
   private _gameOver: boolean
-  private _io: Socket
-  private _roomName: string
 
-  constructor(players: Player[], io: Socket, roomName: string) {
+  constructor(players: Player[]) {
     this._players = players
     this._activePlayerIndex = 0
     this._turnCount = 1
     this._currentPhaseIdx = 0
     this._board = new Map()
     this._gameOver = false
-    this._io = io
-    this._roomName = roomName
   }
 
   /**
@@ -222,8 +217,6 @@ export class GameState {
     this._gameOver = true
     console.log(`game over`)
 
-    this._io.to(this._roomName)
-
     return this._gameOver
   }
 
@@ -236,17 +229,6 @@ export class GameState {
    * */
   get gameOver(): boolean {
     return this._gameOver
-  }
-
-  /**
-   * get io
-   *
-   * Read-only access to io socket.
-   *
-   * @returns Socket
-   * */
-  get io(): Socket {
-    return this._io
   }
 
   /**
