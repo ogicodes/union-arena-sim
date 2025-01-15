@@ -111,6 +111,19 @@ export class Player {
   }
 
   /**
+   * public setHand
+   *
+   * Sets the players hand with an array of cards and returns the hand.
+   *
+   * @param cards Card[]
+   * @returns hand Card[]
+   * */
+  public setHand(cards: Card[]): Card[] {
+    cards.forEach(card => this._hand.push(card))
+    return this._hand
+  }
+
+  /**
    * public pluck
    *
    * Removes a single card from the players hand, and returns it.

@@ -137,6 +137,21 @@ describe('Player', () => {
     mockAPDrawMethod.mockRestore()
   })
 
+  it('sets the players hand with an array of cards', () => {
+    const HAND_LENGTH = 7
+    const setHandSpy = jest.spyOn(player, 'setHand')
+    const cards: Card[] = []
+
+    for (let i = 0; i < HAND_LENGTH; i++) {
+      cards.push(mockCard)
+    }
+
+    player.setHand(cards)
+
+    expect(setHandSpy).toHaveBeenCalled()
+    expect(player.hand).toHaveLength(HAND_LENGTH)
+  })
+
   it('plucks a card from the players hand', () => {
     for (let i = 0; i < 7; i++) {
       player.addToHand(mockCard)
