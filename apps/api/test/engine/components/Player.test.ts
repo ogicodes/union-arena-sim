@@ -152,6 +152,14 @@ describe('Player', () => {
     expect(player.hand).toHaveLength(HAND_LENGTH)
   })
 
+  it('should reset the players hand', () => {
+    const resetHandSpy = jest.spyOn(player, 'resetHand')
+
+    player.resetHand()
+    expect(resetHandSpy).toHaveBeenCalled()
+    expect(player.hand).toHaveLength(0)
+  })
+
   it('plucks a card from the players hand', () => {
     for (let i = 0; i < 7; i++) {
       player.addToHand(mockCard)

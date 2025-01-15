@@ -124,6 +124,17 @@ export class Player {
   }
 
   /**
+   * public resetHand
+   *
+   * Resets the players hand to an empty array of cards.
+   *
+   * @returns void
+   * */
+  public resetHand(): void {
+    this._hand.length = 0
+  }
+
+  /**
    * public pluck
    *
    * Removes a single card from the players hand, and returns it.
