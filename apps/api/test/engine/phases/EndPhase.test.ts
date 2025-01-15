@@ -95,25 +95,45 @@ describe('EndPhase', () => {
   })
 
   it('should unrest the cards', () => {
+    const executeSpy = jest.spyOn(endPhase, 'execute')
     const { activePlayer } = gameState
-    const { frontLine, energyLine } = gameState.getBoard(
-      activePlayer.id,
+
+    const mockCard = new Card(
+      mockDeckCardData.name,
+      mockDeckCardData.effectData,
+      mockDeckCardData.cardType,
+      mockDeckCardData.triggerData,
+      mockDeckCardData.apCost,
+      mockDeckCardData.color,
+      mockDeckCardData.bpData,
+      mockDeckCardData.needEnergyData,
+      mockDeckCardData.generatedEnergyData,
     )
 
-    frontLine.forEach(card => {
-      const mockRestMethod = jest.spyOn(card, 'rest')
-      if (card.data.state.isRested) {
-        expect(mockRestMethod).toHaveBeenCalled()
-      }
-      expect(card.data.state.isRested).toBeFalsy()
-    })
+    mockCard.rest()
 
-    energyLine.forEach(card => {
-      const mockRestMethod = jest.spyOn(card, 'rest')
-      if (card.data.state.isRested) {
-        expect(mockRestMethod).toHaveBeenCalled()
-      }
-      expect(card.data.state.isRested).toBeFalsy()
-    })
+    gameState.setBoardProperty(activePlayer.id, 'energyLine', [
+      mockCard,
+      mockCard,
+    ])
+    gameState.setBoardProperty(activePlayer.id, 'frontLine', [
+      mockCard,
+      mockCard,
+    ])
+    endPhase.execute()
+
+    expect(executeSpy).toHaveBeenCalled()
+    expect(
+      gameState
+        .getBoard(activePlayer.id)
+        .energyLine.filter(
+          card => card.data.state.isRested === false,
+        ),
+    ).toHaveLength(2)
+    expect(
+      gameState
+        .getBoard(activePlayer.id)
+        .frontLine.filter(card => card.data.state.isRested === false),
+    ).toHaveLength(2)
   })
 })
