@@ -87,6 +87,17 @@ describe('Player', () => {
     expect(card).toBeDefined()
   })
 
+  it('should return null if there are no cards to draw', () => {
+    const mockDrawMethod = jest.spyOn(player, 'drawCard')
+
+    player.setState('deck', [])
+
+    const card = player.drawCard()
+
+    expect(mockDrawMethod).toHaveBeenCalled()
+    expect(card).toBeNull()
+  })
+
   it('logs a message when attempting to draw more cards than available', () => {
     const mockDrawMethod = jest.spyOn(player, 'drawCard')
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation()

@@ -175,8 +175,7 @@ export class Player {
       console.log(`no cards left`)
       return null
     }
-    const card = this._deck.shift()
-    return card || null
+    return this._deck.shift() as Card | null
   }
 
   /**
