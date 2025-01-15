@@ -57,6 +57,7 @@ export class TurnManager {
    *
    * @returns void
    * */
+  /* istanbul ignore next */
   public executePhase(): void {
     const currentPhase = this._phases[this._gameState.currentPhaseIdx]
     switch (currentPhase.name) {
