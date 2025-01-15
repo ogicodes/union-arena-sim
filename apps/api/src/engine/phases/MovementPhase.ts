@@ -70,6 +70,8 @@ class MovementPhase extends Phase {
 
     const card = frontLine[frontLineIdx]
 
+    console.log(energyLine)
+
     if (!card) {
       throw new Error(
         'No card exists at the specified energyLine index.',
