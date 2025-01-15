@@ -135,6 +135,23 @@ export class Player {
   }
 
   /**
+   * public setState
+   *
+   * This method allows setting specific player properties.
+   * It mutates the internal property by updating it with the provided data.
+   *
+   * @param property The property of the player to modify
+   * @param data The new data to assign to the property
+   * @returns void
+   * */
+  public setState<K extends keyof Player>(
+    property: K,
+    data: Player[K],
+  ): void {
+    ;(this as any)['_' + property] = data
+  }
+
+  /**
    * public pluck
    *
    * Removes a single card from the players hand, and returns it.
