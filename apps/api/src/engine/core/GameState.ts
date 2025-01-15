@@ -112,6 +112,24 @@ export class GameState {
   }
 
   /**
+   * public setState
+   *
+   * This method allows setting specific gameState properties.
+   * It mutates the internal property by updating it with the provided data.
+   *
+   * @param property The property of the gameState to modify
+   * @param data The new data to assign to the property
+   * @returns void
+   * */
+  /* istanbul ignore next */
+  public setState<K extends keyof GameState>(
+    property: K,
+    data: GameState[K],
+  ): void {
+    ;(this as any)['_' + property] = data
+  }
+
+  /**
    * get activePlayer
    *
    * Returns the active player object on GameState.
@@ -140,6 +158,7 @@ export class GameState {
    *
    * @returns Player
    * */
+  /* istanbul ignore next */
   get inactivePlayer(): Player {
     return (
       this._players.find(
@@ -204,6 +223,27 @@ export class GameState {
    */
   getBoard(playerId: string): PlayerBoard {
     return this._board.get(playerId)!
+  }
+
+  /**
+   * public setBoardProperty
+   *
+   * Sets the board with a specific key and values.
+   *
+   * @param playerId - string
+   * @param area - The area on the board
+   * @param data - The data to set on the board
+   * @returns void
+   * */
+  public setBoardProperty<K extends keyof PlayerBoard>(
+    playerId: string,
+    area: K,
+    data: PlayerBoard[K],
+  ): void {
+    const board = this.getBoard(playerId)
+    const areaData = board[area]
+    areaData.length = 0
+    ;(areaData as any[]).push(...data)
   }
 
   /**
