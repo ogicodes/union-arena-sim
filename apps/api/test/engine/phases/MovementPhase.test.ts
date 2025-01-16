@@ -100,10 +100,10 @@ describe('MovementPhase', () => {
   it('should route the movement correctly', () => {
     const movementSpy = jest.spyOn(movementPhase, 'movement')
     const moveFrontLineToEnergyLineSpy = jest
-      .spyOn(movementPhase as any, 'moveFrontLineToEnergyLine')
+      .spyOn(movementPhase as any, 'moveFrontLineToEnergyLine') // eslint-disable-line
       .mockImplementation(() => {})
     const moveEnergyLineToFrontLineSpy = jest
-      .spyOn(movementPhase as any, 'moveEnergyLineToFrontLine')
+      .spyOn(movementPhase as any, 'moveEnergyLineToFrontLine') // eslint-disable-line
       .mockImplementation(() => {})
 
     movementPhase.movement('FRONTLINE_TO_ENERGYLINE', 0, 0)

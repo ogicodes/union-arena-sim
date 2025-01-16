@@ -126,7 +126,7 @@ export class GameState {
     property: K,
     data: GameState[K],
   ): void {
-    ;(this as any)['_' + property] = data
+    ;(this as any)['_' + property] = data // eslint-disable-line
   }
 
   /**
@@ -243,7 +243,7 @@ export class GameState {
     const board = this.getBoard(playerId)
     const areaData = board[area]
     areaData.length = 0
-    ;(areaData as any[]).push(...data)
+    ;(areaData as any[]).push(...data) // eslint-disable-line
   }
 
   /**

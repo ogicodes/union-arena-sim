@@ -4,7 +4,6 @@ import type {
   Phases,
 } from '../../types'
 import { Phase } from './Phase'
-import { ActionPointCard } from '../components/ActionPointCard'
 
 class MainPhase extends Phase {
   protected _name: Phases = 'Main Phase'

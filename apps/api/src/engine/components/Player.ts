@@ -144,11 +144,12 @@ export class Player {
    * @param data The new data to assign to the property
    * @returns void
    * */
+
   public setState<K extends keyof Player>(
     property: K,
     data: Player[K],
   ): void {
-    ;(this as any)['_' + property] = data
+    ;(this as any)['_' + property] = data // eslint-disable-line
   }
 
   /**

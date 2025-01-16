@@ -30,7 +30,7 @@ export const onMove = (
   }
 
   switch (phase.name) {
-    case 'Movement Phase':
+    case 'Movement Phase': {
       const movementPhase = phase as InstanceType<
         typeof MovementPhase
       >
@@ -40,7 +40,8 @@ export const onMove = (
         action.targetIdx,
       )
       break
-    case 'Main Phase':
+    }
+    case 'Main Phase': {
       const mainPhase = phase as InstanceType<typeof MainPhase>
       mainPhase.movement(
         action.type as MainPhaseMovement,
@@ -48,6 +49,7 @@ export const onMove = (
         action.targetIdx,
       )
       break
+    }
   }
 
   namespace.to(roomName).emit('move:ok', {
