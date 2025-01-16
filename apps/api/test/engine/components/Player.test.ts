@@ -100,7 +100,9 @@ describe('Player', () => {
 
   it('logs a message when attempting to draw more cards than available', () => {
     const mockDrawMethod = jest.spyOn(player, 'drawCard')
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation()
+    const consoleSpy = jest
+      .spyOn(console, 'log')
+      .mockImplementation(() => {})
 
     for (let i = 0; i < 51; i++) {
       const card = player.drawCard()

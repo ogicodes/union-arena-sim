@@ -151,7 +151,9 @@ describe('GameState', () => {
   it('should log an error if there are no cards to draw for the lifepoints', () => {
     const { activePlayer } = gameState
     const gameStateInitSpy = jest.spyOn(gameState, 'initialize')
-    const consoleSpy = jest.spyOn(console, 'error')
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
 
     activePlayer.setState('deck', [])
 
