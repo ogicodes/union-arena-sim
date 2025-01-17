@@ -1,2 +1,3 @@
 export * from './onJoin'
-export * from './onEndPhase'
+export * from './onEndTurn'
+export * from './onMove'

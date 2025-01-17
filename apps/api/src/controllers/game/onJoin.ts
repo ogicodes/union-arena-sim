@@ -1,8 +1,9 @@
-import { Socket, Namespace } from 'socket.io'
 import { GameEngine } from '../../engine/core/GameEngine'
-import type { JoinGamePayload } from '../../types'
 import { createPlayer } from '../../utils/create-player'
 import { roomGameData } from '../../lib/roomGameData'
+import type { Socket, Namespace } from 'socket.io'
+import type { JoinGamePayload } from '../../types'
+import { getRoomName } from '../../utils/get-engine'
 
 /**
  * onJoin
@@ -23,7 +24,7 @@ export const onJoin = (
   const { playerName, playerDeck, playerActionPoints, opponentName } =
     payload
 
-  const roomName = [playerName, opponentName].sort().join('-')
+  const roomName = getRoomName(playerName, opponentName)
   const room = namespace.adapter.rooms.get(roomName)
 
   if (room && room.size >= 2) {

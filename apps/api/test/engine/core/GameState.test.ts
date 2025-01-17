@@ -148,6 +148,23 @@ describe('GameState', () => {
     done()
   })
 
+  it('should log an error if there are no cards to draw for the lifepoints', () => {
+    const { activePlayer } = gameState
+    const gameStateInitSpy = jest.spyOn(gameState, 'initialize')
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    activePlayer.setState('deck', [])
+
+    gameState.initialize()
+
+    expect(gameStateInitSpy).toHaveBeenCalled()
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'no cards to draw for the lifepoints.',
+    )
+  })
+
   it('should end the game', () => {
     const endGameMethod = jest.spyOn(gameState, 'endGame')
     gameState.endGame()
@@ -155,13 +172,18 @@ describe('GameState', () => {
     expect(gameState.gameOver).toBeTruthy()
   })
 
-  it('should end the turn', () => {
-    const endTurnMethod = jest.spyOn(gameState, 'endTurn')
+  it('should cycle to the next player after each turn', () => {
+    const endTurnSpy = jest.spyOn(gameState, 'endTurn')
+
+    expect(gameState.activePlayerIndex).toBe(0)
+
     gameState.endTurn()
-    expect(endTurnMethod).toHaveBeenCalled()
-    if (gameState.activePlayerIndex === 0) {
-      expect(gameState.turnCount).toBe(2)
-    }
+    expect(gameState.activePlayerIndex).toBe(1)
+
+    gameState.endTurn()
+    expect(gameState.activePlayerIndex).toBe(0)
+
+    expect(endTurnSpy).toHaveBeenCalled()
   })
 
   it('gets the active player', () => {
@@ -170,7 +192,20 @@ describe('GameState', () => {
   })
 
   it('gets the inactive player', () => {
-    const inactivePlayer = gameState.inactivePlayer
+    const { inactivePlayer } = gameState
+    expect(inactivePlayer).toBe(playerTwo)
+  })
+
+  it('should return the correct inactive player when active player is Player 2', () => {
+    gameState.setState('activePlayerIndex', 1)
+    const { inactivePlayer } = gameState
+    expect(inactivePlayer).toBe(playerOne)
+  })
+
+  it('should return the first player when no inactive player is found', () => {
+    gameState.setState('players', [playerOne, playerTwo])
+    gameState.setState('activePlayerIndex', 0)
+    const { inactivePlayer } = gameState
     expect(inactivePlayer).toBe(playerTwo)
   })
 })

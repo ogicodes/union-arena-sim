@@ -87,9 +87,22 @@ describe('Player', () => {
     expect(card).toBeDefined()
   })
 
+  it('should return null if there are no cards to draw', () => {
+    const mockDrawMethod = jest.spyOn(player, 'drawCard')
+
+    player.setState('deck', [])
+
+    const card = player.drawCard()
+
+    expect(mockDrawMethod).toHaveBeenCalled()
+    expect(card).toBeNull()
+  })
+
   it('logs a message when attempting to draw more cards than available', () => {
     const mockDrawMethod = jest.spyOn(player, 'drawCard')
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation()
+    const consoleSpy = jest
+      .spyOn(console, 'log')
+      .mockImplementation(() => {})
 
     for (let i = 0; i < 51; i++) {
       const card = player.drawCard()
@@ -135,6 +148,29 @@ describe('Player', () => {
     expect(mockAPDrawMethod).toHaveBeenCalledTimes(4)
 
     mockAPDrawMethod.mockRestore()
+  })
+
+  it('sets the players hand with an array of cards', () => {
+    const HAND_LENGTH = 7
+    const setHandSpy = jest.spyOn(player, 'setHand')
+    const cards: Card[] = []
+
+    for (let i = 0; i < HAND_LENGTH; i++) {
+      cards.push(mockCard)
+    }
+
+    player.setHand(cards)
+
+    expect(setHandSpy).toHaveBeenCalled()
+    expect(player.hand).toHaveLength(HAND_LENGTH)
+  })
+
+  it('should reset the players hand', () => {
+    const resetHandSpy = jest.spyOn(player, 'resetHand')
+
+    player.resetHand()
+    expect(resetHandSpy).toHaveBeenCalled()
+    expect(player.hand).toHaveLength(0)
   })
 
   it('plucks a card from the players hand', () => {

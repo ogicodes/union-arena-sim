@@ -104,10 +104,7 @@ class MainPhase extends Phase {
       )
     }
 
-    if (
-      card.data.costs.needEnergyData &&
-      card.data.costs.needEnergyData > totalEnergy
-    ) {
+    if (card.data.costs.needEnergyData || 0 > totalEnergy) {
       throw new Error(
         'The card does not meet the total energy requirement generated on the energyLine.',
       )
@@ -176,7 +173,7 @@ class MainPhase extends Phase {
     )
 
     const availableEnergy = actionPointsLine.filter(
-      card => !card.data.state.isRested,
+      card => !card['_isRested'],
     )
 
     if (availableEnergy.length === 0) {

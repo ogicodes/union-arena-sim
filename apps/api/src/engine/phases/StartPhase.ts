@@ -56,11 +56,13 @@ class StartPhase extends Phase {
     const { actionPointsLine } = this._gameState.getBoard(
       activePlayer.id,
     )
-    actionPointsLine.forEach(card => {
+
+    for (let i = 0; i < actionPointsLine.length - 1; i++) {
+      const card = actionPointsLine[i]
       if (card.data.state.isRested) {
         card.rest()
       }
-    })
+    }
   }
 
   /**

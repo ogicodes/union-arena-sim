@@ -14,6 +14,7 @@ import type {
   ActionPointCard as ActionPointCardType,
   GameState as GameStateType,
 } from '../../../src/types'
+import { StartPhase } from '../../../src/engine/phases'
 
 describe('TurnManager', () => {
   let turnManager: TurnManagerType
@@ -79,5 +80,29 @@ describe('TurnManager', () => {
 
     expect(executePhaseMock).toHaveBeenCalled()
     expect(gameState.currentPhaseIdx).toBe(1)
+  })
+
+  it('should get the current phase', () => {
+    const currentPhase = turnManager.currentPhase
+    expect(currentPhase).toBeInstanceOf(StartPhase)
+  })
+
+  it('should advance the phase', () => {
+    const initialPhase = 0
+
+    expect(gameState.currentPhaseIdx).toBe(initialPhase)
+
+    turnManager.advancePhase()
+
+    expect(gameState.currentPhaseIdx).toBe(initialPhase + 1)
+
+    gameState.setState(
+      'currentPhaseIdx',
+      turnManager['_phases'].length - 1,
+    )
+
+    turnManager.advancePhase()
+
+    expect(gameState.currentPhaseIdx).toBe(initialPhase)
   })
 })

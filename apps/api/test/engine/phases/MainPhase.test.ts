@@ -26,13 +26,15 @@ describe('MainPhase', () => {
   let mainPhase: InstanceType<typeof MainPhase>
   let gameState: GameStateType
   let mockPlayerOne: PlayerType
+  let mockCard: Card
+  let mockActionCard: InstanceType<typeof ActionPointCard>
 
   beforeEach(done => {
     const mockPlayerDeck: CardType[] = []
     const mockActionCardCollectionOne: ActionPointCardType[] = []
     const mockActionCardCollectionTwo: ActionPointCardType[] = []
 
-    const mockCard = new Card(
+    mockCard = new Card(
       mockDeckCardData.name,
       mockDeckCardData.effectData,
       mockDeckCardData.cardType,
@@ -44,9 +46,7 @@ describe('MainPhase', () => {
       mockDeckCardData.generatedEnergyData,
     )
 
-    const mockActionCard = new ActionPointCard(
-      mockActionCardData.name,
-    )
+    mockActionCard = new ActionPointCard(mockActionCardData.name)
 
     for (let i = 0; i < 50; i++) {
       mockPlayerDeck.push(mockCard)
@@ -95,16 +95,111 @@ describe('MainPhase', () => {
     )
   })
 
+  it('should route the correct movement to moveCardFromHandToEnergyLine', () => {
+    const { activePlayer } = gameState
+    const { energyLine } = gameState.getBoard(activePlayer.id)
+    const movement = 'HAND_TO_ENERGYLINE'
+    const mockCardIdx = 0
+    const mockTargetIdx = 0
+
+    const energyLineBefore = energyLine.length
+
+    mainPhase.movement(movement, mockCardIdx, mockTargetIdx)
+
+    expect(energyLine.length).toBe(energyLineBefore + 1)
+    expect(energyLine).toContain(mockCard)
+  })
+
   it('should allow a card to move from the hand to the frontLine', () => {
     const movementSpy = jest.spyOn(mainPhase, 'movement')
     const { activePlayer } = gameState
-    const { frontLine } = gameState.getBoard(activePlayer.id)
+    const mockPluck = jest.spyOn(activePlayer, 'pluck')
+    const { frontLine, energyLine } = gameState.getBoard(
+      activePlayer.id,
+    )
+
     mainPhase.movement('HAND_TO_FRONTLINE', 1, 0)
 
+    const totalEnergy = energyLine.reduce((acc, card) => {
+      return acc + card.data.costs.generatedEnergyData
+    }, 0)
+
+    expect(totalEnergy).toBe(0)
     expect(movementSpy).toHaveBeenCalled()
+    expect(mockPluck).toHaveBeenCalled()
     expect(activePlayer.hand).toHaveLength(6)
     expect(frontLine[0]).toBeInstanceOf(Card)
     expect(frontLine).toHaveLength(1)
+  })
+
+  it('should throw an error if the frontLine position is already occupied when moving a card', () => {
+    const { activePlayer } = gameState
+    const movementSpy = jest.spyOn(mainPhase, 'movement')
+
+    gameState.setBoardProperty(activePlayer.id, 'frontLine', [
+      mockCard,
+    ])
+    activePlayer.setHand([mockCard])
+
+    expect(() =>
+      mainPhase.movement('HAND_TO_FRONTLINE', 0, 0),
+    ).toThrowError(
+      'The specified frontLine position is already occupied.',
+    )
+    expect(movementSpy).toHaveBeenCalled()
+  })
+
+  it('should throw an error if no cards exist in the players hand with a specified index', () => {
+    const movementSpy = jest.spyOn(mainPhase, 'movement')
+    expect(() =>
+      mainPhase.movement('HAND_TO_FRONTLINE', 8, 0),
+    ).toThrowError(
+      'No card exists in the players hand with the specified index.',
+    )
+    expect(movementSpy).toHaveBeenCalledWith(
+      'HAND_TO_FRONTLINE',
+      8,
+      0,
+    )
+  })
+
+  it('should throw an error if the card does not meet the total energy requirement', () => {
+    const { activePlayer } = gameState
+
+    const mockHighEnergyCard = new Card(
+      'mock-card', // name
+      'mock-effect-data', // effectData
+      'character', // cardType
+      null, // triggerData
+      0, // apCost
+      'red', // color
+      null, // bpData
+      100, // needEnergyData
+      1, // generatedEnergyData
+    )
+
+    gameState.setBoardProperty(activePlayer.id, 'energyLine', [
+      mockCard,
+      mockCard,
+      mockCard,
+    ])
+
+    activePlayer.resetHand()
+    activePlayer.setHand([mockHighEnergyCard])
+
+    expect(() =>
+      mainPhase['moveCardFromHandToFrontLine'](0, 0),
+    ).toThrowError(
+      'The card does not meet the total energy requirement generated on the energyLine.',
+    )
+  })
+
+  it('HAND_TO_FRONTLINE should calculate the totalEnergy', () => {
+    const reduceSpy = jest.spyOn(Array.prototype, 'reduce')
+
+    mainPhase['moveCardFromHandToFrontLine'](0, 0)
+
+    expect(reduceSpy).toHaveBeenCalled()
   })
 
   it('should allow a card to move from the hand to the energyLine', () => {
@@ -134,6 +229,34 @@ describe('MainPhase', () => {
     expect(sideline).toHaveLength(1)
   })
 
+  it('moveCardFromHandToEnergyLine should throw an error when no card exists in the players hand', () => {
+    const { activePlayer } = gameState
+
+    activePlayer.resetHand()
+
+    expect(() =>
+      mainPhase['moveCardFromHandToEnergyLine'](0, 0),
+    ).toThrowError(
+      'No card exists in the players hand with the specified index.',
+    )
+  })
+
+  it('moveCardFromHandToEnergyLine should throw an error when the position is occupied', () => {
+    const { activePlayer } = gameState
+
+    gameState.setBoardProperty(activePlayer.id, 'energyLine', [
+      mockCard,
+    ])
+    activePlayer.resetHand()
+    activePlayer.setHand([mockCard])
+
+    expect(() =>
+      mainPhase['moveCardFromHandToEnergyLine'](0, 0),
+    ).toThrowError(
+      'The specified energyLine position is already occupied.',
+    )
+  })
+
   it('should sideline a card from the energyLine', () => {
     const { activePlayer } = gameState
     const { sideline, energyLine } = gameState.getBoard(
@@ -155,5 +278,21 @@ describe('MainPhase', () => {
     expect(() =>
       mainPhase.sideLineCard('energyLine', 8),
     ).toThrowError('Invalid card index location: 8')
+  })
+
+  it('should throw an error when there is no action points to consume', () => {
+    const { activePlayer } = gameState
+
+    const card = mockActionCard
+
+    card.rest()
+
+    gameState.setBoardProperty(activePlayer.id, 'actionPointsLine', [
+      card,
+    ])
+
+    expect(() => mainPhase['useActionPoint']()).toThrowError(
+      'No available action points to consume.',
+    )
   })
 })

@@ -40,12 +40,24 @@ export class TurnManager {
   }
 
   /**
-   * executePhase
+   * get currentPhase
+   *
+   * Returns read-only access to the currentPhase
+   *
+   * @returns Phase
+   * */
+  get currentPhase(): Phase {
+    return this._phases[this._gameState.currentPhaseIdx]
+  }
+
+  /**
+   * public executePhase
    *
    * Executes the current phase's actions.
    *
    * @returns void
    * */
+  /* istanbul ignore next */
   public executePhase(): void {
     const currentPhase = this._phases[this._gameState.currentPhaseIdx]
     switch (currentPhase.name) {
@@ -70,13 +82,13 @@ export class TurnManager {
   }
 
   /**
-   * advancePhase
+   * public advancePhase
    *
    * Advances to the next phase after completion.
    *
    * @returns number - current phase idx
    * */
-  private advancePhase(): number {
+  public advancePhase(): number {
     this._gameState.nextPhase()
     if (this._gameState.currentPhaseIdx >= this._phases.length) {
       this._gameState.setPhase(0)

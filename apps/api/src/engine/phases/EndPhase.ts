@@ -36,16 +36,13 @@ class EndPhase extends Phase {
       activePlayer.id,
     )
 
-    frontLine.forEach(card => {
-      if (card.data.state.isRested) {
-        card.rest()
-      }
-    })
-    energyLine.forEach(card => {
-      if (card.data.state.isRested) {
-        card.rest()
-      }
-    })
+    for (let i = 0; i < frontLine.length - 1; i++) {
+      frontLine[i].rest()
+    }
+
+    for (let i = 0; i < energyLine.length - 1; i++) {
+      energyLine[i].rest()
+    }
   }
 }
 

@@ -1,6 +1,10 @@
 import { GameState } from './GameState'
 import { TurnManager } from './TurnManager'
-import type { Player } from '../../types'
+import type {
+  Player,
+  GameState as GameStateType,
+  TurnManager as TurnManagerType,
+} from '../../types'
 
 /**
  * GameEngine
@@ -14,21 +18,59 @@ import type { Player } from '../../types'
  * @param players Player[] - The array of 2 player models.
  * */
 export class GameEngine {
-  private gameState
-  public turnManager
+  private _gameState: GameStateType
+  private _turnManager: TurnManagerType
 
   constructor(players: Player[]) {
-    this.gameState = new GameState(players)
-    this.turnManager = new TurnManager(this.gameState)
+    this._gameState = new GameState(players)
+    this._turnManager = new TurnManager(this._gameState)
   }
 
+  /**
+   * get turnManager
+   *
+   * Returns read-only access to the TurnManager
+   *
+   * @returns TurnManagerType
+   * */
+  get turnManager(): TurnManagerType {
+    return this._turnManager
+  }
+
+  /**
+   * get gameState
+   *
+   * Returns read-only access to the GameState
+   *
+   * @returns GameStateType
+   * */
+  get gameState(): GameStateType {
+    return this._gameState
+  }
+
+  /**
+   * public startGame
+   *
+   * Serves as the main entry point for the game engine.
+   *
+   * @returns void
+   * */
   public startGame(): void {
     console.info(`game has started`)
+    this._gameState.initialize()
+  }
 
-    this.gameState.initialize()
-
-    while (!this.gameState.gameOver) {
-      this.turnManager.executePhase()
+  /**
+   * public endTurn
+   *
+   * Ends the current turn and advances the phase if at the last player.
+   *
+   * @returns void
+   * */
+  public endTurn(): void {
+    this._gameState.endTurn()
+    if (this._gameState.activePlayerIndex === 1) {
+      this._turnManager.advancePhase()
     }
   }
 }

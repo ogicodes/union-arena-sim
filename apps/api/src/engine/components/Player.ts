@@ -111,6 +111,48 @@ export class Player {
   }
 
   /**
+   * public setHand
+   *
+   * Sets the players hand with an array of cards and returns the hand.
+   *
+   * @param cards Card[]
+   * @returns hand Card[]
+   * */
+  public setHand(cards: Card[]): Card[] {
+    cards.forEach(card => this._hand.push(card))
+    return this._hand
+  }
+
+  /**
+   * public resetHand
+   *
+   * Resets the players hand to an empty array of cards.
+   *
+   * @returns void
+   * */
+  public resetHand(): void {
+    this._hand.length = 0
+  }
+
+  /**
+   * public setState
+   *
+   * This method allows setting specific player properties.
+   * It mutates the internal property by updating it with the provided data.
+   *
+   * @param property The property of the player to modify
+   * @param data The new data to assign to the property
+   * @returns void
+   * */
+
+  public setState<K extends keyof Player>(
+    property: K,
+    data: Player[K],
+  ): void {
+    ;(this as any)['_' + property] = data // eslint-disable-line
+  }
+
+  /**
    * public pluck
    *
    * Removes a single card from the players hand, and returns it.
@@ -134,8 +176,7 @@ export class Player {
       console.log(`no cards left`)
       return null
     }
-    const card = this._deck.shift()
-    return card || null
+    return this._deck.shift() as Card | null
   }
 
   /**
