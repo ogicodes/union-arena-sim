@@ -22,11 +22,20 @@ export const onMove = (
   const { roomName, action } = payload
 
   const engine = getEngine(roomName)
-  const gameState = engine.gameEngine?.gameState
-  const phase = engine.gameEngine?.turnManager.currentPhase
+
+  if (!engine.gameEngine) {
+    throw new Error('Unable to fetch the engine')
+  }
+
+  const { gameState, turnManager } = engine.gameEngine
+  const { currentPhase: phase } = turnManager
 
   if (!phase) {
     throw new Error('Error fetching the current phase')
+  }
+
+  if (!gameState) {
+    throw new Error('Unable to fetch the gameState')
   }
 
   switch (phase.name) {
@@ -53,7 +62,14 @@ export const onMove = (
   }
 
   namespace.to(roomName).emit('move:ok', {
-    message: 'Move ok',
-    gameState: gameState,
+    currentPhaseIdx: gameState.currentPhaseIdx,
+    currentPhase: turnManager.currentPhase.name,
+    activePlayer: gameState.players[gameState.activePlayerIndex].name,
+    ActivePlayerBoard: gameState.getBoard(gameState.activePlayer.id),
+    InactivePlayerBoard: gameState.getBoard(
+      gameState.inactivePlayer.id,
+    ),
+    turnCount: gameState.turnCount,
+    gameOver: gameState.gameOver,
   })
 }
