@@ -3,6 +3,7 @@ import {
   StartPhase,
   MovementPhase,
   MainPhase,
+  AttackPhase,
   EndPhase,
 } from '../phases'
 
@@ -35,6 +36,7 @@ export class TurnManager {
       new StartPhase(gameState),
       new MovementPhase(gameState),
       new MainPhase(gameState),
+      new AttackPhase(gameState),
       new EndPhase(gameState),
     ]
   }
@@ -72,7 +74,7 @@ export class TurnManager {
         currentPhase.execute()
         break
       case 'Attack Phase':
-        console.log('Attack Phase')
+        currentPhase.execute()
         break
       case 'End Phase':
         currentPhase.execute()

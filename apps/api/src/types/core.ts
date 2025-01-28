@@ -22,3 +22,5 @@ export type MovementPhaseMovement =
 export type MainPhaseMovement =
   | 'HAND_TO_ENERGYLINE'
   | 'HAND_TO_FRONTLINE'
+
+export type BlockingMovement = 'LIFE' | 'FRONTLINE'
