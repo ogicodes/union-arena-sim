@@ -15,13 +15,30 @@ export const onEndTurn = (
   namespace: Namespace,
 ): void => {
   const { roomName } = payload
+
   const engine = getEngine(roomName)
 
-  engine.gameEngine?.endTurn()
-  const gameState = engine.gameEngine?.gameState
+  if (!engine || !engine.gameEngine) {
+    throw new Error('Unable to fetch the engine')
+  }
+
+  const { gameState, turnManager } = engine.gameEngine
+
+  if (!gameState) {
+    throw new Error('Unable to fetch the gameState')
+  }
+
+  engine.gameEngine.endTurn()
 
   namespace.to(roomName).emit('turn:end', {
-    message: 'Turn concluded',
-    gameState: gameState,
+    currentPhaseIdx: gameState.currentPhaseIdx,
+    currentPhase: turnManager.currentPhase.name,
+    activePlayer: gameState.players[gameState.activePlayerIndex].name,
+    ActivePlayerBoard: gameState.getBoard(gameState.activePlayer.id),
+    InactivePlayerBoard: gameState.getBoard(
+      gameState.inactivePlayer.id,
+    ),
+    turnCount: gameState.turnCount,
+    gameOver: gameState.gameOver,
   })
 }
